@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="styles.css">
+<script src="script.js" defer></script>
+<title>Godoy Mods</title>
+</head>
+<body>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab-button active" onclick="openTab(event, 'home')">Home</button>
+    <button class="tab-button" onclick="openTab(event, 'completed')">Projetos Concluídos</button>
+    <button class="tab-button" onclick="openTab(event, 'ongoing')">Em Andamento</button>
+    <div class="filter-icon" onclick="toggleFilterButtons()">
+      <img src="https://cdn0.iconfinder.com/data/icons/mobile-basic-vol-1/32/Filter-256.png" alt="Filtrar">
+      <div class="filter-buttons">
+        <button class="filter-button" onclick="filterProjects('all')">Mostrar Todos</button>
+        <button class="filter-button" onclick="filterProjects('Android')">Android</button>
+        <button class="filter-button" onclick="filterProjects('PC')">PC</button>
+		<button class="filter-button" onclick="filterProjects('PlayStation 2')">PlayStation 2</button>
+        <button class="filter-button" onclick="filterProjects('PlayStation 3')">PlayStation 3</button>
+        <button class="filter-button" onclick="filterProjects('Xbox 360')">Xbox 360</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="home" onclick="showTab('home')" class="tab-content">
+    <div class="project-box">
+      <h2>Godoy Mods</h2>
+	  <div class="profile">
+		<img src="https://i.imgur.com/OgaeHFx.png" alt="Rafael Godoy">
+		<p>
+		Opa, tudo bem? Sou Rafael Godoy, e aqui<br>
+		nesse site vou manter atualizado os mods<br>
+		em que estou envolvido.<br><br>
+		
+		Caso quiera aprender sobre Inteligencia Artifical,<br>
+		te convido a entrar no servidor do discord<br>
+		em que sou ADM, lá ensinamos sobre clonagem de voz,<br>
+		deepfake, geração de imagens.<br>
+	   </p>
+	  </div>
+    </div>
+  </div>
+
+  <div id="completed" class="tab-content">
+    <div class="project-box">
+      <h2 class="project-title">Red Dead Redemption - Legendado em Português do Brasil</h2>
+      <img class="project-image" src="https://api.time.com/wp-content/uploads/2016/07/red-dead-redemption.jpg" alt="Projeto 1">
+      <p class="project-description">Finalmente, depois de 13 anos do lançamento, conseguimos lançar uma tradução para esse jogo.<br> Agora também com a tradução da DLC, Pesadelo dos Mortos-vivos (Undead Nightmare)</p>
+      <div class="project-tags" data-tags="PlayStation 3,Xbox 360">
+		<a href="https://github.com/PS3-4K-Pro/Packages/releases/download/Mods/Red_Dead_Redemption_-_Brazilian_Portuguese_Translation.pkg" class="tag">PlayStation 3</a>
+        <a href="https://www.mediafire.com/file/cbh9qhita3k4dqh/XBOX-RDR-Traduzido%252BDLC-AGO-2023.zip/file" class="tag">Xbox 360</a>
+		<!-- 
+        <span src="https://github.com/PS3-4K-Pro/Packages/releases/download/Mods/Red_Dead_Redemption_-_Brazilian_Portuguese_Translation.pkg" class="tag">PlayStation 3</span>
+        <span src="https://www.mediafire.com/file/cbh9qhita3k4dqh/XBOX-RDR-Traduzido%252BDLC-AGO-2023.zip/file" class="tag">Xbox 360</span>
+		-->
+      </div>
+    </div>
+    <div class="project-box">
+      <h2 class="project-title">Toy Story 3 - Port Dublagem e tradução</h2>
+      <img class="project-image" src="https://http2.mlstatic.com/disney-toy-story-3-jogo-crianca-original-ps3-barato-promoco-D_NQ_NP_859483-MLB26794410428_022018-F.jpg" alt="Projeto 2">
+      <p class="project-description">Só falta descobrir por que a Disney deixou os arquivos dentro<br> e não quis deixar certinho para todas as plataformas.</p>
+      <div class="project-tags" data-tags="PlayStation 3,Xbox 360">
+        <a href="https://github.com/PS3-4K-Pro/Packages/releases/download/Mods/Toy_Story_3_-_Brazilian_Portuguese_Translation.pkg" class="tag">PlayStation 3</a>
+        <a href="https://www.mediafire.com/file/wd7o0al5pju3bcq/X360_Tradu%25C3%25A7%25C3%25A3o_e_Dublagem_Toy_Story_3_port_Godoy%2526Krisp.zip/file" class="tag">Xbox 360</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="ongoing" class="tab-content">
+  	<div class="project-box">
+      <h2 class="project-title">GTA San Andreas</h2>
+      <img class="project-image" src="https://th.bing.com/th/id/R.c798a6b8efbda9b2f469b526c748eb70?rik=A3GLqnLxCqTNPA&pid=ImgRaw&r=0" alt="GTA San Andreas">
+      <p class="project-description">A dublagem do GTA San Andreas já está sendo desenvolvida desde 2019, pela equipe NemesisFanDubs. <br> Me juntei a eles com a ideia de fazer o port para outras plataformas.</p>
+      <div class="project-tags" data-tags="PC,PlayStation 3,PlayStation 2,Android">
+        <a href="https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqbUZNSzI2SjNKM0pvWE5tWmw2Vl9XbEZoSmhDUXxBQ3Jtc0ttNXliTDllNXc5YWhVb2ZxeE0yQnA3enVqMm8yd1o5cjFhOFdwMXlscFhsd0Z5TEpURDB1dUl6Y3pMajU4a0o4NDAwYlJ6c05Iem5UVlZOVlMtUHBTSjVudXctYlRkMHlVT2ZZMUVFNktGUW4yQ0VLdw&q=https%3A%2F%2Fwww.mediafire.com%2Ffile%2Fq36s6h9ebck9fh1%2FPC_NEMESISFANDUBS_GTA_SA_DUBLADO.zip%2Ffile&v=UK6P1uUGuc0" class="tag">PC</a>
+        <a href="" class="tag">PlayStation 3 (off)</a>
+		<a href="" class="tag">PlayStation 2 (off)</a>
+		<a href="https://www.mediafire.com/file/oiwhwdv8wobhw9o/Android_NemesisFanDubs_GTA_SA_DUBLADO.zip/file" class="tag">Android</a>
+      </div>
+    </div>
+  
+    <div class="project-box">
+      <h2 class="project-title">Bully - Dublagem</h2>
+      <img class="project-image" src="https://th.bing.com/th/id/OIP.IRzO3XfyKC8oL-yI7ARWswHaKW?pid=ImgDet&rs=1" alt="Bully">
+      <p class="project-description">Finalmente, a dublagem desse game está em desenvolvimento pela equipe Gremory Studios <br> Obviamente, ainda sem link disponível.</p>
+      <div class="project-tags" data-tags="PC,PlayStation 2">
+        <span class="tag">PC</span>
+        <span class="tag">PlayStation 2</span>
+      </div>
+    </div>
+ 
+    <div class="project-box">
+      <h2 class="project-title">God Of War 2</h2>
+      <img class="project-image" src="https://th.bing.com/th/id/OIP.qwtu3Xt53--6JfOtoBUvmgHaFV?pid=ImgDet&rs=1" alt="God Of War 2">
+      <p class="project-description">Apesar desse jogo já ter uma dublagem, agora estamos usando IA com a voz original do Kratos <br> para assim deixar mais interessante a jogatina. <br> Também vamos usar IA em outras vozes, como Zeus, Gaia(Narradora) entre outros. <br> Esse projeto está sendo desenvolvido numa parceiria do canal Ghelos e eu Godoy</p>
+      <div class="project-tags" data-tags="PlayStation 3,PlayStation 2">
+        <span class="tag">PlayStation 3</span>
+        <span class="tag">PlayStation 2</span>
+      </div>
+    </div>
+	
+	<div class="project-box">
+      <h2 class="project-title">GTA 5</h2>
+      <img class="project-image" src="https://1.bp.blogspot.com/-GuFAVME5mZE/W7kxihkOtlI/AAAAAAAAQ2k/8yJYoQlJokcPxn2HmIPT9NiqLf3SiHb6QCLcBGAs/s2560/4148052-grand-theft-auto-v.jpg" alt="GTA 5">
+      <p class="project-description">A galera pediu e nós nos reunimos, a equipe Mathias Produções está fazendo a dublagem <br>e a gente vai colocar no game e adicionar IA se necessário.</p>
+      <div class="project-tags" data-tags="PC,PlayStation 3">
+        <span class="tag">PC</span>
+        <span class="tag">PlayStation 3</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- AQUI SÓ COPIAR E COLAR PRA FAZER MAIS
+  <div id="ongoing" class="tab-content">
+    <div class="project-box">
+      <h2 class="project-title">Projeto 3</h2>
+      <img class="project-image" src="project3.jpg" alt="Projeto 3">
+      <p class="project-description">Trabalhando duro para trazer um novo RPG épico em breve.</p>
+      <div class="project-tags" data-tags="PC,PlayStation">
+        <span class="tag">PC</span>
+        <span class="tag">PlayStation</span>
+      </div>
+    </div>
+  </div> -->
+
+  <footer class="footer">
+    <div class="social-icons">
+      <a href="https://twitter.com/GodoyEbert"><img src="https://cdn3.iconfinder.com/data/icons/social-network-flat-3/100/Twitter-512.png" alt="Twitter"></a>
+      <a href="https://www.instagram.com/rafael.godoy.ebert/"><img src="https://cdn4.iconfinder.com/data/icons/logos-brands-7/512/instagram_icon-instagram_buttoninstegram-256.png" alt="Instagram"></a>
+      <a href="hhttps://discord.com/invite/atFQmmR2fy"><img src="https://cdn3.iconfinder.com/data/icons/social-network-flat-3/100/Discord-256.png" alt="Discord"></a>
+      <a href="https://nubank.com.br/pagar/1ls6a4/0QpSSbWBSq"><img src="https://th.bing.com/th/id/R.a9d07c8ca5b65907d6ea9bb54242a7a6?rik=iFdIlUvQSiby5A&pid=ImgRaw&r=0" alt="Nubank"></a>
+	  <a href="https://www.youtube.com/@Godoyy"><img src="https://cdn1.iconfinder.com/data/icons/logotypes/32/youtube-256.png" alt="Youtube"></a>
+	  <a href="https://github.com/RafaelGodoyEbert"><img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-social-github-256.png" alt="Github"></a>
+    </div>
+    <p class="contact-info">Contato: rafaelgodebert@gmail.com</p>
+  </footer>
+</div>
+
+</body>
+</html>
