@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <title>Criador & Editor de Posts - Godoy Mods</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body class="generator-subpage">
+
+  <div class="subpage-container">
+    
+    <!-- BARRA DE NAVEGAÇÃO DA SUBPÁGINA -->
+    <header class="subpage-header">
+      <div class="subpage-header-content">
+        <a href="index.html" class="back-link">
+          ← Voltar ao Site Principal
+        </a>
+        <h1 class="subpage-title">🛠️ Criador & Editor de Devlogs e Mods</h1>
+        <div class="subpage-actions">
+          <button class="icon-btn-header" id="theme-toggle-btn" onclick="toggleThemeQuick()" title="Alternar Modo Escuro / Claro">
+            🌙
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="subpage-main">
+      
+      <!-- CARD DE INSTRUÇÕES DA SUBPÁGINA -->
+      <div class="admin-notice-card">
+        <div class="notice-icon">✏️</div>
+        <div class="notice-text">
+          <h3>Edição e Criação de Publicações</h3>
+          <p>Selecione um post da lista abaixo para <strong>editar a imagem de capa, títulos, textos e links</strong>, ou crie uma nova publicação do zero. Ao salvar, as alterações são aplicadas imediatamente no feed do site!</p>
+        </div>
+      </div>
+
+      <!-- PAINEL DO GERADOR / EDITOR -->
+      <div class="generator-container">
+        
+        <!-- FORMULÁRIO DE ENTRADA E EDIÇÃO -->
+        <div class="generator-form-box">
+          
+          <!-- SELETOR DE POSTS PARA EDIÇÃO -->
+          <div style="background: var(--bg-input); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+            <label class="form-label" for="select-existing-post" style="font-size: 0.9rem; font-weight: 700; color: var(--accent-primary); display: flex; align-items: center; gap: 6px;">
+              🔍 Selecionar Post para Editar:
+            </label>
+            <div style="display: flex; gap: 8px; margin-top: 6px; width: 100%;">
+              <select id="select-existing-post" class="form-input" onchange="loadSelectedPostForEdit()" style="flex: 1; min-width: 0; font-weight: 600; cursor: pointer;">
+                <option value="new">➕ [Criar Novo Post ou Devlog]</option>
+              </select>
+              <button class="btn-secondary" onclick="resetFormToNew()" style="white-space: nowrap; padding: 0 14px; flex-shrink: 0;">✨ Limpar</button>
+            </div>
+            <p style="font-size: 0.775rem; color: var(--text-muted); margin-top: 6px; margin-bottom: 0;">
+              Escolha um post existente acima para trocar a imagem ou alterar os dados.
+            </p>
+          </div>
+
+          <h2 class="form-section-title" id="form-title-heading">✍️ Dados do Post</h2>
+          
+          <input type="hidden" id="input-id" value="">
+
+          <div class="form-group">
+            <label class="form-label" for="input-title">Título do Post / Mod / Devlog:</label>
+            <input type="text" id="input-title" class="form-input" placeholder="Ex: God of War II - Dublagem em Português PT-BR" oninput="updateGeneratorPreview()">
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="input-type">Tipo de Publicação:</label>
+              <select id="input-type" class="form-input" onchange="updateGeneratorPreview()">
+                <option value="devlog">📰 Devlog / Atualização de Progresso</option>
+                <option value="ongoing">⚙️ Projeto Em Andamento</option>
+                <option value="completed">✅ Projeto Concluído / Download</option>
+                <option value="paid">💰 Projeto Pago / Financiado</option>
+                <option value="archived">📦 Projeto Arquivado</option>
+                <option value="abandoned">🚫 Projeto Abandonado / Cancelado</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="input-platform">Plataforma Principal:</label>
+              <input type="text" id="input-platform" class="form-input" placeholder="Ex: PlayStation 2, PS3, PC" oninput="updateGeneratorPreview()">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-image">🖼️ URL ou Arquivo da Imagem de Capa:</label>
+            <div style="display: flex; gap: 8px; align-items: center; width: 100%;">
+              <input type="text" id="input-image" class="form-input" style="flex: 1; min-width: 0;" placeholder="https://exemplo.com/sua-imagem.jpg" oninput="updateGeneratorPreview()">
+              <label class="btn-secondary" style="margin: 0; padding: 8px 12px; cursor: pointer; flex-shrink: 0; white-space: nowrap;" title="Escolher arquivo de imagem do computador">
+                📁 Upload
+                <input type="file" id="input-image-file" accept="image/*" style="display: none;" onchange="handleImageFileUpload(event)">
+              </label>
+              <div id="image-thumb-preview" style="width: 50px; height: 38px; border-radius: 6px; overflow: hidden; background: var(--bg-input); border: 1px solid var(--border-color); flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+                <img id="image-thumb-img" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
+                <span id="image-thumb-placeholder" style="font-size:0.65rem; color:var(--text-muted); text-align:center;">Capa</span>
+              </div>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Cole um link direto de imagem ou clique em Upload para carregar uma foto do seu dispositivo.</p>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="input-date">Data da Publicação:</label>
+              <input type="text" id="input-date" class="form-input" placeholder="Ex: 28 de Julho, 2026" oninput="updateGeneratorPreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="input-progress">Progresso (%) - se em andamento:</label>
+              <input type="number" id="input-progress" class="form-input" min="0" max="100" value="70" oninput="updateGeneratorPreview()">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-tags">Tags / Filtros (separadas por vírgula):</label>
+            <input type="text" id="input-tags" class="form-input" placeholder="Ex: Dublagem IA, PS2, PS3, PT-BR" oninput="updateGeneratorPreview()">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-summary">Resumo Curto (Aparece no Card):</label>
+            <textarea id="input-summary" class="form-textarea" style="min-height: 65px;" placeholder="Breve descrição em poucas frases para o card principal..." oninput="updateGeneratorPreview()"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-content">Conteúdo Completo (Aparece ao Clicar / Modal):</label>
+            <textarea id="input-content" class="form-textarea" style="min-height: 120px;" placeholder="Escreva o texto do post completo em HTML ou texto formatado com tags <p>, <h3>, <ul>..." oninput="updateGeneratorPreview()"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-download">Link do Discord / Download (Opcional):</label>
+            <input type="text" id="input-download" class="form-input" placeholder="https://discord.com/invite/atFQmmR2fy" oninput="updateGeneratorPreview()">
+          </div>
+
+          <!-- BOTÕES DE AÇÃO DO EDITOR -->
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
+            <button class="action-btn-primary" onclick="savePostToSiteFeed()" style="flex: 1; min-width: 180px; justify-content: center; padding: 12px;">
+              💾 Salvar Alterações no Site
+            </button>
+            <button class="btn-secondary" onclick="deleteSelectedPost()" id="btn-delete-post" style="display: none; color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">
+              🗑️ Excluir Post
+            </button>
+          </div>
+
+        </div>
+
+        <!-- SAÍDA DE CÓDIGO E PREVIEW RENDERIZADO -->
+        <div class="generator-output-box">
+          
+          <div class="output-header">
+            <h2 class="form-section-title" style="margin-bottom:0;">📋 Código Exportável</h2>
+            
+            <div class="format-toggle">
+              <button id="fmt-js" class="format-btn active" onclick="setOutputFormat('js')">JS Object</button>
+              <button id="fmt-md" class="format-btn" onclick="setOutputFormat('markdown')">Markdown</button>
+              <button id="fmt-html" class="format-btn" onclick="setOutputFormat('html')">HTML</button>
+            </div>
+          </div>
+
+          <div class="output-code-wrapper">
+            <pre id="code-display" class="code-display"></pre>
+          </div>
+
+          <div class="output-actions">
+            <button class="action-btn-primary" id="btn-copy-code" onclick="copyDevlogCode()">
+              📋 Copiar Código
+            </button>
+            <button class="btn-secondary" onclick="downloadDevlogFile()">
+              💾 Baixar Arquivo
+            </button>
+            <button class="btn-secondary" onclick="restoreDefaultData()" style="font-size: 0.75rem;">
+              🔄 Resetar Dados
+            </button>
+          </div>
+
+          <hr style="border: none; border-top: 1px solid var(--border-color); margin: 12px 0;">
+
+          <div>
+            <h3 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--text-main); font-weight: 700;">👁️ Pré-visualização do Card:</h3>
+            <div id="rendered-preview" class="preview-box"></div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+
+    <footer class="site-footer">
+      <p>Godoy Mods • Área de Edição e Gerenciamento de Publicações • <a href="index.html" style="color:var(--text-accent);">Voltar ao Site Principal</a></p>
+    </footer>
+
+  </div>
+
+  <!-- MODAL DE DETALHES DO POST / DEVLOG PARA PREVIEW -->
+  <div class="modal-overlay" id="post-modal-overlay" onclick="closePostModal(event)">
+    <div class="modal-container" onclick="event.stopPropagation()">
+      <button class="modal-close-btn" onclick="closePostModal()" aria-label="Fechar modal">✕</button>
+      
+      <div class="modal-header">
+        <div class="modal-tags" id="modal-tags"></div>
+        <h2 class="modal-title" id="modal-title"></h2>
+        <div class="modal-meta" id="modal-meta"></div>
+      </div>
+
+      <div class="modal-media" id="modal-media">
+        <div class="modal-media-bg" id="modal-media-bg"></div>
+        <img src="" id="modal-image" alt="Capa do Post" referrerpolicy="no-referrer">
+      </div>
+
+      <div class="modal-body-text" id="modal-content"></div>
+
+      <div class="modal-footer" id="modal-footer"></div>
+    </div>
+  </div>
+
+</body>
+</html>
+
