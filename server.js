@@ -111,10 +111,11 @@ app.get('/api/projects', (req, res) => {
 
 // API: Atualizar lista inteira de projetos no servidor
 app.post('/api/projects', (req, res) => {
-  const projects = req.body;
+  let projects = req.body;
   if (!Array.isArray(projects)) {
     return res.status(400).json({ error: 'Formato inválido. Esperado um Array de projetos.' });
   }
+  projects = projects.filter(p => p && p.id !== 'preview-temp-id');
   saveProjects(projects);
   res.json({ success: true, count: projects.length });
 });

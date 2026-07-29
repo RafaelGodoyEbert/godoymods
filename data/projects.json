@@ -374,24 +374,5 @@
     ],
     "content": "<p>A galera pediu e nós nos reunimos, a equipe Mathias Produções está fazendo a dublagem e a gente vai colocar no game e adicionar IA se necessário.</p>",
     "downloadUrl": ""
-  },
-  {
-    "id": "preview-temp-id",
-    "type": "ongoing",
-    "title": "The Warriors",
-    "date": "Em Andamento",
-    "platform": "PlayStation 2 / PSP",
-    "subtag": "Legendado",
-    "image": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.etsystatic.com%2F18798746%2Fr%2Fil%2Fa5fdbd%2F3005263405%2Fil_1588xN.3005263405_r8r1.jpg&f=1&nofb=1&ipt=aa54db65763c8675026b58acfe1f5377ac6b44274543a9c19888f4adbf04f6e2",
-    "tags": [
-      "PSP",
-      "PlayStation 2"
-    ],
-    "description": "Krisp está dedicando seu tempo para trazer a tradução desse jogo.",
-    "content": "<p>Krisp está dedicando seu tempo para trazer a tradução desse jogo.</p>\n\n<iframe src=\"https://rafaelgodoyebert.github.io/gpatch/\" width=\"100%\" height=\"800\" style=\"border:none; border-radius:12px; max-width:800px; margin:0 auto; display:block;\"></iframe>",
-    "downloadUrl": "",
-    "tagLinks": {
-      "PlayStation 2": "https://rafaelgodoyebert.github.io/gpatch/"
-    }
   }
 ]

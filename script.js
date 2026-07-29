@@ -148,7 +148,7 @@ function showCustomConfirm({ title, message, confirmText = 'Confirmar', cancelTe
 // ESTADO DOS PROJETOS
 let PROJECTS_DATA = [];
 
-// Carregar dados de /projects.json, /data/projects.json ou /api/projects
+// Carregar dados de /data/projects.json ou /api/projects
 async function loadProjectsFromServer() {
   function handleEditorAutoSelect() {
     if (document.getElementById("select-existing-post")) {
@@ -167,7 +167,7 @@ async function loadProjectsFromServer() {
     if (res.ok) {
       const serverProjects = await res.json();
       if (Array.isArray(serverProjects) && serverProjects.length > 0) {
-        PROJECTS_DATA = serverProjects;
+        PROJECTS_DATA = serverProjects.filter(p => p && p.id !== "preview-temp-id");
         renderAllCards();
         handleEditorAutoSelect();
         checkUrlHashAndOpenModal();
@@ -179,14 +179,14 @@ async function loadProjectsFromServer() {
   }
 
   // 2. Tentar carregar dos arquivos JSON estáticos
-  const jsonPaths = ["./data/projects.json", "./projects.json"];
+  const jsonPaths = ["./data/projects.json"];
   for (const path of jsonPaths) {
     try {
       const jsonRes = await fetch(path);
       if (jsonRes.ok) {
         const localProjects = await jsonRes.json();
         if (Array.isArray(localProjects) && localProjects.length > 0) {
-          PROJECTS_DATA = localProjects;
+          PROJECTS_DATA = localProjects.filter(p => p && p.id !== "preview-temp-id");
           renderAllCards();
           handleEditorAutoSelect();
           checkUrlHashAndOpenModal();
@@ -201,10 +201,11 @@ async function loadProjectsFromServer() {
 
 async function syncProjectsToServer() {
   try {
+    const dataToSync = PROJECTS_DATA.filter(p => p && p.id !== "preview-temp-id");
     await fetch("/api/projects", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(PROJECTS_DATA)
+      body: JSON.stringify(dataToSync)
     });
   } catch (err) {
     console.error("Erro ao salvar projetos no servidor:", err);
@@ -1634,7 +1635,8 @@ function savePostToSiteFeed() {
 
   // Salvar no localStorage e Servidor
   try {
-    localStorage.setItem("godoy_projects_data", JSON.stringify(PROJECTS_DATA));
+    const cleanProjects = PROJECTS_DATA.filter(p => p && p.id !== "preview-temp-id");
+    localStorage.setItem("godoy_projects_data", JSON.stringify(cleanProjects));
   } catch (e) {
     console.error("Erro ao salvar no localStorage", e);
   }
