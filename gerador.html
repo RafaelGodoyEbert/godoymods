@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="no-referrer">
   <title>Criador & Editor de Posts - Godoy Mods</title>
+  <link rel="icon" type="image/png" href="https://i.imgur.com/OgaeHFx.png">
+  <link rel="shortcut icon" href="https://i.imgur.com/OgaeHFx.png">
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
   <script src="script.js" defer></script>
 </head>
 <body class="generator-subpage">
@@ -33,13 +36,23 @@
       <div class="admin-notice-card">
         <div class="notice-icon">✏️</div>
         <div class="notice-text">
-          <h3>Edição e Criação de Publicações</h3>
-          <p>Selecione um post da lista abaixo para <strong>editar a imagem de capa, títulos, textos e links</strong>, ou crie uma nova publicação do zero. Ao salvar, as alterações são aplicadas imediatamente no feed do site!</p>
+          <h3>Edição de Publicações e Integrantes da Equipe</h3>
+          <p>Alterne entre a gestão de <strong>Posts & Devlogs</strong> ou a gestão dos <strong>Membros da Equipe (Godoy & Krisp)</strong>. Ao salvar, as alterações são aplicadas imediatamente no site!</p>
         </div>
       </div>
 
-      <!-- PAINEL DO GERADOR / EDITOR -->
-      <div class="generator-container">
+      <!-- MODOS DE GERENCIAMENTO -->
+      <div class="admin-mode-tabs">
+        <button class="admin-mode-btn active" id="admin-tab-posts" onclick="switchAdminSection('posts')">
+          📰 Publicações & Devlogs
+        </button>
+        <button class="admin-mode-btn" id="admin-tab-team" onclick="switchAdminSection('team')">
+          👥 Membros da Equipe (Godoy & Krisp)
+        </button>
+      </div>
+
+      <!-- SEÇÃO 1: GERENCIADOR DE POSTS -->
+      <div id="section-admin-posts" class="generator-container">
         
         <!-- FORMULÁRIO DE ENTRADA E EDIÇÃO -->
         <div class="generator-form-box">
@@ -72,7 +85,7 @@
           <div class="form-row-2">
             <div class="form-group">
               <label class="form-label" for="input-type">Tipo de Publicação:</label>
-              <select id="input-type" class="form-input" onchange="updateGeneratorPreview()">
+              <select id="input-type" class="form-input" onchange="handleTypeChange()">
                 <option value="devlog">📰 Devlog / Atualização de Progresso</option>
                 <option value="ongoing">⚙️ Projeto Em Andamento</option>
                 <option value="completed">✅ Projeto Concluído / Download</option>
@@ -85,6 +98,18 @@
             <div class="form-group">
               <label class="form-label" for="input-platform">Plataforma Principal:</label>
               <input type="text" id="input-platform" class="form-input" placeholder="Ex: PlayStation 2, PS3, PC" oninput="updateGeneratorPreview()">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-subtag">🏷️ Subtag / Tipo de Localização (Dublado / Legendado / Port / IA):</label>
+            <input type="text" id="input-subtag" class="form-input" placeholder="Ex: Dublado, Legendado, Port, Dublagem IA" oninput="updateGeneratorPreview()">
+            <div class="subtag-presets">
+              <button type="button" class="preset-btn" onclick="setPresetSubtag('Dublado')">🎙️ Dublado</button>
+              <button type="button" class="preset-btn" onclick="setPresetSubtag('Legendado')">📝 Legendado</button>
+              <button type="button" class="preset-btn" onclick="setPresetSubtag('Port')">🔄 Port</button>
+              <button type="button" class="preset-btn" onclick="setPresetSubtag('Dublado (IA)')">🤖 Dublado (IA)</button>
+              <button type="button" class="preset-btn" onclick="setPresetSubtag('Dublado / Port')">🎙️ Dublado / Port</button>
             </div>
           </div>
 
@@ -117,7 +142,17 @@
 
           <div class="form-group">
             <label class="form-label" for="input-tags">Tags / Filtros (separadas por vírgula):</label>
-            <input type="text" id="input-tags" class="form-input" placeholder="Ex: Dublagem IA, PS2, PS3, PT-BR" oninput="updateGeneratorPreview()">
+            <input type="text" id="input-tags" class="form-input" placeholder="Ex: PC, PlayStation 3, PlayStation 2, Android, Xbox 360" oninput="handleTagsInputChange()">
+          </div>
+
+          <div class="form-group" id="container-tag-links">
+            <label class="form-label">📥 Links de Download Direto por Plataforma / Tag (Opcional):</label>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">
+              Insira o link direto de download (ex: MediaFire, Mega, Google Drive) para cada plataforma/tag digitada acima. Ao salvar, as tags ficarão destacadas em verde e redirecionarão para o download direto.
+            </p>
+            <div id="tag-links-fields-wrapper" style="display: flex; flex-direction: column; gap: 8px;">
+              <!-- Gerado dinamicamente com base nas tags informadas acima -->
+            </div>
           </div>
 
           <div class="form-group">
@@ -126,8 +161,45 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="input-content">Conteúdo Completo (Aparece ao Clicar / Modal):</label>
-            <textarea id="input-content" class="form-textarea" style="min-height: 120px;" placeholder="Escreva o texto do post completo em HTML ou texto formatado com tags <p>, <h3>, <ul>..." oninput="updateGeneratorPreview()"></textarea>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+              <label class="form-label" for="input-content" style="margin-bottom: 0;">📝 Conteúdo Completo do Post (Estilo Blog):</label>
+              <button type="button" class="btn-secondary" onclick="previewCurrentPostModal()" style="font-size: 0.775rem; padding: 4px 10px; background-color: var(--accent-primary); color: #ffffff; border-color: var(--accent-primary);" title="Ver exatamente como a matéria fica no modal com vídeos e imagens">
+                👁️ Ver Prévia em Tela Cheia
+              </button>
+            </div>
+            
+            <!-- Barra de Ferramentas do Editor de Blog -->
+            <div class="editor-toolbar">
+              <button type="button" class="toolbar-btn toolbar-btn-highlight" onclick="insertContentSnippet('iframe')" title="Inserir Vídeo do YouTube ou código de <iframe>">
+                🎥 + Vídeo / iframe
+              </button>
+              <button type="button" class="toolbar-btn toolbar-btn-highlight" onclick="insertContentSnippet('image')" title="Inserir Imagem com legenda">
+                🖼️ + Imagem
+              </button>
+              <button type="button" class="toolbar-btn" onclick="insertContentSnippet('subtitle')" title="Inserir Subtítulo H3">
+                📌 Subtítulo (H3)
+              </button>
+              <button type="button" class="toolbar-btn" onclick="insertContentSnippet('paragraph')" title="Inserir Parágrafo">
+                📄 Parágrafo
+              </button>
+              <button type="button" class="toolbar-btn" onclick="insertContentSnippet('list')" title="Inserir Lista com Marcadores">
+                • Lista (ul)
+              </button>
+              <button type="button" class="toolbar-btn" onclick="insertContentSnippet('quote')" title="Inserir Bloco de Citação">
+                💬 Citação
+              </button>
+              <button type="button" class="toolbar-btn" onclick="insertContentSnippet('bold')" title="Texto em Negrito">
+                <b>B</b> Negrito
+              </button>
+              <button type="button" class="toolbar-btn" onclick="insertContentSnippet('link')" title="Inserir Link de Web">
+                🔗 Link
+              </button>
+            </div>
+
+            <textarea id="input-content" class="form-textarea editor-textarea" style="min-height: 200px; border-top-left-radius: 0; border-top-right-radius: 0;" placeholder="Escreva o texto do post à vontade. Use os botões acima para colocar vídeos (YouTube/iframes), imagens, subtítulos, listas e links..." oninput="updateGeneratorPreview()"></textarea>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
+              💡 Dica: Escreva à vontade! Você pode colear links do YouTube ou usar os botões para incluir imagens e vídeos.
+            </p>
           </div>
 
           <div class="form-group">
@@ -137,13 +209,14 @@
 
           <!-- BOTÕES DE AÇÃO DO EDITOR -->
           <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
-            <button class="action-btn-primary" onclick="savePostToSiteFeed()" style="flex: 1; min-width: 180px; justify-content: center; padding: 12px;">
-              💾 Salvar Alterações no Site
+            <button type="button" class="action-btn-primary" id="btn-save-post" onclick="savePostToSiteFeed()" style="flex: 1; min-width: 180px; justify-content: center; padding: 12px;">
+              💾 Salvar Publicação
             </button>
-            <button class="btn-secondary" onclick="deleteSelectedPost()" id="btn-delete-post" style="display: none; color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">
+            <button type="button" class="btn-secondary" onclick="deleteSelectedPost()" id="btn-delete-post" style="display: none; color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">
               🗑️ Excluir Post
             </button>
           </div>
+          <div id="post-save-feedback" style="display: none; margin-top: 12px; padding: 12px 16px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #10b981; border-radius: 8px; font-size: 0.875rem; font-weight: 700; align-items: center; gap: 8px;"></div>
 
         </div>
 
@@ -183,6 +256,130 @@
             <div id="rendered-preview" class="preview-box"></div>
           </div>
 
+        </div>
+
+      </div>
+
+      <!-- SEÇÃO 2: GERENCIADOR DA EQUIPE -->
+      <div id="section-admin-team" class="generator-container" style="display: none;">
+        
+        <!-- FORMULÁRIO DE EDIÇÃO DE MEMBRO DA EQUIPE -->
+        <div class="generator-form-box">
+          
+          <div style="background: var(--bg-input); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+            <label class="form-label" for="select-team-member" style="font-size: 0.9rem; font-weight: 700; color: var(--accent-primary); display: flex; align-items: center; gap: 6px;">
+              👥 Selecionar Integrante da Equipe:
+            </label>
+            <div style="display: flex; gap: 8px; margin-top: 6px; width: 100%;">
+              <select id="select-team-member" class="form-input" onchange="loadSelectedTeamMemberForEdit()" style="flex: 1; min-width: 0; font-weight: 600; cursor: pointer;">
+                <option value="rafael-godoy">👑 Rafael Godoy (Godoy)</option>
+                <option value="krisp">⚡ Krisp (Co-criador & Modder)</option>
+                <option value="new_member">➕ [Adicionar Novo Integrante]</option>
+              </select>
+              <button class="btn-secondary" onclick="resetTeamFormToNew()" style="white-space: nowrap; padding: 0 14px; flex-shrink: 0;">✨ Novo</button>
+            </div>
+          </div>
+
+          <h2 class="form-section-title" id="team-form-heading">👤 Dados do Integrante</h2>
+          
+          <input type="hidden" id="team-input-id" value="rafael-godoy">
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="team-input-name">Nome Completo / Apelido:</label>
+              <input type="text" id="team-input-name" class="form-input" placeholder="Ex: Krisp ou Rafael Godoy" oninput="updateTeamPreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="team-input-role">Cargo / Função na Equipe:</label>
+              <input type="text" id="team-input-role" class="form-input" placeholder="Ex: Co-criador & Modder" oninput="updateTeamPreview()">
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="team-input-badge">Selo / Badge:</label>
+              <input type="text" id="team-input-badge" class="form-input" placeholder="Ex: ⚡ Equipe Principal" oninput="updateTeamPreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="team-input-status">🏷️ Tag de Atividade na Equipe:</label>
+              <select id="team-input-status" class="form-input" onchange="updateTeamPreview()">
+                <option value="Em Atividade">🟢 Em Atividade</option>
+                <option value="Aposentado">🏖️ Aposentado</option>
+                <option value="Sumido">👻 Sumido</option>
+              </select>
+              <div class="subtag-presets" style="margin-top: 6px;">
+                <button type="button" class="preset-btn" onclick="setTeamStatusPreset('Em Atividade')">🟢 Em Atividade</button>
+                <button type="button" class="preset-btn" onclick="setTeamStatusPreset('Aposentado')">🏖️ Aposentado</button>
+                <button type="button" class="preset-btn" onclick="setTeamStatusPreset('Sumido')">👻 Sumido</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="team-input-avatar">🖼️ URL ou Arquivo da Foto / Avatar:</label>
+            <div style="display: flex; gap: 8px; align-items: center; width: 100%;">
+              <input type="text" id="team-input-avatar" class="form-input" style="flex: 1; min-width: 0;" placeholder="https://exemplo.com/avatar.jpg" oninput="updateTeamPreview()">
+              <label class="btn-secondary" style="margin: 0; padding: 8px 12px; cursor: pointer; flex-shrink: 0; white-space: nowrap;">
+                📁 Upload
+                <input type="file" id="team-input-avatar-file" accept="image/*" style="display: none;" onchange="handleTeamAvatarUpload(event)">
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="team-input-bio">Biografia / Apresentação:</label>
+            <textarea id="team-input-bio" class="form-textarea" style="min-height: 80px;" placeholder="Resumo das atividades do membro na equipe..." oninput="updateTeamPreview()"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="team-input-specs">Especialidades (separadas por vírgula):</label>
+            <input type="text" id="team-input-specs" class="form-input" placeholder="Ex: Dublagens, Traduções, Testes & QA" oninput="updateTeamPreview()">
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="team-input-discord">Link do Discord ou User:</label>
+              <input type="text" id="team-input-discord" class="form-input" placeholder="Ex: https://discord.com/invite/... ou Krisp0o" oninput="updateTeamPreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="team-input-youtube">Link do YouTube (Opcional):</label>
+              <input type="text" id="team-input-youtube" class="form-input" placeholder="https://youtube.com/@seucanal" oninput="updateTeamPreview()">
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="team-input-twitter">Link do Twitter / X:</label>
+              <input type="text" id="team-input-twitter" class="form-input" placeholder="https://x.com/Krisp0o" oninput="updateTeamPreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="team-input-steam">Link da Steam:</label>
+              <input type="text" id="team-input-steam" class="form-input" placeholder="https://steamcommunity.com/id/thekrisp/" oninput="updateTeamPreview()">
+            </div>
+          </div>
+
+          <!-- BOTÕES DE AÇÃO DO GERENCIADOR DE EQUIPE -->
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
+            <button type="button" class="action-btn-primary" id="btn-save-team" onclick="saveTeamMember()" style="flex: 1; min-width: 180px; justify-content: center; padding: 12px;">
+              💾 Salvar Integrante
+            </button>
+            <button type="button" class="btn-secondary" onclick="deleteSelectedTeamMember()" id="btn-delete-team-member" style="display: none; color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">
+              🗑️ Remover Integrante
+            </button>
+          </div>
+          <div id="team-save-feedback" style="display: none; margin-top: 12px; padding: 12px 16px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #10b981; border-radius: 8px; font-size: 0.875rem; font-weight: 700; align-items: center; gap: 8px;"></div>
+
+        </div>
+
+        <!-- PREVIEW DO CARD DO MEMBRO -->
+        <div class="generator-output-box">
+          <h2 class="form-section-title">👁️ Pré-visualização do Card da Equipe</h2>
+          <div id="team-rendered-preview" class="preview-box"></div>
+
+          <div style="margin-top: 20px;">
+            <h3 style="font-size: 0.9rem; color: var(--text-main); font-weight: 700; margin-bottom: 8px;">📋 JSON da Equipe Completa:</h3>
+            <pre id="team-code-display" class="code-display" style="max-height: 200px;"></pre>
+          </div>
         </div>
 
       </div>

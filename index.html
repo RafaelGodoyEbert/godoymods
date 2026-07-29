@@ -5,8 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="no-referrer">
   <title>Godoy Mods - Modding, Traduções & Devlogs de Jogos</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="script.js" defer></script>
+  <link rel="icon" type="image/png" href="https://i.imgur.com/OgaeHFx.png">
+  <link rel="shortcut icon" href="https://i.imgur.com/OgaeHFx.png">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script src="./script.js" defer></script>
 </head>
 <body>
 
@@ -14,7 +17,7 @@
   <header class="mobile-navbar">
     <div class="mobile-nav-content">
       <div class="mobile-logo">
-        <span class="logo-badge">GM</span>
+        <img src="https://i.imgur.com/OgaeHFx.png" alt="Godoy Mods Logo" style="width: 26px; height: 26px; border-radius: 6px; object-fit: cover;">
         <span class="mobile-site-title">Godoy Mods</span>
       </div>
       <div class="mobile-controls">
@@ -39,32 +42,33 @@
         <button onclick="toggleMobileSidebar()" class="close-btn">✕</button>
       </div>
 
-      <!-- PERFIL DO MODDER -->
-      <div class="profile-section">
-        <div class="avatar-wrapper">
-          <img src="https://i.imgur.com/OgaeHFx.png" alt="Rafael Godoy" class="avatar-img">
-          <span class="status-badge" title="Online no Discord"></span>
+      <!-- MARCA E EQUIPE GODOY MODS -->
+      <div class="team-brand-section">
+        <!-- AVATARS DA EQUIPE NO TOPO -->
+        <div class="team-avatars-top" onclick="switchTab('team')" title="Ver equipe Godoy Mods">
+          <div class="avatar-overlap-container">
+            <img src="https://i.imgur.com/OgaeHFx.png" alt="Rafael Godoy" class="team-avatar-img primary-avatar" title="Rafael Godoy (Fundador)">
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=100&q=80" alt="Krisp" class="team-avatar-img secondary-avatar" title="Krisp (Engenharia Reversa)">
+            <span class="status-badge" title="Equipe Ativa"></span>
+          </div>
+          <div class="team-members-names">
+            <span>Rafael Godoy</span>
+            <span class="ampersand">&</span>
+            <span>Krisp</span>
+          </div>
         </div>
-        <h2 class="profile-name">Rafael Godoy</h2>
-        <span class="profile-tag">Curioso</span>
-        <p class="profile-bio">
-          Traduções, dublagens em PT-BR por IA e ports de jogos para PC, PS3, Xbox 360, PS2 e Android.
+
+        <h2 class="brand-title">Godoy Mods</h2>
+        <span class="brand-tag">Equipe de Modding & Dublagens</span>
+        <p class="brand-bio">
+          Traduções, dublagens em PT-BR por IA, engenharia reversa e ports para PC, PS2, PS3, Xbox 360 e Android.
         </p>
-      </div>
 
-      <hr class="sidebar-divider">
-
-      <!-- FILTRO DE PLATAFORMAS DE JOGOS -->
-      <div class="sidebar-block">
-        <div class="sidebar-title">🎮 Plataformas</div>
-        <div class="filter-pills">
-          <button class="pill-btn active" data-platform="all" onclick="setFilter('all')">Todos</button>
-          <button class="pill-btn" data-platform="PC" onclick="setFilter('PC')">PC</button>
-          <button class="pill-btn" data-platform="PlayStation 2" onclick="setFilter('PlayStation 2')">PS2</button>
-          <button class="pill-btn" data-platform="PlayStation 3" onclick="setFilter('PlayStation 3')">PS3</button>
-          <button class="pill-btn" data-platform="Xbox 360" onclick="setFilter('Xbox 360')">Xbox 360</button>
-          <button class="pill-btn" data-platform="Android" onclick="setFilter('Android')">Android</button>
-        </div>
+        <!-- BOTAO PARA VER EQUIPE COMPLETA -->
+        <button class="sidebar-team-btn" onclick="switchTab('team')" title="Clique para ver a página da equipe">
+          <span>👥 Ver Equipe Completa</span>
+          <span class="arrow-icon">→</span>
+        </button>
       </div>
 
       <hr class="sidebar-divider">
@@ -138,25 +142,71 @@
           <button class="nav-tab-btn active" id="tab-btn-devlogs" data-tab="devlogs" onclick="switchTab('devlogs')">
             <span class="tab-icon">📰</span> Devlogs & Notícias
           </button>
-          <button class="nav-tab-btn" id="tab-btn-completed" data-tab="completed" onclick="switchTab('completed')">
-            <span class="tab-icon">✅</span> Concluídos <span class="nav-badge" id="badge-completed">0</span>
-          </button>
-          <button class="nav-tab-btn" id="tab-btn-ongoing" data-tab="ongoing" onclick="switchTab('ongoing')">
-            <span class="tab-icon">⚙️</span> Em Andamento <span class="nav-badge" id="badge-ongoing">0</span>
-          </button>
-          <button class="nav-tab-btn" id="tab-btn-paid" data-tab="paid" onclick="switchTab('paid')">
-            <span class="tab-icon">💰</span> Pagos / Financiados <span class="nav-badge" id="badge-paid">0</span>
-          </button>
-          <button class="nav-tab-btn" id="tab-btn-archived" data-tab="archived" onclick="switchTab('archived')">
-            <span class="tab-icon">📦</span> Arquivados <span class="nav-badge" id="badge-archived">0</span>
-          </button>
-          <button class="nav-tab-btn" id="tab-btn-abandoned" data-tab="abandoned" onclick="switchTab('abandoned')">
-            <span class="tab-icon">🚫</span> Abandonados <span class="nav-badge" id="badge-abandoned">0</span>
+          <button class="nav-tab-btn" id="tab-btn-projects" data-tab="projects" onclick="switchTab('projects')">
+            <span class="tab-icon">🎮</span> Catálogo de Projetos <span class="nav-badge" id="badge-projects">0</span>
           </button>
           <button class="nav-tab-btn" id="tab-btn-contact" data-tab="contact" onclick="switchTab('contact')">
             <span class="tab-icon">🛒</span> Comprar / Encomendar
           </button>
+          <button class="nav-tab-btn" id="tab-btn-team" data-tab="team" onclick="switchTab('team')">
+            <span class="tab-icon">👥</span> Nossa Equipe <span class="nav-badge" id="badge-team">2</span>
+          </button>
         </nav>
+
+        <!-- BARRA COMPACTA DE FILTROS SUPERIOR (DROPDOWNS INTELIGENTES) -->
+        <div class="filter-toolbar" id="main-filter-panel">
+          
+          <div class="filter-controls-group">
+            <!-- DROPDOWN STATUS -->
+            <div class="filter-select-box">
+              <span class="filter-select-icon">📌</span>
+              <select id="select-status-filter" class="filter-select" onchange="setStatusFilter(this.value)">
+                <option value="all">Status: Todos</option>
+                <option value="completed">✅ Concluídos</option>
+                <option value="ongoing">⚙️ Em Andamento</option>
+                <option value="paid">💰 Pagos / Financiados</option>
+                <option value="archived">📦 Arquivados</option>
+                <option value="abandoned">🚫 Abandonados</option>
+              </select>
+            </div>
+
+            <!-- DROPDOWN PLATAFORMA -->
+            <div class="filter-select-box">
+              <span class="filter-select-icon">🎮</span>
+              <select id="select-platform-filter" class="filter-select" onchange="setPlatformFilter(this.value)">
+                <option value="all">Plataforma: Todas</option>
+                <option value="PC">💻 PC</option>
+                <option value="PS2">🎮 PlayStation 2</option>
+                <option value="PS3">🎮 PlayStation 3</option>
+                <option value="Xbox 360">🟢 Xbox 360</option>
+                <option value="Android">📱 Android</option>
+              </select>
+            </div>
+
+            <!-- DROPDOWN SUBTAG / IDIOMA -->
+            <div class="filter-select-box">
+              <span class="filter-select-icon">🏷️</span>
+              <select id="select-subtag-filter" class="filter-select" onchange="setSubtagFilter(this.value)">
+                <option value="all">Tipo: Todos</option>
+                <option value="dublado">🎙️ Dublado</option>
+                <option value="legendado">📝 Legendado</option>
+                <option value="port">🔄 Port</option>
+                <option value="ia">🤖 Dublagem IA</option>
+              </select>
+            </div>
+
+            <!-- BOTAO LIMPAR FILTROS -->
+            <button id="btn-clear-filters" class="btn-clear-filters" onclick="clearAllFilters()" style="display: none;">
+              ✕ Limpar Filtros
+            </button>
+          </div>
+
+          <!-- CONTADOR COMPACTO DE RESULTADOS -->
+          <div class="filter-results-counter" id="filter-results-counter">
+            Exibindo <strong id="results-count-num">0</strong> itens
+          </div>
+
+        </div>
       </header>
 
       <!-- TAB 1: DEVLOGS -->
@@ -166,39 +216,28 @@
         </div>
       </section>
 
-      <!-- TAB 2: PROJETOS CONCLUÍDOS -->
+      <!-- TAB 2: CATÁLOGO UNIFICADO DE PROJETOS -->
+      <section id="pane-projects" class="tab-pane">
+        <div class="cards-grid" id="grid-projects">
+          <!-- Renderizado via JavaScript -->
+        </div>
+      </section>
+
+      <!-- SECÇÕES DE SUPORTE E COMPATIBILIDADE -->
       <section id="pane-completed" class="tab-pane">
-        <div class="cards-grid" id="grid-completed">
-          <!-- Renderizado via JavaScript -->
-        </div>
+        <div class="cards-grid" id="grid-completed"></div>
       </section>
-
-      <!-- TAB 3: PROJETOS EM ANDAMENTO -->
       <section id="pane-ongoing" class="tab-pane">
-        <div class="cards-grid" id="grid-ongoing">
-          <!-- Renderizado via JavaScript -->
-        </div>
+        <div class="cards-grid" id="grid-ongoing"></div>
       </section>
-
-      <!-- TAB 4: PROJETOS PAGOS / FINANCIADOS -->
       <section id="pane-paid" class="tab-pane">
-        <div class="cards-grid" id="grid-paid">
-          <!-- Renderizado via JavaScript -->
-        </div>
+        <div class="cards-grid" id="grid-paid"></div>
       </section>
-
-      <!-- TAB 5: PROJETOS ARQUIVADOS -->
       <section id="pane-archived" class="tab-pane">
-        <div class="cards-grid" id="grid-archived">
-          <!-- Renderizado via JavaScript -->
-        </div>
+        <div class="cards-grid" id="grid-archived"></div>
       </section>
-
-      <!-- TAB 6: PROJETOS ABANDONADOS -->
       <section id="pane-abandoned" class="tab-pane">
-        <div class="cards-grid" id="grid-abandoned">
-          <!-- Renderizado via JavaScript -->
-        </div>
+        <div class="cards-grid" id="grid-abandoned"></div>
       </section>
 
       <!-- TAB 7: ENCOMENDAR / COMPRAR PROJETO & CONTATO -->
@@ -373,6 +412,52 @@
 
             </div>
 
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TAB 8: NOSSA EQUIPE -->
+      <section id="pane-team" class="tab-pane">
+        <div class="team-section-container">
+          
+          <div class="team-hero-banner">
+            <div class="team-hero-content">
+              <span class="team-hero-badge">👥 Equipe Godoy Mods</span>
+              <h2>Conheça os Criadores por Trás dos Mods & Dublagens</h2>
+              <p>Somos uma equipe focada em trazer localização de alta qualidade, dublagens em português (PT-BR) com Inteligência Artificial e ports para consoles clássicos como PS2, PS3 e Xbox 360.</p>
+            </div>
+            <div class="team-stats-row">
+              <div class="team-stat-box">
+                <span class="stat-number" id="team-count-val">2</span>
+                <span class="stat-label">Integrantes da Equipe</span>
+              </div>
+              <div class="team-stat-box">
+                <span class="stat-number">10+</span>
+                <span class="stat-label">Projetos Ativos</span>
+              </div>
+              <div class="team-stat-box">
+                <span class="stat-number">5</span>
+                <span class="stat-label">Plataformas de Jogos</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- GRID DE MEMBROS DA EQUIPE (DUAS PESSOAS: GODOY & KRISP) -->
+          <div class="team-grid" id="grid-team">
+            <!-- Renderizado dinamicamente via script.js -->
+          </div>
+
+          <!-- CARD DE COLABORAÇÃO E COMUNIDADE -->
+          <div class="team-join-banner">
+            <div class="join-icon">🤝</div>
+            <div class="join-text">
+              <h3>Quer colaborar com a equipe do Godoy Mods?</h3>
+              <p>Trabalha com extração de arquivos de jogos, dublagem, edição de áudio, engenharia de som ou programação? Venha bater um papo no nosso Discord oficial!</p>
+            </div>
+            <a href="https://discord.com/invite/atFQmmR2fy" target="_blank" rel="noopener" class="btn-primary-action" style="padding: 10px 20px; font-size: 0.85rem; white-space: nowrap;">
+              💬 Falar no Discord
+            </a>
           </div>
 
         </div>
