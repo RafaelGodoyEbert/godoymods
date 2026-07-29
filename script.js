@@ -1013,19 +1013,37 @@ function previewCurrentPostModal() {
   openPostModal("preview-temp-id");
 }
 
+let isModalHistoryPushed = false;
+
+// Ouvinte para o botão "Voltar" do celular / navegador para fechar o modal
+window.addEventListener("popstate", () => {
+  const modalOverlay = document.getElementById("post-modal-overlay");
+  if (modalOverlay && modalOverlay.classList.contains("active")) {
+    isModalHistoryPushed = false;
+    hidePostModalUI();
+  }
+});
+
 // LÓGICA DO MODAL DE DETALHES DO POST
 function openPostModal(postId) {
   const item = PROJECTS_DATA.find(p => p.id === postId);
   if (!item) return;
 
-  // Atualizar a URL com o hash do post sem recarregar a página
-  if (postId !== "preview-temp-id" && window.location.hash !== `#${postId}`) {
+  const modalOverlay = document.getElementById("post-modal-overlay");
+  if (!modalOverlay) return;
+
+  // Atualizar a URL e adicionar entrada no histórico para o botão "Voltar" do celular fechar o modal
+  if (postId !== "preview-temp-id" && !modalOverlay.classList.contains("active")) {
     try {
-      history.replaceState(null, null, `#${postId}`);
+      history.pushState({ modalOpen: true, postId: postId }, "", `#${postId}`);
+      isModalHistoryPushed = true;
+    } catch (e) { }
+  } else if (postId !== "preview-temp-id" && window.location.hash !== `#${postId}`) {
+    try {
+      history.replaceState({ modalOpen: true, postId: postId }, "", `#${postId}`);
     } catch (e) { }
   }
 
-  const modalOverlay = document.getElementById("post-modal-overlay");
   const modalTags = document.getElementById("modal-tags");
   const modalTitle = document.getElementById("modal-title");
   const modalMeta = document.getElementById("modal-meta");
@@ -1033,8 +1051,6 @@ function openPostModal(postId) {
   const modalMediaBg = document.getElementById("modal-media-bg");
   const modalContent = document.getElementById("modal-content");
   const modalFooter = document.getElementById("modal-footer");
-
-  if (!modalOverlay) return;
 
   // Subtag
   let subtagBadgeHTML = "";
@@ -1151,47 +1167,57 @@ function closePostModal(e) {
   if (e && e.target && e.target.id !== "post-modal-overlay" && !e.target.classList.contains("modal-close-btn") && !e.target.classList.contains("btn-secondary-action")) {
     return;
   }
+
+  if (isModalHistoryPushed) {
+    isModalHistoryPushed = false;
+    history.back();
+    return;
+  }
+
+  if (window.location.hash) {
+    try {
+      history.replaceState(null, null, window.location.pathname + window.location.search);
+    } catch (err) { }
+  }
+
+  hidePostModalUI();
+}
+
+function hidePostModalUI() {
   const modalOverlay = document.getElementById("post-modal-overlay");
-  if (modalOverlay) {
-    // Limpar hash da URL ao fechar modal
-    if (window.location.hash) {
-      try {
-        history.replaceState(null, null, window.location.pathname + window.location.search);
-      } catch (err) { }
-    }
+  if (!modalOverlay) return;
 
-    if (typeof anime !== 'undefined') {
-      const modalContainer = modalOverlay.querySelector(".modal-container");
-      anime.remove([modalOverlay, modalContainer]);
+  if (typeof anime !== 'undefined') {
+    const modalContainer = modalOverlay.querySelector(".modal-container");
+    anime.remove([modalOverlay, modalContainer]);
 
-      anime({
-        targets: modalContainer,
-        opacity: 0,
-        scale: 0.94,
-        translateY: 25,
-        duration: 200,
-        easing: 'easeInQuad'
-      });
+    anime({
+      targets: modalContainer,
+      opacity: 0,
+      scale: 0.94,
+      translateY: 25,
+      duration: 200,
+      easing: 'easeInQuad'
+    });
 
-      anime({
-        targets: modalOverlay,
-        opacity: 0,
-        duration: 200,
-        easing: 'easeInQuad',
-        complete: () => {
-          modalOverlay.classList.remove("active");
-          modalOverlay.style.opacity = "";
-          if (modalContainer) {
-            modalContainer.style.opacity = "";
-            modalContainer.style.transform = "";
-          }
-          document.body.style.overflow = ""; // Restaurar rolagem
+    anime({
+      targets: modalOverlay,
+      opacity: 0,
+      duration: 200,
+      easing: 'easeInQuad',
+      complete: () => {
+        modalOverlay.classList.remove("active");
+        modalOverlay.style.opacity = "";
+        if (modalContainer) {
+          modalContainer.style.opacity = "";
+          modalContainer.style.transform = "";
         }
-      });
-    } else {
-      modalOverlay.classList.remove("active");
-      document.body.style.overflow = ""; // Restaurar rolagem
-    }
+        document.body.style.overflow = ""; // Restaurar rolagem
+      }
+    });
+  } else {
+    modalOverlay.classList.remove("active");
+    document.body.style.overflow = ""; // Restaurar rolagem
   }
 }
 
