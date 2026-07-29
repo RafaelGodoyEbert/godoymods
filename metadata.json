@@ -1,0 +1,8 @@
+{
+  "name": "Godoy Mods",
+  "description": "Website oficial e Gerador de Devlogs para Godoy Mods - Traduções, Dublagens de Jogos e Projetos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

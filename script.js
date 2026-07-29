@@ -3,7 +3,7 @@
 // Limpeza de localStorage de projetos legados/antigos
 try {
   localStorage.removeItem("godoy_projects_data");
-} catch (e) {}
+} catch (e) { }
 
 // Funções utilitárias para extensões e ícones de plataformas
 function getExtBadge(platKey) {
@@ -237,7 +237,7 @@ const DEFAULT_TEAM_DATA = [
     "nickname": "Krisp",
     "role": "Cérebro Técnico & Lead Reverse Engineer",
     "badge": "🧠 Cérebro Técnico",
-    "avatar": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80",
+    "avatar": "https://imgur.com/l5vqXKF.jpeg",
     "status": "Em Atividade",
     "bio": "Cérebro técnico responsável pela arquitetura avançada de engenharia reversa no Godoy Mods. Desenvolve ferramentas customizadas para codecs proprietários de áudio da EA e formatos da Ubisoft. Entre seus destaques de modding, realizou o port completo do jogo Undertale do PS4 para PS3.",
     "specialties": ["Engenharia Reversa", "Codecs da EA & Ubisoft", "Port PS4 → PS3", "Ferramentas de Áudio"],
@@ -277,7 +277,7 @@ async function loadTeamFromServer() {
         TEAM_DATA = serverTeam;
         try {
           localStorage.setItem("godoy_team_data", JSON.stringify(TEAM_DATA));
-        } catch (e) {}
+        } catch (e) { }
         renderTeamCards();
         if (document.getElementById("select-team-member")) {
           populateTeamSelector();
@@ -300,7 +300,7 @@ async function loadTeamFromServer() {
         TEAM_DATA = localTeam;
         try {
           localStorage.setItem("godoy_team_data", JSON.stringify(TEAM_DATA));
-        } catch (e) {}
+        } catch (e) { }
         renderTeamCards();
         if (document.getElementById("select-team-member")) {
           populateTeamSelector();
@@ -308,7 +308,7 @@ async function loadTeamFromServer() {
         return;
       }
     }
-  } catch (err) {}
+  } catch (err) { }
   renderTeamCards();
 }
 
@@ -533,7 +533,7 @@ function checkMatchSubtag(item, filterKey) {
 function checkMatchPlatform(item, filterKey) {
   if (!filterKey || filterKey === "all") return true;
   const key = filterKey.toLowerCase().trim();
-  
+
   const platformStr = (item.platform || "").toLowerCase();
   const tagsArr = (item.tags || []).map(t => t.toLowerCase());
   const titleStr = (item.title || "").toLowerCase();
@@ -541,36 +541,36 @@ function checkMatchPlatform(item, filterKey) {
   const contentStr = (item.content || "").toLowerCase();
 
   if (key === "android") {
-    return platformStr.includes("android") || 
-           tagsArr.includes("android") || 
-           descStr.includes("android") ||
-           titleStr.includes("android") ||
-           contentStr.includes("android");
+    return platformStr.includes("android") ||
+      tagsArr.includes("android") ||
+      descStr.includes("android") ||
+      titleStr.includes("android") ||
+      contentStr.includes("android");
   }
-  
+
   if (key === "pc") {
-    return platformStr.includes("pc") || 
-           tagsArr.includes("pc") || 
-           descStr.includes("pc") ||
-           titleStr.includes("pc");
+    return platformStr.includes("pc") ||
+      tagsArr.includes("pc") ||
+      descStr.includes("pc") ||
+      titleStr.includes("pc");
   }
 
   if (key === "ps2" || key === "playstation 2") {
-    return platformStr.includes("ps2") || platformStr.includes("playstation 2") || 
-           tagsArr.includes("ps2") || tagsArr.includes("playstation 2") ||
-           descStr.includes("ps2") || descStr.includes("playstation 2");
+    return platformStr.includes("ps2") || platformStr.includes("playstation 2") ||
+      tagsArr.includes("ps2") || tagsArr.includes("playstation 2") ||
+      descStr.includes("ps2") || descStr.includes("playstation 2");
   }
 
   if (key === "ps3" || key === "playstation 3") {
-    return platformStr.includes("ps3") || platformStr.includes("playstation 3") || 
-           tagsArr.includes("ps3") || tagsArr.includes("playstation 3") ||
-           descStr.includes("ps3") || descStr.includes("playstation 3");
+    return platformStr.includes("ps3") || platformStr.includes("playstation 3") ||
+      tagsArr.includes("ps3") || tagsArr.includes("playstation 3") ||
+      descStr.includes("ps3") || descStr.includes("playstation 3");
   }
 
   if (key === "xbox 360" || key === "xbox") {
-    return platformStr.includes("xbox") || 
-           tagsArr.includes("xbox 360") || tagsArr.includes("xbox") ||
-           descStr.includes("xbox");
+    return platformStr.includes("xbox") ||
+      tagsArr.includes("xbox 360") || tagsArr.includes("xbox") ||
+      descStr.includes("xbox");
   }
 
   return platformStr.includes(key) || tagsArr.some(t => t.includes(key));
@@ -683,44 +683,52 @@ function renderAllCards() {
 
   // Badge da Aba Catálogo de Projetos
   const bProjects = document.getElementById("badge-projects");
-  if (bProjects) bProjects.textContent = PROJECTS_DATA.length;
+  if (bProjects) bProjects.textContent = PROJECTS_DATA.filter(i => i.type !== "devlog").length;
 
   // Filtragem Global Combinada (Status + Plataforma + Subtag + Busca)
   const filtered = PROJECTS_DATA.filter(item => {
     const matchStatus = checkMatchStatus(item, activeStatusFilter);
     const matchPlatform = checkMatchPlatform(item, activePlatformFilter);
     const matchSubtag = checkMatchSubtag(item, activeSubtagFilter);
-    const matchSearch = !activeSearchQuery || 
-      item.title.toLowerCase().includes(activeSearchQuery) || 
+    const matchSearch = !activeSearchQuery ||
+      item.title.toLowerCase().includes(activeSearchQuery) ||
       item.description.toLowerCase().includes(activeSearchQuery) ||
       (item.subtag && item.subtag.toLowerCase().includes(activeSearchQuery)) ||
       (item.tags && item.tags.some(t => t.toLowerCase().includes(activeSearchQuery)));
     return matchStatus && matchPlatform && matchSubtag && matchSearch;
   });
 
+  const devlogItems = filtered.filter(i => i.type === "devlog");
+  const projectItems = filtered.filter(i => i.type !== "devlog");
+
   // Atualizar Contador de Resultados
   const countNumElem = document.getElementById("results-count-num");
   if (countNumElem) {
-    countNumElem.textContent = filtered.length;
+    if (currentTab === "devlogs") {
+      countNumElem.textContent = devlogItems.length;
+    } else if (currentTab === "projects" || ["completed", "ongoing", "paid", "archived", "abandoned"].includes(currentTab)) {
+      countNumElem.textContent = projectItems.length;
+    } else {
+      countNumElem.textContent = filtered.length;
+    }
   }
 
   // Alternar Visibilidade do Botão Limpar Filtros
   const btnClear = document.getElementById("btn-clear-filters");
   if (btnClear) {
-    const hasActiveFilters = activeStatusFilter !== "all" || 
-                             activePlatformFilter !== "all" || 
-                             activeSubtagFilter !== "all" || 
-                             activeSearchQuery !== "";
+    const hasActiveFilters = activeStatusFilter !== "all" ||
+      activePlatformFilter !== "all" ||
+      activeSubtagFilter !== "all" ||
+      activeSearchQuery !== "";
     btnClear.style.display = hasActiveFilters ? "inline-flex" : "none";
   }
 
   if (devlogsGrid) {
-    const devlogItems = filtered.filter(i => i.type === "devlog" || i.type === "ongoing" || i.type === "completed" || i.type === "paid");
     devlogsGrid.innerHTML = devlogItems.map(createCardHTML).join("") || getEmptyHTML();
   }
 
   if (projectsGrid) {
-    projectsGrid.innerHTML = filtered.map(createCardHTML).join("") || getEmptyHTML();
+    projectsGrid.innerHTML = projectItems.map(createCardHTML).join("") || getEmptyHTML();
   }
 
   if (completedGrid) {
@@ -760,15 +768,32 @@ function createCardHTML(item) {
     statusBadge = `<span class="card-status-tag status-completed">✅ Concluído</span>`;
   } else if (item.type === "ongoing") {
     const progressVal = item.progress || 50;
-    statusBadge = `<span class="card-status-tag status-ongoing">⚙️ ${progressVal}%</span>`;
+
+    // Sistema de semáforo (Traffic light color system based on progress)
+    let ongoingClass = "status-ongoing-yellow";
+    let percentClass = "progress-percent-val-yellow";
+    let fillClass = "card-progress-fill-yellow";
+
+    if (progressVal < 40) {
+      ongoingClass = "status-ongoing-red";
+      percentClass = "progress-percent-val-red";
+      fillClass = "card-progress-fill-red";
+    } else if (progressVal >= 80) {
+      ongoingClass = "status-ongoing-green";
+      percentClass = "progress-percent-val-green";
+      fillClass = "card-progress-fill-green";
+    }
+
+    // Removendo o '%' conforme solicitado pelo usuário
+    statusBadge = `<span class="card-status-tag ${ongoingClass}">⚙️ ${progressVal}</span>`;
     progressBarHTML = `
       <div class="card-progress-wrapper">
         <div class="card-progress-header">
           <span class="progress-label">⚙️ Progresso da Dublagem</span>
-          <span class="progress-percent-val">${progressVal}%</span>
+          <span class="progress-percent-val ${percentClass}">${progressVal}</span>
         </div>
         <div class="card-progress-bar">
-          <div class="card-progress-fill" style="width: ${progressVal}%;"></div>
+          <div class="card-progress-fill ${fillClass}" style="width: ${progressVal}%;"></div>
         </div>
       </div>
     `;
@@ -790,7 +815,7 @@ function createCardHTML(item) {
     else if (stLower.includes("dublad")) subIcon = "🎙️";
     else if (stLower.includes("legendad") || stLower.includes("tradu")) subIcon = "📝";
     else if (stLower.includes("port")) subIcon = "🔄";
-    
+
     subtagBadgeHTML = `<span class="subtag-badge" title="Tipo: ${item.subtag}">${subIcon} ${item.subtag}</span>`;
   }
 
@@ -1007,7 +1032,7 @@ function openPostModal(postId) {
     else if (stLower.includes("dublad")) subIcon = "🎙️";
     else if (stLower.includes("legendad") || stLower.includes("tradu")) subIcon = "📝";
     else if (stLower.includes("port")) subIcon = "🔄";
-    
+
     subtagBadgeHTML = `<span class="subtag-badge">${subIcon} ${item.subtag}</span>`;
   }
 
@@ -1031,7 +1056,7 @@ function openPostModal(postId) {
     const parentContainer = modalImage.parentElement;
     if (item.image && item.image.trim() !== "") {
       if (parentContainer) parentContainer.style.display = "flex";
-      modalImage.onerror = function() {
+      modalImage.onerror = function () {
         this.onerror = null;
         const fallback = "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80";
         this.src = fallback;
@@ -1162,7 +1187,7 @@ function toggleMobileSidebar() {
 
 function initGeneratorPage() {
   populatePostSelector();
-  
+
   // Selecionar o primeiro post por padrão para facilitar edição imediata
   const selectElem = document.getElementById("select-existing-post");
   if (selectElem && selectElem.options.length > 1) {
@@ -1317,11 +1342,11 @@ function resetFormToNew() {
   const subtagElem = document.getElementById("input-subtag");
   if (subtagElem) subtagElem.value = "Dublado (IA)";
   document.getElementById("input-image").value = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80";
-  
+
   const today = new Date();
   const options = { day: 'numeric', month: 'long', year: 'numeric' };
   document.getElementById("input-date").value = today.toLocaleDateString('pt-BR', options);
-  
+
   document.getElementById("input-progress").value = "70";
   document.getElementById("input-tags").value = "Devlog, God of War, IA, PS2";
   document.getElementById("input-summary").value = "Avanços na dublagem e sincronia de vozes para o PlayStation 2 e PlayStation 3.";
@@ -1442,10 +1467,10 @@ function handleImageFileUpload(e) {
   if (!file) return;
 
   const reader = new FileReader();
-  reader.onload = async function(event) {
+  reader.onload = async function (event) {
     const dataUrl = event.target.result;
     const imgInput = document.getElementById("input-image");
-    
+
     // Tenta fazer o upload para a pasta /uploads/ do servidor
     try {
       const res = await fetch("/api/upload", {
@@ -1892,12 +1917,22 @@ function renderTeamCards() {
   if (countVal) countVal.textContent = TEAM_DATA.length;
   if (badgeTeam) badgeTeam.textContent = TEAM_DATA.length;
 
+  // Atualizar dinamicamente os avatars do overlap no topo/sidebar se estiverem presentes
+  const primaryAvatar = document.querySelector(".avatar-overlap-container .primary-avatar");
+  const secondaryAvatar = document.querySelector(".avatar-overlap-container .secondary-avatar");
+  if (primaryAvatar && TEAM_DATA[0]) {
+    primaryAvatar.src = TEAM_DATA[0].avatar;
+  }
+  if (secondaryAvatar && TEAM_DATA[1]) {
+    secondaryAvatar.src = TEAM_DATA[1].avatar;
+  }
+
   if (!gridTeam) return;
 
   gridTeam.innerHTML = TEAM_DATA.map(member => {
     const specialtiesHTML = (member.specialties || []).map(s => `<span class="team-spec-chip">${s}</span>`).join("");
     const statusInfo = getTeamStatusInfo(member.status);
-    
+
     let socialsHTML = "";
     if (member.socials) {
       if (member.socials.discord) {
@@ -2125,7 +2160,7 @@ function handleTeamAvatarUpload(e) {
   if (!file) return;
 
   const reader = new FileReader();
-  reader.onload = async function(evt) {
+  reader.onload = async function (evt) {
     const dataUrl = evt.target.result;
     const avatarInput = document.getElementById("team-input-avatar");
 
@@ -2203,7 +2238,7 @@ function saveTeamMember() {
 
   try {
     localStorage.setItem("godoy_team_data", JSON.stringify(TEAM_DATA));
-  } catch (e) {}
+  } catch (e) { }
 
   syncTeamToServer();
   populateTeamSelector();
@@ -2255,7 +2290,7 @@ function deleteSelectedTeamMember() {
       TEAM_DATA = TEAM_DATA.filter(m => m.id !== id);
       try {
         localStorage.setItem("godoy_team_data", JSON.stringify(TEAM_DATA));
-      } catch (e) {}
+      } catch (e) { }
       await syncTeamToServer();
       populateTeamSelector();
       loadSelectedTeamMemberForEdit();
