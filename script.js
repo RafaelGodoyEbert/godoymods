@@ -883,14 +883,16 @@ function formatBlogContent(rawContent) {
     return `${prefix}<div class="blog-embed-container"><iframe src="https://www.youtube.com/embed/${videoId}" title="Vídeo do YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
   });
 
-  // 3. Garantir que todas as tags <iframe> existentes estejam envoltas em div responsiva .blog-embed-container
+  // 3. Garantir que apenas vídeos (YouTube, Vimeo, etc.) estejam envoltos em div responsiva 16:9 .blog-embed-container
   if (typeof DOMParser !== "undefined") {
     try {
       const parser = new DOMParser();
       const doc = parser.parseFromString(text, "text/html");
       const iframes = doc.querySelectorAll("iframe");
       iframes.forEach(iframe => {
-        if (!iframe.parentElement.classList.contains("blog-embed-container")) {
+        const src = (iframe.getAttribute("src") || "").toLowerCase();
+        const isVideoEmbed = src.includes("youtube") || src.includes("youtu.be") || src.includes("vimeo") || src.includes("dailymotion");
+        if (isVideoEmbed && !iframe.parentElement.classList.contains("blog-embed-container")) {
           const wrapper = doc.createElement("div");
           wrapper.className = "blog-embed-container";
           iframe.parentNode.insertBefore(wrapper, iframe);
@@ -2427,4 +2429,15 @@ function deleteSelectedTeamMember() {
     }
   });
 }
+
+// Ajustar altura de iframe dinamicamente caso o site interno envie postMessage com altura
+window.addEventListener("message", (e) => {
+  if (e.data && (e.data.iframeHeight || e.data.height)) {
+    const newHeight = e.data.iframeHeight || e.data.height;
+    const iframes = document.querySelectorAll("iframe");
+    iframes.forEach(iframe => {
+      iframe.style.height = newHeight + "px";
+    });
+  }
+});
 

@@ -313,10 +313,10 @@
       "PlayStation 2"
     ],
     "tagLinks": {
-      "PlayStation 2": "https://rafaelgodoyebert.github.io/gpatch/"
+      "PlayStation 2": "https://rafaelgodoyebert.github.io/gpatch/?nocreate=1"
     },
     "progress": 95,
-    "content": "<p>Krisp está dedicando seu tempo para trazer a tradução desse jogo.</p>\n\n<iframe src=\"https://rafaelgodoyebert.github.io/gpatch/\" width=\"100%\" height=\"800\" style=\"border:none; border-radius:12px; max-width:800px; margin:0 auto; display:block;\"></iframe>",
+    "content": "<p>Krisp está dedicando seu tempo para trazer a tradução desse jogo.</p>\n\n<iframe src=\"https://rafaelgodoyebert.github.io/gpatch/?embed=1&nocreate=1&full=1\" width=\"100%\" height=\"1280\" scrolling=\"no\" style=\"border:none; width:100%; height:1280px; min-height:1280px; display:block; overflow:hidden;\"></iframe>",
     "downloadUrl": ""
   },
   {

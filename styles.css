@@ -1294,6 +1294,7 @@ body {
   flex-direction: column;
 }
 
+
 /* MODAL TELA CHEIA NO CELULAR */
 @media (max-width: 768px) {
   .modal-overlay {
@@ -1508,6 +1509,12 @@ body {
   width: 100%;
   height: 100%;
   border: 0;
+  border-radius: 12px;
+}
+
+.modal-body-text > iframe {
+  max-width: 100%;
+  border: none;
   border-radius: 12px;
 }
 
@@ -2588,9 +2595,11 @@ select.form-input:focus {
   border-bottom: 3px solid #a855f7;
   box-shadow: 0 4px 16px rgba(168, 85, 247, 0.2);
 }
+
 .team-stat-box.stat-members .stat-number {
   color: #c084fc;
 }
+
 .team-stat-box.stat-members .stat-text {
   color: #e9d5ff;
   font-weight: 700;
@@ -2599,6 +2608,7 @@ select.form-input:focus {
 .team-stat-box.stat-total {
   border-bottom: 3px solid #38bdf8;
 }
+
 .team-stat-box.stat-total .stat-number {
   color: #38bdf8;
 }
@@ -2606,6 +2616,7 @@ select.form-input:focus {
 .team-stat-box.stat-active {
   border-bottom: 3px solid #3b82f6;
 }
+
 .team-stat-box.stat-active .stat-number {
   color: #60a5fa;
 }
@@ -2613,6 +2624,7 @@ select.form-input:focus {
 .team-stat-box.stat-completed {
   border-bottom: 3px solid #22c55e;
 }
+
 .team-stat-box.stat-completed .stat-number {
   color: #4ade80;
 }
@@ -2620,6 +2632,7 @@ select.form-input:focus {
 .team-stat-box.stat-archived {
   border-bottom: 3px solid #eab308;
 }
+
 .team-stat-box.stat-archived .stat-number {
   color: #facc15;
 }
@@ -2627,6 +2640,7 @@ select.form-input:focus {
 .team-stat-box.stat-abandoned {
   border-bottom: 3px solid #ef4444;
 }
+
 .team-stat-box.stat-abandoned .stat-number {
   color: #f87171;
 }
