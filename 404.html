@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirecionando... | Godoy Mods</title>
+  <script>
+    (function() {
+      // Captura o caminho acessado
+      const path = window.location.pathname;
+      
+      // Verifica se a URL tentou acessar um post em /p/id-do-post/ ou /p/id-do-post
+      const match = path.match(/\/p\/([^\/]+)/);
+      if (match && match[1]) {
+        const postId = match[1];
+        // Redireciona imediatamente para a home com a hash do modal
+        window.location.replace("https://rafaelgodoyebert.github.io/godoymods/#" + postId);
+      } else {
+        // Fallback genérico para a home
+        window.location.replace("https://rafaelgodoyebert.github.io/godoymods/");
+      }
+    })();
+  </script>
+  <style>
+    body {
+      background: #0f172a;
+      color: #f8fafc;
+      font-family: system-ui, -apple-system, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    a { color: #38bdf8; text-decoration: none; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div>
+    <h2>🚀 Redirecionando para o Godoy Mods...</h2>
+    <p>Caso não seja redirecionado em instantes, <a href="https://rafaelgodoyebert.github.io/godoymods/">clique aqui</a>.</p>
+  </div>
+</body>
+</html>

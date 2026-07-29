@@ -1,0 +1,27 @@
+[
+  {
+    "id": "gpatch-web",
+    "type": "tool",
+    "category": "created",
+    "title": "GPATCH Web App - Aplicador de Patches de Modding",
+    "date": "29 de Julho, 2026",
+    "description": "Ferramenta web desenvolvida para criação e aplicação rápida de patches de modding e tradução diretamente no navegador.",
+    "platform": "Web / PC / Celular",
+    "subtag": "Ferramenta (Criada)",
+    "icon": "⚡",
+    "image": "https://i.imgur.com/OgaeHFx.png",
+    "tags": [
+      "Ferramenta",
+      "Modding",
+      "Web App",
+      "Patches",
+      "PS2"
+    ],
+    "badge": "Criado por Mim",
+    "badgeColor": "primary",
+    "url": "https://rafaelgodoyebert.github.io/gpatch/",
+    "downloadUrl": "https://rafaelgodoyebert.github.io/gpatch/",
+    "buttonText": "🚀 Acessar GPATCH",
+    "content": "<h3>⚡ O que é o GPATCH?</h3><p>O <strong>GPATCH</strong> é uma aplicação web desenvolvida especialmente para permitir que criadores de mods e jogadores apliquem patches de tradução, dublagem e modificação diretamente pelo navegador, sem necessidade de instalar programas externos pesados.</p><h3>🚀 Recursos Principais:</h3><ul><li><strong>Aplicação Direta no Navegador:</strong> Funciona em PCs, notebooks e dispositivos móveis.</li><li><strong>Seguro e Local:</strong> O processamento do patch ocorre no seu próprio navegador.</li><li><strong>Compatibilidade:</strong> Suporte a múltiplos formatos de patches e roms de consoles (PS2, PS3, etc.).</li></ul><p>Clique no botão de acesso abaixo para abrir a ferramenta imediatamente!</p>"
+  }
+]

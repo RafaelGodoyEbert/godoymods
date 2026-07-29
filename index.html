@@ -5,10 +5,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Godoy Mods - Modding, Traduções PT-BR & Devlogs de Jogos | Rafael Godoy</title>
-  
+
   <!-- SEO Essencial -->
-  <meta name="description" content="Site oficial de Godoy Mods (Rafael Godoy). Mods, dublagens, traduções em Português (PT-BR) e devlogs de jogos como Red Dead Redemption, GTA SA, God of War 2, Bully e mais.">
-  <meta name="keywords" content="Godoy Mods, Rafael Godoy, RafaelGodoyEbert, Modding, Traduções PT-BR, Devlogs, RDR PT-BR, GTA SA Dublado, God of War 2, Bully, GitHub">
+  <meta name="description"
+    content="Site oficial de Godoy Mods (Rafael Godoy). Mods, dublagens, traduções em Português (PT-BR) e devlogs de jogos como Red Dead Redemption, GTA SA, God of War 2, Bully e mais.">
+  <meta name="keywords"
+    content="Godoy Mods, Rafael Godoy, RafaelGodoyEbert, Modding, Traduções PT-BR, Devlogs, RDR PT-BR, GTA SA Dublado, God of War 2, Bully, GitHub">
   <meta name="author" content="Rafael Godoy (RafaelGodoyEbert)">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <link rel="canonical" href="https://rafaelgodoyebert.github.io/godoymods/">
@@ -17,14 +19,16 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rafaelgodoyebert.github.io/godoymods/">
   <meta property="og:title" content="Godoy Mods - Modding, Traduções PT-BR & Devlogs de Jogos">
-  <meta property="og:description" content="Site oficial e hub de projetos de Rafael Godoy (Godoy Mods). Confira devlogs, traduções e mods para PC, PS2, PS3, Xbox 360 e Android.">
+  <meta property="og:description"
+    content="Site oficial e hub de projetos de Rafael Godoy (Godoy Mods). Confira devlogs, traduções e mods para PC, PS2, PS3, Xbox 360 e Android.">
   <meta property="og:image" content="https://i.imgur.com/OgaeHFx.png">
   <meta property="og:locale" content="pt_BR">
 
   <!-- Twitter / X Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Godoy Mods - Modding, Traduções & Devlogs">
-  <meta name="twitter:description" content="Mods, dublagens e devlogs de jogos por Rafael Godoy. Link direto para projetos e código no GitHub.">
+  <meta name="twitter:description"
+    content="Mods, dublagens e devlogs de jogos por Rafael Godoy. Link direto para projetos e código no GitHub.">
   <meta name="twitter:image" content="https://i.imgur.com/OgaeHFx.png">
 
   <!-- Favicon -->
@@ -214,10 +218,10 @@
               🌙
             </button>
 
-            <!-- ACESSO RÁPIDO AO GERADOR/PAINEL -->
+            <!-- ACESSO RÁPIDO AO GERADOR/PAINEL
             <a href="gerador.html" class="creator-btn" title="Área do Criador de Posts">
               🛠️ Criador
-            </a>
+            </a> -->
           </div>
         </div>
 
@@ -228,6 +232,9 @@
           </button>
           <button class="nav-tab-btn" id="tab-btn-projects" data-tab="projects" onclick="switchTab('projects')">
             <span class="tab-icon">🎮</span> Catálogo de Projetos <span class="nav-badge" id="badge-projects">0</span>
+          </button>
+          <button class="nav-tab-btn" id="tab-btn-tools" data-tab="tools" onclick="switchTab('tools')">
+            <span class="tab-icon">🛠️</span> Ferramentas <span class="nav-badge" id="badge-tools">0</span>
           </button>
           <button class="nav-tab-btn" id="tab-btn-contact" data-tab="contact" onclick="switchTab('contact')">
             <span class="tab-icon">🛒</span> Comprar / Encomendar
@@ -320,8 +327,39 @@
       <section id="pane-archived" class="tab-pane">
         <div class="cards-grid" id="grid-archived"></div>
       </section>
-      <section id="pane-abandoned" class="tab-pane">
-        <div class="cards-grid" id="grid-abandoned"></div>
+      <!-- TAB 3: CENTRAL DE FERRAMENTAS -->
+      <section id="pane-tools" class="tab-pane">
+        <div class="tools-section-container">
+
+          <div class="tools-hero-banner">
+            <div class="tools-hero-content">
+              <span class="tools-hero-badge">🛠️ Central de Ferramentas</span>
+              <h2>Ferramentas de Modding, Dublagem IA & Utilitários</h2>
+              <p>Explore as aplicações criadas pela equipe Godoy Mods, softwares recomendados pela comunidade e utilitários essenciais para o seu fluxo de trabalho.</p>
+            </div>
+
+            <div class="tools-category-filters" id="tools-category-filters">
+              <button class="tools-cat-btn active" data-cat="all" onclick="filterToolsCategory('all')">
+                🌐 Todas (<span id="tools-count-all">0</span>)
+              </button>
+              <button class="tools-cat-btn" data-cat="created" onclick="filterToolsCategory('created')">
+                🛠️ Criadas por Mim (<span id="tools-count-created">0</span>)
+              </button>
+              <button class="tools-cat-btn" data-cat="recommended" onclick="filterToolsCategory('recommended')">
+                ⭐ Recomendadas (<span id="tools-count-recommended">0</span>)
+              </button>
+              <button class="tools-cat-btn" data-cat="workflow" onclick="filterToolsCategory('workflow')">
+                🧰 Dia a Dia (<span id="tools-count-workflow">0</span>)
+              </button>
+            </div>
+          </div>
+
+          <!-- GRID DE CARDS DE FERRAMENTAS -->
+          <div class="tools-grid" id="grid-tools">
+            <!-- Renderizado dinamicamente via script.js -->
+          </div>
+
+        </div>
       </section>
 
       <!-- TAB 7: ENCOMENDAR / COMPRAR PROJETO & CONTATO -->

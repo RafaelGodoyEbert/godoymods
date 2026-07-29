@@ -145,6 +145,121 @@ function showCustomConfirm({ title, message, confirmText = 'Confirmar', cancelTe
   overlay.classList.add('active');
 }
 
+// HELPER PARA FORMATAR DATA ATUAL NATIVA EM PORTUGUÊS (PT-BR)
+function getFormattedCurrentDate() {
+  const now = new Date();
+  const months = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  ];
+  const day = now.getDate();
+  const month = months[now.getMonth()];
+  const year = now.getFullYear();
+  return `${day} de ${month}, ${year}`;
+}
+
+function getFormattedMonthYear() {
+  const now = new Date();
+  const months = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  ];
+  const month = months[now.getMonth()];
+  const year = now.getFullYear();
+  return `${month}, ${year}`;
+}
+
+function setPresetPostDate(type) {
+  const input = document.getElementById("input-date");
+  if (!input) return;
+  const now = new Date();
+  if (type === "today") {
+    input.value = getFormattedCurrentDate();
+  } else if (type === "month_year") {
+    input.value = getFormattedMonthYear();
+  } else if (type === "year") {
+    input.value = `${now.getFullYear()}`;
+  }
+  updateGeneratorPreview();
+}
+
+function setPresetProjectPeriod(type) {
+  const input = document.getElementById("input-project-period");
+  if (!input) return;
+  const now = new Date();
+  const monthsShort = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+  const mShort = monthsShort[now.getMonth()];
+  const y = now.getFullYear();
+  if (type === "ongoing") {
+    input.value = `Início: ${mShort}/${y} (Em andamento)`;
+  } else if (type === "completed") {
+    input.value = `Início: 2024 • Concluído: ${mShort}/${y}`;
+  } else if (type === "start_only") {
+    input.value = `Início: ${y}`;
+  }
+  updateGeneratorPreview();
+}
+
+// FORMATADOR E PARSER DE DATA PARA ORDENAÇÃO CRONOLÓGICA (MAIS RECENTE PRIMEIRO)
+function parsePostDate(dateStr) {
+  if (!dateStr) return 0;
+  const str = String(dateStr).trim().toLowerCase();
+
+  if (str === "hoje") return Date.now();
+
+  const monthsMap = {
+    "janeiro": 0, "jan": 0,
+    "fevereiro": 1, "fev": 1,
+    "março": 2, "marco": 2, "mar": 2,
+    "abril": 3, "abr": 3,
+    "maio": 4, "mai": 4,
+    "junho": 5, "jun": 5,
+    "julho": 6, "jul": 6,
+    "agosto": 7, "ago": 7,
+    "setembro": 8, "set": 8,
+    "outubro": 9, "out": 9,
+    "novembro": 10, "nov": 10,
+    "dezembro": 11, "dez": 11
+  };
+
+  const matchDMY = str.match(/(\d{1,2})\s+(?:de\s+)?([a-zçáéíóú]+)\s+(?:de\s+|,?\s+)?(\d{4})/i);
+  if (matchDMY) {
+    const day = parseInt(matchDMY[1], 10);
+    const mStr = matchDMY[2].toLowerCase();
+    const month = monthsMap[mStr] !== undefined ? monthsMap[mStr] : 0;
+    const year = parseInt(matchDMY[3], 10);
+    return new Date(year, month, day).getTime();
+  }
+
+  const matchMY = str.match(/([a-zçáéíóú]+)\s+(?:de\s+|,?\s+)?(\d{4})/i);
+  if (matchMY) {
+    const mStr = matchMY[1].toLowerCase();
+    const month = monthsMap[mStr] !== undefined ? monthsMap[mStr] : 0;
+    const year = parseInt(matchMY[2], 10);
+    return new Date(year, month, 1).getTime();
+  }
+
+  const isoMatch = str.match(/(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+  if (isoMatch) {
+    return new Date(parseInt(isoMatch[1]), parseInt(isoMatch[2]) - 1, parseInt(isoMatch[3])).getTime();
+  }
+
+  const brDateMatch = str.match(/(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})/);
+  if (brDateMatch) {
+    return new Date(parseInt(brDateMatch[3]), parseInt(brDateMatch[2]) - 1, parseInt(brDateMatch[1])).getTime();
+  }
+
+  const yearOnlyMatch = str.match(/\b(\d{4})\b/);
+  if (yearOnlyMatch) {
+    return new Date(parseInt(yearOnlyMatch[1]), 0, 1).getTime();
+  }
+
+  const parsed = Date.parse(str);
+  if (!isNaN(parsed)) return parsed;
+
+  return 0;
+}
+
 // ESTADO DOS PROJETOS
 let PROJECTS_DATA = [];
 
@@ -168,6 +283,7 @@ async function loadProjectsFromServer() {
       const serverProjects = await res.json();
       if (Array.isArray(serverProjects) && serverProjects.length > 0) {
         PROJECTS_DATA = serverProjects.filter(p => p && p.id !== "preview-temp-id");
+        PROJECTS_DATA.sort((a, b) => parsePostDate(b.date) - parsePostDate(a.date));
         renderAllCards();
         handleEditorAutoSelect();
         checkUrlHashAndOpenModal();
@@ -187,6 +303,7 @@ async function loadProjectsFromServer() {
         const localProjects = await jsonRes.json();
         if (Array.isArray(localProjects) && localProjects.length > 0) {
           PROJECTS_DATA = localProjects.filter(p => p && p.id !== "preview-temp-id");
+          PROJECTS_DATA.sort((a, b) => parsePostDate(b.date) - parsePostDate(a.date));
           renderAllCards();
           handleEditorAutoSelect();
           checkUrlHashAndOpenModal();
@@ -334,6 +451,10 @@ let currentTab = "devlogs";
 let currentOutputFormat = "js";
 let lastSubmittedOrderSummary = "";
 
+// ESTADO GLOBAL DE FERRAMENTAS
+let TOOLS_DATA = [];
+let activeToolsCategory = "all";
+
 // ANIMAÇÃO DE INTRODUÇÃO AO CARREGAR A PÁGINA
 function animateOnLoad() {
   if (typeof anime === 'undefined') return;
@@ -379,6 +500,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initNavTabsScroll();
   loadProjectsFromServer();
   loadTeamFromServer();
+  loadToolsFromServer();
   animateOnLoad();
 
   window.addEventListener("hashchange", checkUrlHashAndOpenModal);
@@ -460,7 +582,7 @@ function switchTab(tabId) {
   // Mostrar/Ocultar o Painel de Filtros dependendo da Aba Ativa
   const filterPanel = document.getElementById("main-filter-panel");
   if (filterPanel) {
-    if (tabId === "contact" || tabId === "team") {
+    if (tabId === "contact" || tabId === "team" || tabId === "tools") {
       filterPanel.style.display = "none";
     } else {
       filterPanel.style.display = "flex";
@@ -503,6 +625,9 @@ function switchTab(tabId) {
   renderAllCards();
   if (tabId === "team") {
     renderTeamCards();
+  }
+  if (tabId === "tools") {
+    renderToolsCards();
   }
 }
 
@@ -644,6 +769,196 @@ function setPresetSubtag(val) {
 function handleSearch(query) {
   activeSearchQuery = query.toLowerCase().trim();
   renderAllCards();
+  if (currentTab === "tools") {
+    renderToolsCards();
+  }
+}
+
+// ==========================================================================
+// CENTRAL DE FERRAMENTAS (TOOLS HUB)
+// ==========================================================================
+
+async function loadToolsFromServer() {
+  try {
+    const apiRes = await fetch("/api/tools");
+    if (apiRes.ok) {
+      const dataApi = await apiRes.json();
+      if (Array.isArray(dataApi) && dataApi.length > 0) {
+        TOOLS_DATA = dataApi;
+        updateToolsBadges();
+        renderToolsCards();
+        return;
+      }
+    }
+  } catch (err) {
+    console.warn("API de ferramentas indisponível, tentando arquivos estáticos:", err);
+  }
+
+  try {
+    const res = await fetch("./data/tools.json");
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        TOOLS_DATA = data;
+        updateToolsBadges();
+        renderToolsCards();
+        return;
+      }
+    }
+  } catch (err) {
+    console.warn("Não foi possível carregar ./data/tools.json:", err);
+  }
+
+  try {
+    const resRoot = await fetch("./tools.json");
+    if (resRoot.ok) {
+      const dataRoot = await resRoot.json();
+      if (Array.isArray(dataRoot) && dataRoot.length > 0) {
+        TOOLS_DATA = dataRoot;
+        updateToolsBadges();
+        renderToolsCards();
+        return;
+      }
+    }
+  } catch (err) {
+    console.warn("Não foi possível carregar ./tools.json:", err);
+  }
+
+  renderToolsCards();
+}
+
+function updateToolsBadges() {
+  const badgeTools = document.getElementById("badge-tools");
+  const countAll = document.getElementById("tools-count-all");
+  const countCreated = document.getElementById("tools-count-created");
+  const countRec = document.getElementById("tools-count-recommended");
+  const countWork = document.getElementById("tools-count-workflow");
+
+  const total = TOOLS_DATA.length;
+  const created = TOOLS_DATA.filter(t => t.category === "created").length;
+  const rec = TOOLS_DATA.filter(t => t.category === "recommended").length;
+  const work = TOOLS_DATA.filter(t => t.category === "workflow").length;
+
+  if (badgeTools) badgeTools.textContent = total;
+  if (countAll) countAll.textContent = total;
+  if (countCreated) countCreated.textContent = created;
+  if (countRec) countRec.textContent = rec;
+  if (countWork) countWork.textContent = work;
+}
+
+function filterToolsCategory(catId) {
+  activeToolsCategory = catId;
+
+  document.querySelectorAll(".tools-cat-btn").forEach(btn => {
+    const isCat = btn.dataset.cat === catId;
+    btn.classList.toggle("active", isCat);
+  });
+
+  renderToolsCards();
+}
+
+function renderToolsCards() {
+  const container = document.getElementById("grid-tools");
+  if (!container) return;
+
+  // Combinar ferramentas de data/tools.json com publicações de tipo 'tool'
+  const combinedToolsMap = new Map();
+  
+  TOOLS_DATA.forEach(t => combinedToolsMap.set(t.id, t));
+  if (Array.isArray(PROJECTS_DATA)) {
+    PROJECTS_DATA.filter(p => p.type === "tool" || (p.subtag && p.subtag.toLowerCase().includes("ferramenta"))).forEach(p => {
+      if (!combinedToolsMap.has(p.id)) {
+        combinedToolsMap.set(p.id, {
+          id: p.id,
+          category: p.category || "created",
+          title: p.title,
+          description: p.description,
+          icon: p.icon || "🛠️",
+          image: p.image || "",
+          tags: p.tags || ["Ferramenta"],
+          badge: p.badge || p.subtag || "Ferramenta",
+          badgeColor: p.badgeColor || "primary",
+          url: p.downloadUrl || p.url || "",
+          buttonText: "Acessar Ferramenta",
+          content: p.content || ""
+        });
+      }
+    });
+  }
+
+  const allToolsList = Array.from(combinedToolsMap.values());
+
+  let filtered = allToolsList.filter(t => {
+    if (activeToolsCategory !== "all" && t.category !== activeToolsCategory) {
+      return false;
+    }
+    if (activeSearchQuery) {
+      const title = (t.title || "").toLowerCase();
+      const desc = (t.description || "").toLowerCase();
+      const tags = (t.tags || []).join(" ").toLowerCase();
+      const badge = (t.badge || "").toLowerCase();
+      return title.includes(activeSearchQuery) || desc.includes(activeSearchQuery) || tags.includes(activeSearchQuery) || badge.includes(activeSearchQuery);
+    }
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state-box" style="grid-column: 1 / -1; text-align: center; padding: 48px 20px; background: var(--bg-card); border: 1px dashed var(--border-color); border-radius: 12px;">
+        <div style="font-size: 3rem; margin-bottom: 12px;">🛠️</div>
+        <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 8px;">Nenhuma ferramenta encontrada</h3>
+        <p style="color: var(--text-muted); max-width: 420px; margin: 0 auto 16px auto;">Não encontramos nenhuma ferramenta com a categoria ou termo pesquisado.</p>
+        <button class="btn-secondary" onclick="filterToolsCategory('all'); clearAllFilters();">Mostrar Todas as Ferramentas</button>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = filtered.map(tool => {
+    const badgeClass = tool.badgeColor ? `tool-badge-${tool.badgeColor}` : "tool-badge-default";
+    const tagsHTML = (tool.tags || []).map(tag => `<span class="tool-tag">${tag}</span>`).join("");
+    const iconHTML = tool.image 
+      ? `<img src="${tool.image}" alt="${tool.title}" class="tool-card-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" /><div class="tool-card-icon-fallback" style="display:none;">${tool.icon || "🛠️"}</div>`
+      : `<div class="tool-card-icon-fallback">${tool.icon || "🛠️"}</div>`;
+
+    const targetUrl = tool.url || tool.downloadUrl || "";
+    const isExternal = targetUrl.startsWith("http");
+
+    return `
+      <div class="tool-card" onclick="openPostModal('${tool.id}')" style="cursor: pointer;">
+        <div class="tool-card-header">
+          <div class="tool-icon-wrapper">
+            ${iconHTML}
+          </div>
+          <div class="tool-header-info">
+            <span class="tool-badge ${badgeClass}">${tool.badge || "Ferramenta"}</span>
+            <h3 class="tool-card-title">${tool.title}</h3>
+          </div>
+        </div>
+
+        <p class="tool-card-desc">${tool.description}</p>
+
+        <div class="tool-card-tags">
+          ${tagsHTML}
+        </div>
+
+        <div class="tool-card-footer" onclick="event.stopPropagation()" style="display: flex; gap: 8px; align-items: center; justify-content: space-between;">
+          <button class="btn-secondary" onclick="openPostModal('${tool.id}')" style="font-size: 0.8rem; padding: 7px 12px; flex: 1; justify-content: center; font-weight: 700; white-space: nowrap;">
+            📖 Ver Matéria
+          </button>
+          ${targetUrl ? `
+            <a href="${targetUrl}" target="${isExternal ? '_blank' : '_self'}" rel="noopener" class="tool-action-btn" style="width: auto; padding: 7px 14px; white-space: nowrap; font-size: 0.8rem;">
+              ${tool.buttonText || "Acessar"} ${isExternal ? "↗" : "➔"}
+            </a>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  if (typeof triggerGridStaggerAnimation === 'function') {
+    triggerGridStaggerAnimation();
+  }
 }
 
 // STAGGER CARD CASCADE ANIMATION WITH ANIME.JS
@@ -685,14 +1000,17 @@ function renderAllCards() {
   const archivedGrid = document.getElementById("grid-archived");
   const abandonedGrid = document.getElementById("grid-abandoned");
 
+  // Garantir ordenação cronológica rigorosa (posts mais recentes primeiro)
+  const sortedData = [...PROJECTS_DATA].sort((a, b) => parsePostDate(b.date) - parsePostDate(a.date));
+
   // Badge da Aba Catálogo de Projetos
   const bProjects = document.getElementById("badge-projects");
-  if (bProjects) bProjects.textContent = PROJECTS_DATA.filter(i => i.type !== "devlog").length;
+  if (bProjects) bProjects.textContent = sortedData.filter(i => i.type !== "devlog").length;
 
   updateHeroTeamStats();
 
   // Filtragem Global Combinada (Status + Plataforma + Subtag + Busca)
-  const filtered = PROJECTS_DATA.filter(item => {
+  const filtered = sortedData.filter(item => {
     const matchStatus = checkMatchStatus(item, activeStatusFilter);
     const matchPlatform = checkMatchPlatform(item, activePlatformFilter);
     const matchSubtag = checkMatchSubtag(item, activeSubtagFilter);
@@ -834,6 +1152,8 @@ function createCardHTML(item) {
     return `<span class="tag-badge">${t}</span>`;
   }).join("");
 
+  const periodBadgeHTML = item.projectPeriod ? `<div class="card-project-period" title="Período do Projeto (Início & Conclusão)">⏳ ${item.projectPeriod}</div>` : "";
+
   return `
     <article class="card card-clickable" onclick="openPostModal('${item.id}')">
       <div class="card-media">
@@ -843,9 +1163,10 @@ function createCardHTML(item) {
       </div>
       <div class="card-body">
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
-          <span class="card-date">${item.date} • ${item.platform}</span>
+          <span class="card-date">📅 ${item.date} • ${item.platform}</span>
           ${subtagBadgeHTML}
         </div>
+        ${periodBadgeHTML}
         <h3 class="card-title">
           <a href="javascript:void(0)" class="card-title-link" onclick="openPostModal('${item.id}'); event.stopPropagation();">${item.title}</a>
         </h3>
@@ -880,7 +1201,7 @@ function formatBlogContent(rawContent) {
   // Exemplo: https://www.youtube.com/watch?v=VIDEO_ID ou https://youtu.be/VIDEO_ID ou https://www.youtube.com/embed/VIDEO_ID
   const ytRegex = /(^|>|\s)(https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:[^\s<"']*)?)(?=<|\s|$)/gi;
   text = text.replace(ytRegex, (match, prefix, fullUrl, videoId) => {
-    return `${prefix}<div class="blog-embed-container"><iframe src="https://www.youtube.com/embed/${videoId}" title="Vídeo do YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+    return `${prefix}<div class="blog-embed-container"><iframe src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`;
   });
 
   // 3. Garantir que apenas vídeos (YouTube, Vimeo, etc.) estejam envoltos em div responsiva 16:9 .blog-embed-container
@@ -917,7 +1238,102 @@ function formatBlogContent(rawContent) {
   return text;
 }
 
-// HELPER PARA INSERÇÃO NO EDITOR DE BLOG (gerador.html)
+// HELPER PARA INSERÇÃO E UPLOAD DE IMAGEM BASE64 NO CORPO DO BLOG (gerador.html)
+function handleContentImageUpload(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function (event) {
+    const base64Data = event.target.result;
+    insertBase64ImageToContent(base64Data, file.name);
+    e.target.value = "";
+  };
+  reader.readAsDataURL(file);
+}
+
+function insertBase64ImageToContent(base64Data, defaultCaption = "") {
+  const textarea = document.getElementById("input-content");
+  if (!textarea) return;
+
+  const caption = prompt("Insira uma legenda para a imagem (opcional):", defaultCaption) || "";
+  let snippet = "";
+  if (caption) {
+    snippet = `\n<figure class="blog-figure">\n  <img src="${base64Data}" alt="${caption}">\n  <figcaption>${caption}</figcaption>\n</figure>\n`;
+  } else {
+    snippet = `\n<img src="${base64Data}" alt="Imagem do Post">\n`;
+  }
+
+  const start = textarea.selectionStart || 0;
+  const end = textarea.selectionEnd || 0;
+  const val = textarea.value;
+
+  textarea.value = val.substring(0, start) + snippet + val.substring(end);
+  textarea.selectionStart = textarea.selectionEnd = start + snippet.length;
+  textarea.focus();
+
+  updateGeneratorPreview();
+  showToast("📷 Imagem Base64 inserida no corpo do post com sucesso!", "success");
+}
+
+function setupEditorDragDropAndPaste() {
+  const textarea = document.getElementById("input-content");
+  if (!textarea || textarea.dataset.dragPasteBound) return;
+  textarea.dataset.dragPasteBound = "true";
+
+  // Suporte a colar foto (Ctrl+V) diretamente no editor
+  textarea.addEventListener("paste", (e) => {
+    const items = e.clipboardData && e.clipboardData.items;
+    if (!items) return;
+
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf("image") !== -1) {
+        e.preventDefault();
+        const blob = items[i].getAsFile();
+        if (blob) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            insertBase64ImageToContent(event.target.result, "Imagem colada");
+          };
+          reader.readAsDataURL(blob);
+        }
+        break;
+      }
+    }
+  });
+
+  // Suporte a Arrastar e Soltar (Drag & Drop) de arquivos de foto
+  textarea.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    textarea.style.borderColor = "var(--accent-primary)";
+    textarea.style.backgroundColor = "var(--bg-badge)";
+  });
+
+  textarea.addEventListener("dragleave", (e) => {
+    e.preventDefault();
+    textarea.style.borderColor = "";
+    textarea.style.backgroundColor = "";
+  });
+
+  textarea.addEventListener("drop", (e) => {
+    e.preventDefault();
+    textarea.style.borderColor = "";
+    textarea.style.backgroundColor = "";
+
+    const files = e.dataTransfer && e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith("image/")) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          insertBase64ImageToContent(event.target.result, file.name);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  });
+}
+
 function insertContentSnippet(snippetType) {
   const textarea = document.getElementById("input-content");
   if (!textarea) return;
@@ -938,7 +1354,7 @@ function insertContentSnippet(snippetType) {
     if (embedSrc.startsWith("<iframe")) {
       replacement = `\n<div class="blog-embed-container">\n  ${embedSrc}\n</div>\n`;
     } else {
-      replacement = `\n<div class="blog-embed-container">\n  <iframe src="${embedSrc}" title="Vídeo do Post" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>\n</div>\n`;
+      replacement = `\n<div class="blog-embed-container">\n  <iframe src="${embedSrc}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>\n</div>\n`;
     }
   } else if (snippetType === "image") {
     const imgUrl = prompt("Insira o URL da imagem (http://... ou https://...):");
@@ -982,7 +1398,9 @@ function previewCurrentPostModal() {
   const subtagElem = document.getElementById("input-subtag");
   const subtag = subtagElem ? subtagElem.value.trim() : "";
   const image = document.getElementById("input-image").value.trim() || "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80";
-  const date = document.getElementById("input-date").value.trim() || "Hoje";
+  const date = document.getElementById("input-date").value.trim() || getFormattedCurrentDate();
+  const periodElem = document.getElementById("input-project-period");
+  const projectPeriod = periodElem ? periodElem.value.trim() : "";
   const tagsStr = document.getElementById("input-tags").value.trim();
   const tags = tagsStr ? tagsStr.split(",").map(t => t.trim()).filter(Boolean) : ["Mod"];
   const description = document.getElementById("input-summary").value.trim() || "";
@@ -995,6 +1413,7 @@ function previewCurrentPostModal() {
     type,
     title,
     date,
+    ...(projectPeriod ? { projectPeriod } : {}),
     platform,
     subtag,
     image,
@@ -1028,7 +1447,7 @@ window.addEventListener("popstate", () => {
 
 // LÓGICA DO MODAL DE DETALHES DO POST
 function openPostModal(postId) {
-  const item = PROJECTS_DATA.find(p => p.id === postId);
+  const item = PROJECTS_DATA.find(p => p.id === postId) || (typeof TOOLS_DATA !== "undefined" ? TOOLS_DATA.find(t => t.id === postId) : null);
   if (!item) return;
 
   const modalOverlay = document.getElementById("post-modal-overlay");
@@ -1080,7 +1499,8 @@ function openPostModal(postId) {
 
   // Título e Meta
   modalTitle.textContent = item.title;
-  modalMeta.innerHTML = `📅 ${item.date} • 🎮 ${item.platform} ${subtagBadgeHTML ? `• ${subtagBadgeHTML}` : ""}`;
+  const periodMeta = item.projectPeriod ? ` • ⏳ Período: <strong>${item.projectPeriod}</strong>` : "";
+  modalMeta.innerHTML = `📅 ${item.date}${periodMeta} • 🎮 ${item.platform} ${subtagBadgeHTML ? `• ${subtagBadgeHTML}` : ""}`;
 
   // Imagem
   if (modalImage) {
@@ -1225,7 +1645,14 @@ function hidePostModalUI() {
 
 // LÓGICA DE COMPARTILHAMENTO DE POSTS & DEEP LINKING
 function sharePost(postId, postTitle) {
-  const shareUrl = `${window.location.origin}${window.location.pathname}#${postId}`;
+  let baseUrl = window.location.origin + window.location.pathname;
+  if (baseUrl.endsWith('/index.html')) {
+    baseUrl = baseUrl.slice(0, -10);
+  }
+  if (!baseUrl.endsWith('/')) {
+    baseUrl += '/';
+  }
+  const shareUrl = `${baseUrl}p/${postId}/`;
 
   if (navigator.share) {
     navigator.share({
@@ -1298,6 +1725,7 @@ function toggleMobileSidebar() {
 
 function initGeneratorPage() {
   populatePostSelector();
+  setupEditorDragDropAndPaste();
 
   // Selecionar o primeiro post por padrão para facilitar edição imediata
   const selectElem = document.getElementById("select-existing-post");
@@ -1316,7 +1744,9 @@ function populatePostSelector() {
   const currentValue = selectElem.value;
   selectElem.innerHTML = `<option value="new">➕ [Criar Novo Post ou Devlog]</option>`;
 
-  PROJECTS_DATA.forEach(item => {
+  const sortedProjects = [...PROJECTS_DATA].sort((a, b) => parsePostDate(b.date) - parsePostDate(a.date));
+
+  sortedProjects.forEach(item => {
     const option = document.createElement("option");
     option.value = item.id;
     let icon = "📰";
@@ -1325,7 +1755,7 @@ function populatePostSelector() {
     if (item.type === "paid") icon = "💰";
     if (item.type === "archived") icon = "📦";
     if (item.type === "abandoned") icon = "🚫";
-    option.textContent = `${icon} ${item.title}`;
+    option.textContent = `${icon} ${item.title} (${item.date || 'Sem data'})`;
     selectElem.appendChild(option);
   });
 
@@ -1424,7 +1854,9 @@ function loadSelectedPostForEdit() {
   const subtagElem = document.getElementById("input-subtag");
   if (subtagElem) subtagElem.value = item.subtag || "";
   document.getElementById("input-image").value = item.image || "";
-  document.getElementById("input-date").value = item.date || "";
+  document.getElementById("input-date").value = item.date || getFormattedCurrentDate();
+  const periodElem = document.getElementById("input-project-period");
+  if (periodElem) periodElem.value = item.projectPeriod || "";
   document.getElementById("input-progress").value = item.progress || 50;
   document.getElementById("input-tags").value = (item.tags || []).join(", ");
   document.getElementById("input-summary").value = item.description || "";
@@ -1454,9 +1886,9 @@ function resetFormToNew() {
   if (subtagElem) subtagElem.value = "Dublado (IA)";
   document.getElementById("input-image").value = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80";
 
-  const today = new Date();
-  const options = { day: 'numeric', month: 'long', year: 'numeric' };
-  document.getElementById("input-date").value = today.toLocaleDateString('pt-BR', options);
+  document.getElementById("input-date").value = getFormattedCurrentDate();
+  const periodElem = document.getElementById("input-project-period");
+  if (periodElem) periodElem.value = "";
 
   document.getElementById("input-progress").value = "70";
   document.getElementById("input-tags").value = "Devlog, God of War, IA, PS2";
@@ -1477,7 +1909,9 @@ function updateGeneratorPreview() {
   const subtagElem = document.getElementById("input-subtag");
   const subtag = subtagElem ? subtagElem.value.trim() : "";
   const image = document.getElementById("input-image").value.trim() || "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80";
-  const date = document.getElementById("input-date").value.trim() || "28 de Julho, 2026";
+  const date = document.getElementById("input-date").value.trim() || getFormattedCurrentDate();
+  const periodElem = document.getElementById("input-project-period");
+  const projectPeriod = periodElem ? periodElem.value.trim() : "";
   const progress = parseInt(document.getElementById("input-progress").value) || 50;
   const tagsStr = document.getElementById("input-tags").value.trim();
   const description = document.getElementById("input-summary").value.trim() || "Sem resumo disponível.";
@@ -1495,6 +1929,7 @@ function updateGeneratorPreview() {
     type,
     title,
     date,
+    ...(projectPeriod ? { projectPeriod } : {}),
     description,
     platform,
     ...(subtag ? { subtag } : {}),
@@ -1540,7 +1975,7 @@ function updateGeneratorPreview() {
 title: "${title}"
 type: "${type}"
 date: "${date}"
-platform: "${platform}"
+${projectPeriod ? `projectPeriod: "${projectPeriod}"\n` : ""}platform: "${platform}"
 image: "${image}"
 tags: [${tags.map(t => `"${t}"`).join(", ")}]
 ${type === "ongoing" ? `progress: ${progress}\n` : ""}downloadUrl: "${downloadUrl}"
@@ -1554,7 +1989,7 @@ ${content.replace(/<p>/g, "").replace(/<\/p>/g, "\n\n").replace(/<h3>/g, "### ")
     } else {
       codeDisplay.textContent = `<article class="devlog-post">
   <h2>${title}</h2>
-  <div class="meta">${date} • ${platform}</div>
+  <div class="meta">${date} ${projectPeriod ? `(Período: ${projectPeriod})` : ""} • ${platform}</div>
   <img src="${image}" alt="${title}">
   <p>${description}</p>
   <div class="full-content">
@@ -1625,7 +2060,9 @@ function savePostToSiteFeed() {
   const subtagElem = document.getElementById("input-subtag");
   const subtag = subtagElem ? subtagElem.value.trim() : "";
   const image = document.getElementById("input-image").value.trim() || "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80";
-  const date = document.getElementById("input-date").value.trim() || "28 de Julho, 2026";
+  const date = document.getElementById("input-date").value.trim() || getFormattedCurrentDate();
+  const periodElem = document.getElementById("input-project-period");
+  const projectPeriod = periodElem ? periodElem.value.trim() : "";
   const progress = parseInt(document.getElementById("input-progress").value) || 50;
   const tagsStr = document.getElementById("input-tags").value.trim();
   const tags = tagsStr ? tagsStr.split(",").map(t => t.trim()).filter(Boolean) : ["Mod"];
@@ -1642,6 +2079,7 @@ function savePostToSiteFeed() {
     type,
     title,
     date,
+    ...(projectPeriod ? { projectPeriod } : (existingItem.projectPeriod ? { projectPeriod: existingItem.projectPeriod } : {})),
     description,
     platform,
     ...(subtag ? { subtag } : {}),

@@ -87,6 +87,7 @@
               <label class="form-label" for="input-type">Tipo de Publicação:</label>
               <select id="input-type" class="form-input" onchange="handleTypeChange()">
                 <option value="devlog">📰 Devlog / Atualização de Progresso</option>
+                <option value="tool">🛠️ Ferramenta / Utilitário</option>
                 <option value="ongoing">⚙️ Projeto Em Andamento</option>
                 <option value="completed">✅ Projeto Concluído / Download</option>
                 <option value="paid">💰 Projeto Pago / Financiado</option>
@@ -97,19 +98,20 @@
 
             <div class="form-group">
               <label class="form-label" for="input-platform">Plataforma Principal:</label>
-              <input type="text" id="input-platform" class="form-input" placeholder="Ex: PlayStation 2, PS3, PC" oninput="updateGeneratorPreview()">
+              <input type="text" id="input-platform" class="form-input" placeholder="Ex: PlayStation 2, PS3, PC, Web" oninput="updateGeneratorPreview()">
             </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="input-subtag">🏷️ Subtag / Tipo de Localização (Dublado / Legendado / Port / IA):</label>
-            <input type="text" id="input-subtag" class="form-input" placeholder="Ex: Dublado, Legendado, Port, Dublagem IA" oninput="updateGeneratorPreview()">
+            <label class="form-label" for="input-subtag">🏷️ Subtag / Tipo de Localização (Dublado / Legendado / Ferramenta):</label>
+            <input type="text" id="input-subtag" class="form-input" placeholder="Ex: Dublado, Legendado, Port, Ferramenta" oninput="updateGeneratorPreview()">
             <div class="subtag-presets">
               <button type="button" class="preset-btn" onclick="setPresetSubtag('Dublado')">🎙️ Dublado</button>
               <button type="button" class="preset-btn" onclick="setPresetSubtag('Legendado')">📝 Legendado</button>
               <button type="button" class="preset-btn" onclick="setPresetSubtag('Port')">🔄 Port</button>
               <button type="button" class="preset-btn" onclick="setPresetSubtag('Dublado (IA)')">🤖 Dublado (IA)</button>
-              <button type="button" class="preset-btn" onclick="setPresetSubtag('Dublado / Port')">🎙️ Dublado / Port</button>
+              <button type="button" class="preset-btn" onclick="setPresetSubtag('Ferramenta (Criada)')">🛠️ Ferramenta (Criada)</button>
+              <button type="button" class="preset-btn" onclick="setPresetSubtag('Ferramenta (Indicada)')">⭐ Ferramenta (Indicada)</button>
             </div>
           </div>
 
@@ -131,13 +133,32 @@
 
           <div class="form-row-2">
             <div class="form-group">
-              <label class="form-label" for="input-date">Data da Publicação:</label>
-              <input type="text" id="input-date" class="form-input" placeholder="Ex: 28 de Julho, 2026" oninput="updateGeneratorPreview()">
+              <label class="form-label" for="input-date">📅 Data da Publicação (Data do Post):</label>
+              <input type="text" id="input-date" class="form-input" placeholder="Ex: 29 de Julho, 2026" oninput="updateGeneratorPreview()">
+              <div class="subtag-presets" style="margin-top: 6px;">
+                <button type="button" class="preset-btn" onclick="setPresetPostDate('today')">📅 Hoje (Data Atual)</button>
+                <button type="button" class="preset-btn" onclick="setPresetPostDate('month_year')">📅 Mês / Ano</button>
+                <button type="button" class="preset-btn" onclick="setPresetPostDate('year')">📅 Ano</button>
+              </div>
             </div>
+
             <div class="form-group">
               <label class="form-label" for="input-progress">Progresso (%) - se em andamento:</label>
               <input type="number" id="input-progress" class="form-input" min="0" max="100" value="70" oninput="updateGeneratorPreview()">
             </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="input-project-period">⏳ Período do Projeto / Cronograma (Início & Conclusão - Opcional):</label>
+            <input type="text" id="input-project-period" class="form-input" placeholder="Ex: Início: Jan/2024 • Conclusão: Jul/2026" oninput="updateGeneratorPreview()">
+            <div class="subtag-presets" style="margin-top: 6px;">
+              <button type="button" class="preset-btn" onclick="setPresetProjectPeriod('ongoing')">🚀 Em Andamento (Início: Mês/Ano)</button>
+              <button type="button" class="preset-btn" onclick="setPresetProjectPeriod('completed')">✅ Concluído (Início • Conclusão)</button>
+              <button type="button" class="preset-btn" onclick="setPresetProjectPeriod('start_only')">📅 Somente Ano de Início</button>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
+              💡 Dica: A data da publicação indica quando a novidade/post foi publicado. O período do projeto registra a linha do tempo do mod (ex: início, duração ou data de conclusão).
+            </p>
           </div>
 
           <div class="form-group">
@@ -173,8 +194,12 @@
               <button type="button" class="toolbar-btn toolbar-btn-highlight" onclick="insertContentSnippet('iframe')" title="Inserir Vídeo do YouTube ou código de <iframe>">
                 🎥 + Vídeo / iframe
               </button>
-              <button type="button" class="toolbar-btn toolbar-btn-highlight" onclick="insertContentSnippet('image')" title="Inserir Imagem com legenda">
-                🖼️ + Imagem
+              <label class="toolbar-btn toolbar-btn-highlight" style="cursor: pointer; margin: 0; display: inline-flex; align-items: center; gap: 4px;" title="Fazer Upload de Foto do Dispositivo (Base64) diretamente no corpo do texto">
+                📷 + Upload Imagem (Base64)
+                <input type="file" id="input-content-image-file" accept="image/*" style="display: none;" onchange="handleContentImageUpload(event)">
+              </label>
+              <button type="button" class="toolbar-btn toolbar-btn-highlight" onclick="insertContentSnippet('image')" title="Inserir URL de Imagem">
+                🌐 + URL Imagem
               </button>
               <button type="button" class="toolbar-btn" onclick="insertContentSnippet('subtitle')" title="Inserir Subtítulo H3">
                 📌 Subtítulo (H3)
@@ -196,9 +221,9 @@
               </button>
             </div>
 
-            <textarea id="input-content" class="form-textarea editor-textarea" style="min-height: 200px; border-top-left-radius: 0; border-top-right-radius: 0;" placeholder="Escreva o texto do post à vontade. Use os botões acima para colocar vídeos (YouTube/iframes), imagens, subtítulos, listas e links..." oninput="updateGeneratorPreview()"></textarea>
+            <textarea id="input-content" class="form-textarea editor-textarea" style="min-height: 200px; border-top-left-radius: 0; border-top-right-radius: 0;" placeholder="Escreva o texto do post à vontade. Você pode colar print/imagem diretamente (Ctrl+V), arrastar fotos para aqui ou usar os botões acima..." oninput="updateGeneratorPreview()"></textarea>
             <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
-              💡 Dica: Escreva à vontade! Você pode colear links do YouTube ou usar os botões para incluir imagens e vídeos.
+              💡 Dica: Você pode <strong>colar fotos diretamente (Ctrl+V)</strong>, arrastar arquivos de imagem para a caixa de texto ou clicar em <strong>📷 + Upload Imagem (Base64)</strong>.
             </p>
           </div>
 

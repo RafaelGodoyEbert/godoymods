@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
-    "build": "echo 'No build required'"
+    "generate-previews": "node generate-previews.js",
+    "build": "node generate-previews.js"
   },
   "dependencies": {
     "animejs": "^4.5.0",

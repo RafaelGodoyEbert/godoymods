@@ -1,12 +1,14 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
+import { generatePreviews } from './generate-previews.js';
 
 const app = express();
 const PORT = 3000;
 const COMMISSIONS_FILE = path.join(process.cwd(), 'data', 'commissions.json');
 const PROJECTS_FILE = path.join(process.cwd(), 'data', 'projects.json');
 const TEAM_FILE = path.join(process.cwd(), 'data', 'team.json');
+const TOOLS_FILE = path.join(process.cwd(), 'data', 'tools.json');
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.static(process.cwd()));
@@ -78,6 +80,47 @@ app.post('/api/team', (req, res) => {
   res.json({ success: true, count: team.length });
 });
 
+// Helper para ler e salvar ferramentas no servidor
+function loadTools() {
+  try {
+    if (fs.existsSync(TOOLS_FILE)) {
+      const data = fs.readFileSync(TOOLS_FILE, 'utf-8');
+      return JSON.parse(data);
+    }
+  } catch (err) {
+    console.error('Erro ao ler arquivo de ferramentas:', err);
+  }
+  return null;
+}
+
+function saveTools(tools) {
+  try {
+    const dataDir = path.join(process.cwd(), 'data');
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    fs.writeFileSync(TOOLS_FILE, JSON.stringify(tools, null, 2), 'utf-8');
+  } catch (err) {
+    console.error('Erro ao salvar arquivo de ferramentas:', err);
+  }
+}
+
+// API: Listar ferramentas
+app.get('/api/tools', (req, res) => {
+  const tools = loadTools();
+  res.json(tools || []);
+});
+
+// API: Atualizar ferramentas
+app.post('/api/tools', (req, res) => {
+  const tools = req.body;
+  if (!Array.isArray(tools)) {
+    return res.status(400).json({ error: 'Formato inválido. Esperado um Array de ferramentas.' });
+  }
+  saveTools(tools);
+  res.json({ success: true, count: tools.length });
+});
+
 // Helper para ler e salvar projetos no servidor
 function loadProjects() {
   try {
@@ -98,6 +141,7 @@ function saveProjects(projects) {
       fs.mkdirSync(dataDir, { recursive: true });
     }
     fs.writeFileSync(PROJECTS_FILE, JSON.stringify(projects, null, 2), 'utf-8');
+    generatePreviews();
   } catch (err) {
     console.error('Erro ao salvar arquivo de projetos:', err);
   }
