@@ -170,6 +170,7 @@ async function loadProjectsFromServer() {
         PROJECTS_DATA = serverProjects;
         renderAllCards();
         handleEditorAutoSelect();
+        checkUrlHashAndOpenModal();
         return;
       }
     }
@@ -178,19 +179,23 @@ async function loadProjectsFromServer() {
   }
 
   // 2. Tentar carregar dos arquivos JSON estáticos
-  try {
-    const jsonRes = await fetch("./data/projects.json");
-    if (jsonRes.ok) {
-      const localProjects = await jsonRes.json();
-      if (Array.isArray(localProjects) && localProjects.length > 0) {
-        PROJECTS_DATA = localProjects;
-        renderAllCards();
-        handleEditorAutoSelect();
-        return;
+  const jsonPaths = ["./data/projects.json", "./projects.json"];
+  for (const path of jsonPaths) {
+    try {
+      const jsonRes = await fetch(path);
+      if (jsonRes.ok) {
+        const localProjects = await jsonRes.json();
+        if (Array.isArray(localProjects) && localProjects.length > 0) {
+          PROJECTS_DATA = localProjects;
+          renderAllCards();
+          handleEditorAutoSelect();
+          checkUrlHashAndOpenModal();
+          return;
+        }
       }
+    } catch (err) {
+      console.warn(`Arquivo estático ${path} não pôde ser lido:`, err);
     }
-  } catch (err) {
-    console.warn("Nenhum arquivo JSON estático pôde ser lido:", err);
   }
 }
 
@@ -374,6 +379,8 @@ document.addEventListener("DOMContentLoaded", () => {
   loadProjectsFromServer();
   loadTeamFromServer();
   animateOnLoad();
+
+  window.addEventListener("hashchange", checkUrlHashAndOpenModal);
 
   // Fechar modal com tecla ESC
   document.addEventListener("keydown", (e) => {
@@ -1010,6 +1017,13 @@ function openPostModal(postId) {
   const item = PROJECTS_DATA.find(p => p.id === postId);
   if (!item) return;
 
+  // Atualizar a URL com o hash do post sem recarregar a página
+  if (postId !== "preview-temp-id" && window.location.hash !== `#${postId}`) {
+    try {
+      history.replaceState(null, null, `#${postId}`);
+    } catch (e) { }
+  }
+
   const modalOverlay = document.getElementById("post-modal-overlay");
   const modalTags = document.getElementById("modal-tags");
   const modalTitle = document.getElementById("modal-title");
@@ -1084,8 +1098,13 @@ function openPostModal(postId) {
     }
   });
 
-  // Footer com Ações Limpas
+  const safeTitle = (item.title || "").replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/"/g, "&quot;");
+
+  // Footer com Ações Limpas e Botão de Compartilhar
   let footerHTML = `
+    <button class="btn-secondary-action btn-share-action" onclick="sharePost('${item.id}', '${safeTitle}')" title="Compartilhar este post">
+      🔗 Compartilhar
+    </button>
     <button class="btn-secondary-action" onclick="closePostModal()">Fechar</button>
   `;
 
@@ -1133,6 +1152,13 @@ function closePostModal(e) {
   }
   const modalOverlay = document.getElementById("post-modal-overlay");
   if (modalOverlay) {
+    // Limpar hash da URL ao fechar modal
+    if (window.location.hash) {
+      try {
+        history.replaceState(null, null, window.location.pathname + window.location.search);
+      } catch (err) { }
+    }
+
     if (typeof anime !== 'undefined') {
       const modalContainer = modalOverlay.querySelector(".modal-container");
       anime.remove([modalOverlay, modalContainer]);
@@ -1164,6 +1190,64 @@ function closePostModal(e) {
     } else {
       modalOverlay.classList.remove("active");
       document.body.style.overflow = ""; // Restaurar rolagem
+    }
+  }
+}
+
+// LÓGICA DE COMPARTILHAMENTO DE POSTS & DEEP LINKING
+function sharePost(postId, postTitle) {
+  const shareUrl = `${window.location.origin}${window.location.pathname}#${postId}`;
+
+  if (navigator.share) {
+    navigator.share({
+      title: postTitle || 'Godoy Mods',
+      text: `Confira "${postTitle}" no Godoy Mods!`,
+      url: shareUrl
+    }).catch(err => {
+      if (err.name !== 'AbortError') {
+        copyShareUrlToClipboard(shareUrl);
+      }
+    });
+  } else {
+    copyShareUrlToClipboard(shareUrl);
+  }
+}
+
+function copyShareUrlToClipboard(url) {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast("Link do post copiado para a área de transferência! 🚀", "success");
+    }).catch(() => {
+      fallbackCopyText(url);
+    });
+  } else {
+    fallbackCopyText(url);
+  }
+}
+
+function fallbackCopyText(url) {
+  const textArea = document.createElement("textarea");
+  textArea.value = url;
+  textArea.style.position = "fixed";
+  textArea.style.opacity = "0";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand('copy');
+    showToast("Link do post copiado para a área de transferência! 🚀", "success");
+  } catch (err) {
+    showToast("Erro ao copiar link: " + url, "error");
+  }
+  document.body.removeChild(textArea);
+}
+
+function checkUrlHashAndOpenModal() {
+  const hash = window.location.hash.replace('#', '').trim();
+  if (hash && hash !== "preview-temp-id") {
+    const item = PROJECTS_DATA.find(p => p.id === hash);
+    if (item) {
+      openPostModal(item.id);
     }
   }
 }

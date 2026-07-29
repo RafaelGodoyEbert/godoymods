@@ -1608,6 +1608,23 @@ body {
   color: var(--text-accent);
 }
 
+.btn-share-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--bg-input);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  transition: all 0.2s ease;
+}
+
+.btn-share-action:hover {
+  background-color: rgba(99, 102, 241, 0.12);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  transform: translateY(-1px);
+}
+
 /* FOOTER DISCRETO */
 .site-footer {
   margin-top: 36px;
