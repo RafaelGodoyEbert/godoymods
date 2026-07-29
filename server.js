@@ -6,9 +6,7 @@ const app = express();
 const PORT = 3000;
 const COMMISSIONS_FILE = path.join(process.cwd(), 'data', 'commissions.json');
 const PROJECTS_FILE = path.join(process.cwd(), 'data', 'projects.json');
-const LEGACY_PROJECTS_FILE = path.join(process.cwd(), 'projects.json');
 const TEAM_FILE = path.join(process.cwd(), 'data', 'team.json');
-const LEGACY_TEAM_FILE = path.join(process.cwd(), 'team.json');
 
 app.use(express.json({ limit: '50mb' }));
 app.use(express.static(process.cwd()));
@@ -45,9 +43,6 @@ function loadTeam() {
     if (fs.existsSync(TEAM_FILE)) {
       const data = fs.readFileSync(TEAM_FILE, 'utf-8');
       return JSON.parse(data);
-    } else if (fs.existsSync(LEGACY_TEAM_FILE)) {
-      const data = fs.readFileSync(LEGACY_TEAM_FILE, 'utf-8');
-      return JSON.parse(data);
     }
   } catch (err) {
     console.error('Erro ao ler arquivo de equipe:', err);
@@ -62,7 +57,6 @@ function saveTeam(team) {
       fs.mkdirSync(dataDir, { recursive: true });
     }
     fs.writeFileSync(TEAM_FILE, JSON.stringify(team, null, 2), 'utf-8');
-    fs.writeFileSync(LEGACY_TEAM_FILE, JSON.stringify(team, null, 2), 'utf-8');
   } catch (err) {
     console.error('Erro ao salvar arquivo de equipe:', err);
   }
@@ -90,9 +84,6 @@ function loadProjects() {
     if (fs.existsSync(PROJECTS_FILE)) {
       const data = fs.readFileSync(PROJECTS_FILE, 'utf-8');
       return JSON.parse(data);
-    } else if (fs.existsSync(LEGACY_PROJECTS_FILE)) {
-      const data = fs.readFileSync(LEGACY_PROJECTS_FILE, 'utf-8');
-      return JSON.parse(data);
     }
   } catch (err) {
     console.error('Erro ao ler arquivo de projetos:', err);
@@ -107,7 +98,6 @@ function saveProjects(projects) {
       fs.mkdirSync(dataDir, { recursive: true });
     }
     fs.writeFileSync(PROJECTS_FILE, JSON.stringify(projects, null, 2), 'utf-8');
-    fs.writeFileSync(LEGACY_PROJECTS_FILE, JSON.stringify(projects, null, 2), 'utf-8');
   } catch (err) {
     console.error('Erro ao salvar arquivo de projetos:', err);
   }

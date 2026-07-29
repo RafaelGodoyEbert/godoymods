@@ -2456,32 +2456,126 @@ select.form-input:focus {
 }
 
 .team-stats-row {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+@media (max-width: 520px) {
+  .team-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .team-stat-box {
-  background-color: var(--bg-sidebar);
+  background: var(--bg-sidebar);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 12px 18px;
+  border-radius: 14px;
+  padding: 12px 10px;
   text-align: center;
-  min-width: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.team-stat-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .team-stat-box .stat-number {
   display: block;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 800;
-  color: var(--accent-primary);
   line-height: 1.1;
+  margin-bottom: 4px;
+  font-family: inherit;
+  text-align: center;
 }
 
 .team-stat-box .stat-label {
-  font-size: 0.725rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
   font-weight: 600;
+  letter-spacing: 0.1px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+  line-height: 1.15;
+}
+
+.team-stat-box .stat-icon {
+  font-size: 0.9rem;
+  line-height: 1;
+  display: block;
+}
+
+.team-stat-box .stat-text {
+  display: block;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Cores e Destaques Específicos */
+.team-stat-box.stat-members {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.18), var(--bg-sidebar));
+  border: 1px solid rgba(168, 85, 247, 0.45);
+  border-bottom: 3px solid #a855f7;
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.2);
+}
+.team-stat-box.stat-members .stat-number {
+  color: #c084fc;
+}
+.team-stat-box.stat-members .stat-text {
+  color: #e9d5ff;
+  font-weight: 700;
+}
+
+.team-stat-box.stat-total {
+  border-bottom: 3px solid #38bdf8;
+}
+.team-stat-box.stat-total .stat-number {
+  color: #38bdf8;
+}
+
+.team-stat-box.stat-active {
+  border-bottom: 3px solid #3b82f6;
+}
+.team-stat-box.stat-active .stat-number {
+  color: #60a5fa;
+}
+
+.team-stat-box.stat-completed {
+  border-bottom: 3px solid #22c55e;
+}
+.team-stat-box.stat-completed .stat-number {
+  color: #4ade80;
+}
+
+.team-stat-box.stat-archived {
+  border-bottom: 3px solid #eab308;
+}
+.team-stat-box.stat-archived .stat-number {
+  color: #facc15;
+}
+
+.team-stat-box.stat-abandoned {
+  border-bottom: 3px solid #ef4444;
+}
+.team-stat-box.stat-abandoned .stat-number {
+  color: #f87171;
 }
 
 /* GRID DOS CARDS DE MEMBROS DA EQUIPE */

@@ -179,10 +179,7 @@ async function loadProjectsFromServer() {
 
   // 2. Tentar carregar dos arquivos JSON estáticos
   try {
-    let jsonRes = await fetch("./projects.json");
-    if (!jsonRes.ok) {
-      jsonRes = await fetch("./data/projects.json");
-    }
+    const jsonRes = await fetch("./data/projects.json");
     if (jsonRes.ok) {
       const localProjects = await jsonRes.json();
       if (Array.isArray(localProjects) && localProjects.length > 0) {
@@ -290,10 +287,7 @@ async function loadTeamFromServer() {
   }
 
   try {
-    let jsonRes = await fetch("./data/team.json");
-    if (!jsonRes.ok) {
-      jsonRes = await fetch("./team.json");
-    }
+    const jsonRes = await fetch("./data/team.json");
     if (jsonRes.ok) {
       const localTeam = await jsonRes.json();
       if (Array.isArray(localTeam) && localTeam.length > 0) {
@@ -308,7 +302,9 @@ async function loadTeamFromServer() {
         return;
       }
     }
-  } catch (err) { }
+  } catch (err) {
+    console.warn("Arquivo ./data/team.json não pôde ser lido:", err);
+  }
   renderTeamCards();
 }
 
@@ -684,6 +680,8 @@ function renderAllCards() {
   // Badge da Aba Catálogo de Projetos
   const bProjects = document.getElementById("badge-projects");
   if (bProjects) bProjects.textContent = PROJECTS_DATA.filter(i => i.type !== "devlog").length;
+
+  updateHeroTeamStats();
 
   // Filtragem Global Combinada (Status + Plataforma + Subtag + Busca)
   const filtered = PROJECTS_DATA.filter(item => {
@@ -1678,10 +1676,7 @@ async function restoreDefaultData() {
     onConfirm: async () => {
       try {
         localStorage.removeItem("godoy_projects_data");
-        let res = await fetch("./data/projects.json");
-        if (!res.ok) {
-          res = await fetch("./projects.json");
-        }
+        const res = await fetch("./data/projects.json");
         if (res.ok) {
           PROJECTS_DATA = await res.json();
           await syncProjectsToServer();
@@ -1909,6 +1904,26 @@ function setTeamStatusPreset(statusVal) {
   }
 }
 
+function updateHeroTeamStats() {
+  const teamCount = document.getElementById("team-count-val");
+  const totalProj = document.getElementById("stat-total-projects");
+  const activeProj = document.getElementById("stat-active-projects");
+  const completedProj = document.getElementById("stat-completed-projects");
+  const archivedProj = document.getElementById("stat-archived-projects");
+  const abandonedProj = document.getElementById("stat-abandoned-projects");
+
+  if (teamCount) teamCount.textContent = (typeof TEAM_DATA !== "undefined" && TEAM_DATA.length) ? TEAM_DATA.length : 2;
+
+  if (typeof PROJECTS_DATA !== "undefined" && Array.isArray(PROJECTS_DATA)) {
+    const validProjects = PROJECTS_DATA.filter(i => i.type !== "devlog");
+    if (totalProj) totalProj.textContent = validProjects.length;
+    if (activeProj) activeProj.textContent = validProjects.filter(i => i.type === "ongoing" || i.type === "active").length;
+    if (completedProj) completedProj.textContent = validProjects.filter(i => i.type === "completed" || i.type === "paid").length;
+    if (archivedProj) archivedProj.textContent = validProjects.filter(i => i.type === "archived").length;
+    if (abandonedProj) abandonedProj.textContent = validProjects.filter(i => i.type === "abandoned").length;
+  }
+}
+
 function renderTeamCards() {
   const gridTeam = document.getElementById("grid-team");
   const countVal = document.getElementById("team-count-val");
@@ -1916,6 +1931,7 @@ function renderTeamCards() {
 
   if (countVal) countVal.textContent = TEAM_DATA.length;
   if (badgeTeam) badgeTeam.textContent = TEAM_DATA.length;
+  updateHeroTeamStats();
 
   // Atualizar dinamicamente os avatars do overlap no topo/sidebar se estiverem presentes
   const primaryAvatar = document.querySelector(".avatar-overlap-container .primary-avatar");

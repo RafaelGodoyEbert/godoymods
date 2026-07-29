@@ -37,7 +37,7 @@
   },
   {
     "id": "prince-of-persia-sot-dublado",
-    "type": "ongoing",
+    "type": "paid",
     "title": "Prince of Persia: The Sands of Time",
     "date": "22 de Fevereiro, 2026",
     "description": "Dublagem completa em PT-BR das cutscenes (6/6) e falas in-game (955/955) com 99% de revisão.",
@@ -48,13 +48,15 @@
       "PC",
       "PlayStation 2"
     ],
-    "progress": 99,
-    "content": "<p>Projeto de dublagem completa para <strong>Prince of Persia: The Sands of Time</strong> (PoPSoT).</p>\n<h3>📊 Progresso Atual:</h3>\n<ul>\n  <li><strong>Cutscenes:</strong> 6/6 (100% ✅)</li>\n  <li><strong>Falas In-game:</strong> 955/955 (100% ✅)</li>\n  <li><strong>Revisão:</strong> 99% 🟡</li>\n</ul>\n<p>Lançamento em parceria no canal do <strong>Dast Games</strong>!</p>",
+    "tagLinks": {
+      "PC": "https://www.centraldetraducoes.net.br/2026/04/dublagem-do-prince-of-persia-sands-of-time-pc.html"
+    },
+    "content": "<p>Projeto de dublagem completa para <strong>Prince of Persia: The Sands of Time</strong> (PoPSoT).</p>\n<h3>📊 Progresso Atual:</h3>\n<ul>\n  <li><strong>Cutscenes:</strong> 6/6 (100% ✅)</li>\n  <li><strong>Falas In-game:</strong> 955/955 (100% ✅)</li>\n  <li><strong>Revisão:</strong> 99% 🟡</li>\n</ul>\n<p>Lançamento em parceria no canal do <strong>Dast Games</strong>!</p>\n\n<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/100YjCmKomA?si=4YRy85mltyr_rud7\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
     "downloadUrl": "https://www.youtube.com/channel/UC7OyRL70SFlEtHYWCLxYuKQ"
   },
   {
     "id": "paper-mario-ttyd",
-    "type": "abandoned",
+    "type": "archived",
     "title": "Paper Mario: The Thousand-Year Door",
     "date": "26 de Outubro, 2025",
     "description": "Tradução-relâmpago via IA (Claude) que deu origem à ferramenta open-source Dialogue Editor.",
@@ -69,7 +71,7 @@
   },
   {
     "id": "assassins-creed-dublado",
-    "type": "abandoned",
+    "type": "archived",
     "title": "Assassin's Creed",
     "date": "26 de Outubro, 2025",
     "description": "Projeto de dublagem em PT-BR para a versão original de 2007 (que não possui legendas no jogo original).",
@@ -84,7 +86,7 @@
   },
   {
     "id": "nfs-underground-2-dublado",
-    "type": "abandoned",
+    "type": "archived",
     "title": "Need For Speed Underground 2",
     "date": "26 de Outubro, 2025",
     "description": "Projeto de dublagem PT-BR em Bayview que impulsionou o desenvolvimento do DubGen.",
@@ -120,7 +122,7 @@
   },
   {
     "id": "jackass-the-game",
-    "type": "abandoned",
+    "type": "archived",
     "title": "Jackass The Game",
     "date": "26 de Outubro, 2025",
     "description": "Tradução e localização PT-BR do clássico da MTV para PS2 e PSP.",
@@ -142,7 +144,7 @@
     "description": "Projeto de tradução em PT-BR para Resident Evil Code: Veronica X HD (abandonado).",
     "platform": "PlayStation 3 / Xbox 360",
     "subtag": "Legendado",
-    "image": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwallpapercave.com%2Fwp%2Fwp1947230.jpg&f=1&nofb=1",
+    "image": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi0.fifu.app%2Fovercentral.com%2F4944751863f4%2Fcapcom-planeja-remake-de-resident-evil-1-apos-lancamento-de-code-veronica-em-2027.webp%3Fp%3D21334%26u%3DaHR0cHM6Ly9tb3Rla2dhbWVzLmRlL3dwLWNvbnRlbnQvdXBsb2Fkcy8yMDI2LzAxL1Jlc2lkZW50X0V2aWxfQ29kZV9WZXJvbmljYV8yNl8wMV8yNl8wMS5qcGc&f=1&nofb=1&ipt=e77f77dc613877943dbc706708f6af3d7d69f7cf9e70d3fdf4e3b49869cc8536",
     "tags": [
       "PlayStation 3",
       "Xbox 360"
@@ -162,6 +164,9 @@
     "tags": [
       "PC"
     ],
+    "tagLinks": {
+      "PC": "https://huggingface.co/CentralDeTraducoes/TraducoesPC/resolve/main/TRADU%C3%87%C3%95ES%20ANY/Tradu%C3%A7%C3%B5es%20G/GTA%20Vice%20City%20NextGen%20Edition%20v1.1%20(Arquivos)%20%5BCentralDeTraducoes.net.br%5D.rar?download=true"
+    },
     "content": "<p>Tradução em Português do Brasil para a mod de <strong>GTA Vice City NextGen Edition</strong> no PC por <strong>Krisp</strong>.</p>",
     "downloadUrl": "https://www.mediafire.com/file/hmhe2mgb09ise2e/GTAVCNG-TRADU%C3%87%C3%83O.zip/file"
   },
@@ -177,6 +182,9 @@
     "tags": [
       "PlayStation 3"
     ],
+    "tagLinks": {
+      "PlayStation 3": "https://www.mediafire.com/file/67cqee3g519vr08/DUBLAGEM_RESIDENTEVIL4HD_PS3.zip/file"
+    },
     "content": "<p>Dublagem em Português do Brasil para <strong>Resident Evil 4 HD</strong> no PlayStation 3, lançada por <strong>Krisp</strong>.</p>",
     "downloadUrl": "https://www.mediafire.com/file/67cqee3g519vr08/DUBLAGEM_RESIDENTEVIL4HD_PS3.zip/file"
   },
@@ -228,8 +236,7 @@
       "PC"
     ],
     "tagLinks": {
-      "Instalador Central": "https://www.centraldetraducoes.net.br/2024/05/dublagem-do-portal-pc.html",
-      "Mediafire": "https://www.mediafire.com/file/2m5rn092wmfdy7t/portal-dublado-pt_BR-por-RafaelGodoy-%26-Krisp.zip/file"
+      "PC": "https://www.mediafire.com/file/2m5rn092wmfdy7t/portal-dublado-pt_BR-por-RafaelGodoy-%26-Krisp.zip/file"
     },
     "content": "<p>Dublagem completa de <strong>Portal</strong> e <strong>Portal with RTX</strong> para PC, criada por <strong>RafaelGodoy & Krisp</strong>.</p>\n<h3>📦 Instalação:</h3>\n<p>Extraia o conteúdo do ZIP na pasta do seu Portal (não substituirá nada). Caso esteja jogando o <em>Portal Remix / RTX</em>, renomeie a pasta <code>portal</code> para <code>portal_rtx</code>.</p>",
     "downloadUrl": "https://www.mediafire.com/file/2m5rn092wmfdy7t/portal-dublado-pt_BR-por-RafaelGodoy-%26-Krisp.zip/file"
@@ -244,9 +251,11 @@
     "subtag": "Port",
     "image": "https://assets.nintendo.com/image/upload/q_auto/f_auto/store/software/switch/70010000009921/44bea8c565db26c0c470a6325a47c9ea031633945cb91e4b5e1b1a39b01a2cdb",
     "tags": [
-      "PlayStation 3",
-      "PC"
+      "PlayStation 3"
     ],
+    "tagLinks": {
+      "PlayStation 3": "https://bit.ly/Undertale_PS3_PKG"
+    },
     "content": "<p>Port de <strong>Undertale</strong> em pacote PKG para ser jogado no PlayStation 3 e no emulador RPCS3.</p>\n<h3>📦 Instruções de Instalação:</h3>\n<ol>\n  <li>Baixe o arquivo PKG no link indicado.</li>\n  <li>Instale o arquivo PKG no seu PS3 ou RPCS3.</li>\n  <li>Divirta-se!</li>\n</ol>\n<p><em>Port realizado por @Krisp.</em></p>\n<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/qHuzMt4isEI\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
     "downloadUrl": "https://bit.ly/Undertale_PS3_PKG"
   },
