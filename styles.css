@@ -51,7 +51,18 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+a,
+button,
+input,
+select,
+textarea,
+.project-card,
+.badge,
+.sidebar-link,
+.tab-btn {
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 a,

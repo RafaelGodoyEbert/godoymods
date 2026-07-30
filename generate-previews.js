@@ -24,6 +24,21 @@ function escapeHtml(text) {
     .replace(/>/g, '&gt;');
 }
 
+function getDefaultThemeColor(platform, tags) {
+  const str = `${platform || ''} ${(tags || []).join(' ')}`.toLowerCase();
+  if (str.includes('cod') || str.includes('call of duty')) return '#22c55e';
+  if (str.includes('mario') || str.includes('switch') || str.includes('nintendo')) return '#ef4444';
+  if (str.includes('gta') || str.includes('san andreas')) return '#16a34a';
+  if (str.includes('vice city')) return '#ec4899';
+  if (str.includes('god of war')) return '#dc2626';
+  if (str.includes('red dead') || str.includes('rdr')) return '#b91c1c';
+  if (str.includes('ps2') || str.includes('playstation 2') || str.includes('ps3') || str.includes('playstation 3')) return '#3b82f6';
+  if (str.includes('xbox')) return '#10b981';
+  if (str.includes('pc')) return '#8b5cf6';
+  if (str.includes('android')) return '#3ddc84';
+  return '#6366f1';
+}
+
 export function generatePreviews() {
   console.log('🚀 Gerando páginas de preview estáticas para redes sociais (Discord, WhatsApp, etc.)...');
   
@@ -94,6 +109,7 @@ export function generatePreviews() {
     const imageUrl = rawImg.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     const targetUrl = `https://rafaelgodoyebert.github.io/godoymods/#${projectId}`;
     const pageUrl = `https://rafaelgodoyebert.github.io/godoymods/p/${projectId}/`;
+    const themeColor = project.themeColor || getDefaultThemeColor(project.platform, project.tags);
 
     const htmlContent = `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -102,6 +118,7 @@ export function generatePreviews() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${fullTitle}</title>
   <meta name="description" content="${descriptionText}">
+  <meta name="theme-color" content="${themeColor}">
   
   <!-- Open Graph / Facebook / Discord / WhatsApp -->
   <meta property="og:type" content="article">

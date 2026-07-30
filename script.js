@@ -1884,6 +1884,11 @@ function loadSelectedPostForEdit() {
   document.getElementById("input-content").value = (item.content || "").replace(/\\n/g, "\n");
   document.getElementById("input-download").value = item.downloadUrl || "";
 
+  const colorElem = document.getElementById("input-theme-color");
+  const colorPickerElem = document.getElementById("input-theme-color-picker");
+  if (colorElem) colorElem.value = item.themeColor || "#6366f1";
+  if (colorPickerElem) colorPickerElem.value = item.themeColor || "#6366f1";
+
   handleTypeChange();
   renderTagLinksInputs(item.tagLinks || item.platformDownloads || {});
 
@@ -1906,6 +1911,11 @@ function resetFormToNew() {
   const subtagElem = document.getElementById("input-subtag");
   if (subtagElem) subtagElem.value = "Dublado (IA)";
   document.getElementById("input-image").value = "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1200&q=80";
+
+  const colorElem = document.getElementById("input-theme-color");
+  const colorPickerElem = document.getElementById("input-theme-color-picker");
+  if (colorElem) colorElem.value = "#6366f1";
+  if (colorPickerElem) colorPickerElem.value = "#6366f1";
 
   document.getElementById("input-date").value = getFormattedCurrentDate();
   const periodElem = document.getElementById("input-project-period");
@@ -1930,6 +1940,8 @@ function updateGeneratorPreview() {
   const subtagElem = document.getElementById("input-subtag");
   const subtag = subtagElem ? subtagElem.value.trim() : "";
   const image = document.getElementById("input-image").value.trim() || "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80";
+  const colorElem = document.getElementById("input-theme-color");
+  const themeColor = colorElem ? colorElem.value.trim() : "#6366f1";
   const date = document.getElementById("input-date").value.trim() || getFormattedCurrentDate();
   const periodElem = document.getElementById("input-project-period");
   const projectPeriod = periodElem ? periodElem.value.trim() : "";
@@ -1955,6 +1967,7 @@ function updateGeneratorPreview() {
     platform,
     ...(subtag ? { subtag } : {}),
     image,
+    ...(themeColor ? { themeColor } : {}),
     tags,
     ...(Object.keys(tagLinks).length > 0 ? { tagLinks } : {}),
     ...(type === "ongoing" ? { progress } : {}),

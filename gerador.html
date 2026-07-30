@@ -131,6 +131,15 @@
             <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Cole um link direto de imagem ou clique em Upload para carregar uma foto do seu dispositivo.</p>
           </div>
 
+          <div class="form-group">
+            <label class="form-label" for="input-theme-color">🎨 Cor do Embed (Barra Lateral no Discord / WhatsApp):</label>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <input type="color" id="input-theme-color-picker" value="#6366f1" style="width: 42px; height: 38px; padding: 2px; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer;" oninput="document.getElementById('input-theme-color').value = this.value; updateGeneratorPreview();">
+              <input type="text" id="input-theme-color" class="form-input" style="flex: 1;" placeholder="Ex: #22c55e (Cor em Hex de acordo com a arte)" value="#6366f1" oninput="document.getElementById('input-theme-color-picker').value = this.value; updateGeneratorPreview();">
+            </div>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Define a cor da linha lateral do embed e destaque no Discord e WhatsApp para combinar com a paleta da imagem.</p>
+          </div>
+
           <div class="form-row-2">
             <div class="form-group">
               <label class="form-label" for="input-date">📅 Data da Publicação (Data do Post):</label>
