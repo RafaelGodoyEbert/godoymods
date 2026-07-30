@@ -1439,6 +1439,17 @@ let isModalHistoryPushed = false;
 // Ouvinte para o botão "Voltar" do celular / navegador para fechar o modal
 window.addEventListener("popstate", () => {
   const modalOverlay = document.getElementById("post-modal-overlay");
+  const hash = window.location.hash.replace('#', '').trim();
+
+  if (hash && hash !== "preview-temp-id") {
+    const item = PROJECTS_DATA.find(p => p.id === hash) || (typeof TOOLS_DATA !== "undefined" ? TOOLS_DATA.find(t => t.id === hash) : null);
+    if (item) {
+      isModalHistoryPushed = false;
+      openPostModal(item.id);
+      return;
+    }
+  }
+
   if (modalOverlay && modalOverlay.classList.contains("active")) {
     isModalHistoryPushed = false;
     hidePostModalUI();
@@ -1698,11 +1709,21 @@ function fallbackCopyText(url) {
   document.body.removeChild(textArea);
 }
 
+let isInitialHashCheckDone = false;
+
 function checkUrlHashAndOpenModal() {
   const hash = window.location.hash.replace('#', '').trim();
   if (hash && hash !== "preview-temp-id") {
-    const item = PROJECTS_DATA.find(p => p.id === hash);
+    const item = PROJECTS_DATA.find(p => p.id === hash) || (typeof TOOLS_DATA !== "undefined" ? TOOLS_DATA.find(t => t.id === hash) : null);
     if (item) {
+      // Ao carregar a página vindo de um link direto (ex: /#paper-mario-ttyd),
+      // limpa a hash da entrada inicial do histórico com replaceState para que a base seja a Home limpa.
+      if (!isInitialHashCheckDone && window.location.hash) {
+        isInitialHashCheckDone = true;
+        try {
+          history.replaceState(null, null, window.location.pathname + window.location.search);
+        } catch (e) { }
+      }
       openPostModal(item.id);
     }
   }

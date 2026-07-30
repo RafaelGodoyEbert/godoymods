@@ -81,7 +81,17 @@ export function generatePreviews() {
     descriptionText = escapeHtml(descriptionText.substring(0, 200));
 
     const defaultImage = 'https://i.imgur.com/OgaeHFx.png';
-    const imageUrl = escapeHtml(project.image && project.image.trim() !== '' ? project.image : defaultImage);
+    let rawImg = project.image && project.image.trim() !== '' ? project.image.trim() : defaultImage;
+
+    if (rawImg.includes('duckduckgo.com/iu/?u=')) {
+      const match = rawImg.match(/u=([^&]+)/);
+      if (match && match[1]) {
+        try {
+          rawImg = decodeURIComponent(match[1]);
+        } catch (e) {}
+      }
+    }
+    const imageUrl = rawImg.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     const targetUrl = `https://rafaelgodoyebert.github.io/godoymods/#${projectId}`;
     const pageUrl = `https://rafaelgodoyebert.github.io/godoymods/p/${projectId}/`;
 
