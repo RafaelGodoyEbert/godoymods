@@ -922,6 +922,27 @@ body {
   z-index: 1;
 }
 
+/* CONTAINER DE BADGES DE STATUS NOS CARDS (Empilhamento flex vertical) */
+.card-status-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.card-status-container .card-status-tag {
+  position: relative;
+  top: auto;
+  right: auto;
+  margin: 0;
+  pointer-events: auto;
+}
+
 /* BADGES DE STATUS NOS CARDS - ULTRA LEGÍVEIS COM ALTO CONTRASTE */
 .card-status-tag {
   position: absolute;

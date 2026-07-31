@@ -955,18 +955,8 @@ function switchTab(tabId) {
     if (isTarget) {
       if (!pane.classList.contains("active")) {
         pane.classList.add("active");
-        if (typeof anime !== 'undefined') {
-          anime.remove(pane);
-          pane.style.opacity = '0';
-          pane.style.transform = 'translateY(15px)';
-          anime({
-            targets: pane,
-            opacity: [0, 1],
-            translateY: [15, 0],
-            duration: 400,
-            easing: 'easeOutQuad'
-          });
-        }
+        pane.style.opacity = '1';
+        pane.style.transform = 'none';
       }
     } else {
       pane.classList.remove("active");
@@ -981,6 +971,7 @@ function switchTab(tabId) {
     renderToolsCards();
   }
 }
+
 
 // HELPERS DE FILTRAGEM
 function checkMatchStatus(item, filterKey) {
@@ -1312,34 +1303,42 @@ function renderToolsCards() {
   }
 }
 
-// STAGGER CARD CASCADE ANIMATION WITH ANIME.JS
+// STAGGER CARD CASCADE ANIMATION WITH ANIME.JS (Otimizada para 60fps fluido)
 function triggerGridStaggerAnimation() {
   if (typeof anime === 'undefined') return;
 
   const activePane = document.querySelector(".tab-pane.active");
   if (!activePane) return;
 
-  const cards = activePane.querySelectorAll(".card, .team-card");
+  const cards = Array.from(activePane.querySelectorAll(".card, .team-card"));
   if (cards.length === 0) return;
 
   anime.remove(cards);
 
-  // Set initial states to avoid flicker
-  cards.forEach(card => {
+  // Limitar a animação stagger aos primeiros 12 cards para evitar perda de FPS
+  const animCards = cards.slice(0, 12);
+  const restCards = cards.slice(12);
+
+  restCards.forEach(card => {
+    card.style.opacity = '1';
+    card.style.transform = 'none';
+  });
+
+  animCards.forEach(card => {
     card.style.opacity = '0';
-    card.style.transform = 'translateY(20px) scale(0.97)';
+    card.style.transform = 'translateY(12px)';
   });
 
   anime({
-    targets: cards,
+    targets: animCards,
     opacity: [0, 1],
-    translateY: [20, 0],
-    scale: [0.97, 1],
-    delay: anime.stagger(45, { start: 50 }),
-    duration: 550,
-    easing: 'easeOutCubic'
+    translateY: [12, 0],
+    delay: anime.stagger(25, { start: 20 }),
+    duration: 350,
+    easing: 'easeOutQuad'
   });
 }
+
 
 // RENDERIZAR CARDS NO GRID
 function renderAllCards() {
@@ -1465,7 +1464,6 @@ function createCardHTML(item) {
       <div class="card-progress-wrapper">
         <div class="card-progress-header">
           <span class="progress-label">⚙️ Progresso da Dublagem</span>
-          <span class="progress-percent-val ${percentClass}">${progressVal}</span>
         </div>
         <div class="card-progress-bar">
           <div class="card-progress-fill ${fillClass}" style="width: ${progressVal}%;"></div>
@@ -1480,6 +1478,11 @@ function createCardHTML(item) {
     statusBadge = `<span class="card-status-tag status-abandoned">🚫 Abandonado</span>`;
   } else {
     statusBadge = `<span class="card-status-tag status-devlog">📰 Devlog</span>`;
+  }
+
+  // Badge extra de patrocinado (independente do tipo)
+  if (item.sponsored) {
+    statusBadge += `<span class="card-status-tag status-sponsored">💰 Financiado</span>`;
   }
 
   let subtagBadgeHTML = "";
@@ -1510,7 +1513,9 @@ function createCardHTML(item) {
       <div class="card-media">
         <img src="${item.image}" alt="${item.title}" loading="lazy" referrerpolicy="no-referrer" style="object-position: ${item.imagePosition || item.imagePos || 'center'};" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80';">
         <div class="card-media-overlay"></div>
-        ${statusBadge}
+        <div class="card-status-container">
+          ${statusBadge}
+        </div>
       </div>
       <div class="card-body">
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
@@ -2345,6 +2350,19 @@ function initGeneratorPage() {
   }
 }
 
+// Atualiza visual do toggle patrocinado
+function updateSponsoredToggle() {
+  const cb = document.getElementById("input-sponsored");
+  if (!cb) return;
+  const track = document.getElementById("sponsored-track");
+  const thumb = document.getElementById("sponsored-thumb");
+  if (track) track.style.background = cb.checked ? "rgba(251,191,36,0.6)" : "";
+  if (thumb) {
+    thumb.style.left = cb.checked ? "23px" : "3px";
+    thumb.style.background = cb.checked ? "#fbbf24" : "";
+  }
+}
+
 function populatePostSelector() {
   const selectElem = document.getElementById("select-existing-post");
   if (!selectElem) return;
@@ -2526,6 +2544,16 @@ function loadSelectedPostForEdit() {
   if (document.getElementById("input-tool-button-text")) document.getElementById("input-tool-button-text").value = item.buttonText || "🚀 Acessar Ferramenta";
   if (document.getElementById("input-tool-url")) document.getElementById("input-tool-url").value = item.url || item.downloadUrl || "";
 
+  // Campo sponsored
+  const sponsoredCheck = document.getElementById("input-sponsored");
+  if (sponsoredCheck) {
+    sponsoredCheck.checked = !!item.sponsored;
+    const track = document.getElementById("sponsored-track");
+    const thumb = document.getElementById("sponsored-thumb");
+    if (track) track.style.background = item.sponsored ? "rgba(251,191,36,0.6)" : "";
+    if (thumb) { thumb.style.left = item.sponsored ? "23px" : "3px"; thumb.style.background = item.sponsored ? "#fbbf24" : ""; }
+  }
+
   handleTypeChange();
   renderTagLinksInputs(item.tagLinks || item.platformDownloads || {});
 
@@ -2561,6 +2589,16 @@ function resetFormToNew() {
   if (document.getElementById("input-tool-badge")) document.getElementById("input-tool-badge").value = "Ferramenta";
   if (document.getElementById("input-tool-button-text")) document.getElementById("input-tool-button-text").value = "🚀 Acessar Ferramenta";
   if (document.getElementById("input-tool-url")) document.getElementById("input-tool-url").value = "";
+
+  // Limpar sponsored
+  const sponsoredCheck = document.getElementById("input-sponsored");
+  if (sponsoredCheck) {
+    sponsoredCheck.checked = false;
+    const track = document.getElementById("sponsored-track");
+    const thumb = document.getElementById("sponsored-thumb");
+    if (track) track.style.background = "";
+    if (thumb) { thumb.style.left = "3px"; thumb.style.background = ""; }
+  }
 
   document.getElementById("input-date").value = getFormattedCurrentDate();
   const periodElem = document.getElementById("input-project-period");
@@ -2817,6 +2855,15 @@ function savePostToSiteFeed() {
   const id = existingId || title.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || `post-${Date.now()}`;
 
   const type = document.getElementById("input-type").value;
+  const sponsoredElem = document.getElementById("input-sponsored");
+  const sponsored = sponsoredElem ? sponsoredElem.checked : false;
+  // Atualizar visual do toggle
+  if (sponsoredElem) {
+    const track = document.getElementById("sponsored-track");
+    const thumb = document.getElementById("sponsored-thumb");
+    if (track) track.style.background = sponsored ? "rgba(251,191,36,0.6)" : "";
+    if (thumb) { thumb.style.left = sponsored ? "23px" : "3px"; thumb.style.background = sponsored ? "#fbbf24" : ""; }
+  }
   const platform = document.getElementById("input-platform").value.trim() || "PlayStation 2";
   const subtagElem = document.getElementById("input-subtag");
   const subtag = subtagElem ? subtagElem.value.trim() : "";
@@ -2861,6 +2908,7 @@ function savePostToSiteFeed() {
     tags,
     ...(Object.keys(tagLinks).length > 0 ? { tagLinks } : (existingItem.tagLinks ? { tagLinks: existingItem.tagLinks } : {})),
     ...(type === "ongoing" ? { progress } : {}),
+    ...(sponsored ? { sponsored: true } : {}),
     ...(type === "tool" ? {
       category: toolCategory,
       icon: toolIcon,

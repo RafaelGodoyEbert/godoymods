@@ -1,12 +1,12 @@
 [
   {
-    "id": "prince-of-persia-the-two-thrones",
-    "type": "paid",
+    "id": "prince-of-persia-the-two-thrones-dublado",
+    "type": "ongoing",
     "title": "Prince of persia The Two Thrones",
     "date": "31 de Julho, 2026",
     "projectPeriod": "Início: Mai/2026 (Em andamento)",
     "description": "O DastGames fazendo a boa e Patrocinando a trilogia do PoP de ps2.",
-    "platform": "PlayStation 2",
+    "platform": "PC",
     "subtag": "Dublado (IA)",
     "image": "https://ucarecdn.com/be05ac61-d430-46ea-af7b-2ad02f142547/image.jpg",
     "imagePosition": "top",
@@ -15,17 +15,19 @@
       "PC",
       "Playstation 2"
     ],
+    "progress": 65,
+    "sponsored": true,
     "content": "<p>Confira as últimas novidades e o andamento do nosso projeto de modificação!</p>\n\n<h3>✨ Destaques do Update:</h3>\n<ul>\n  <li><strong>Progresso de dublagem:</strong> Trabalhando na sincronização das vozes principais e nos ajustes de áudio em alta fidelidade.</li>\n  <li><strong>Parceria confirmada:</strong> O canal <a href=\"https://www.youtube.com/@dastgames94\" target=\"_blank\">DastGames</a> (acesse o <a href=\"https://discord.gg/8Y7czsqxyd\" target=\"_blank\">Discord dele</a>) chegou junto para patrocinar o projeto da clássica trilogia <em>Prince of Persia</em> (famosa no PS2)!</li>\n  <li><strong>Plataforma:</strong> O foco do desenvolvimento é a versão de <strong>PC</strong> (uma versão para PS2 é apenas uma possibilidade remota).</li>\n  <li><strong>Novas Ferramentas:</strong> Desenvolvemos ferramentas próprias para viabilizar o projeto — o <em>\"Editor de Emoções\"</em> e o <em>\"Editor de Cutscenes\"</em>.</li>\n</ul>\n\n<p>Em breve faremos um post detalhado sobre como essas ferramentas funcionam!</p>",
     "downloadUrl": "https://discord.com/invite/atFQmmR2fy"
   },
   {
     "id": "prince-of-persia-warrior-within-dublado",
-    "type": "paid",
+    "type": "ongoing",
     "title": "Prince of Persia Warrior within",
     "date": "15 de Mar, 2026",
     "projectPeriod": "Início: Mar/2026 (Em andamento)",
     "description": "O DastGames fazendo a boa e Patrocinando a trilogia do PoP de ps2.",
-    "platform": "PC, PlayStation 2",
+    "platform": "PC",
     "subtag": "Dublado (IA)",
     "image": "https://ucarecdn.com/b48b2a97-a054-4511-9a85-fa32a7c839ee/image.jpg",
     "themeColor": "#b20923",
@@ -33,6 +35,8 @@
       "PC",
       "Playstation 2"
     ],
+    "progress": 85,
+    "sponsored": true,
     "content": "<p>🚀 <strong>NOVIDADES NO PROJETO!</strong></p>\n\n<p>O <a href=\"https://www.youtube.com/@dastgames94\" target=\"_blank\">DastGames</a> fortaleceu o projeto e fechamos o patrocínio para a clássica trilogia <strong>Prince of Persia</strong> (conhecida do PS2). Aproveite para entrar no <a href=\"https://discord.gg/8Y7czsqxyd\" target=\"_blank\">Discord da DastGames</a>!</p>\n\n<p><em>Vale lembrar: o foco do desenvolvimento é a versão de <strong>PC</strong> (portar para o PS2 é um grande talvez).</em></p>\n\n<h3>✨ No que estamos trabalhando:</h3>\n<ul>\n  <li>Sincronização em andamento das vozes principais.</li>\n  <li>Tratamento e refinamento do áudio em alta fidelidade.</li>\n  <li>Criação de ferramentas próprias para a dublagem: o <strong>\"Editor de Emoções\"</strong> e o <strong>\"Editor de Cutscenes\"</strong>.</li>\n</ul>\n\n<p>Em breve traremos um post dedicado explicando o funcionamento dessas novas ferramentas!</p>",
     "downloadUrl": "https://discord.com/invite/atFQmmR2fy"
   },
@@ -76,12 +80,12 @@
   },
   {
     "id": "prince-of-persia-sot-dublado",
-    "type": "paid",
+    "type": "completed",
     "title": "Prince of Persia: The Sands of Time",
     "date": "22 de Fevereiro, 2026",
     "projectPeriod": "Início: nov/2025 • Concluído: fev/2026",
     "description": "Dublagem completa em PT-BR das cutscenes (6/6) e falas in-game (955/955) com 99% de revisão.",
-    "platform": "PC / PlayStation 2",
+    "platform": "PC",
     "subtag": "Dublado (IA)",
     "image": "https://i.imgur.com/8jzuwod.png",
     "themeColor": "#e0bc4c",
@@ -92,6 +96,7 @@
     "tagLinks": {
       "PC": "https://www.centraldetraducoes.net.br/2026/04/dublagem-do-prince-of-persia-sands-of-time-pc.html"
     },
+    "sponsored": true,
     "content": "<p>Projeto de dublagem completa para <strong>Prince of Persia: The Sands of Time</strong> (PoPSoT).</p>\n<h3>📊 Progresso Atual:</h3>\n<ul>\n  <li><strong>Cutscenes:</strong> 6/6 (100% ✅)</li>\n  <li><strong>Falas In-game:</strong> 955/955 (100% ✅)</li>\n  <li><strong>Revisão:</strong> 99% 🟡</li>\n</ul>\n<p>Lançamento em parceria no canal do <strong>Dast Games</strong>!</p>\n\n<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/100YjCmKomA?si=4YRy85mltyr_rud7\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
     "downloadUrl": "https://www.youtube.com/channel/UC7OyRL70SFlEtHYWCLxYuKQ"
   },
@@ -152,7 +157,7 @@
     "title": "Bully",
     "date": "26 de Outubro, 2025",
     "description": "Projeto de dublagem PT-BR para Bully (paralisado por divergências de gestão e cronograma da equipe).",
-    "platform": "PS2 / PC / Android",
+    "platform": "PC",
     "subtag": "Dublado",
     "image": "https://i.imgur.com/gt0vX8a.jpeg",
     "themeColor": "#001c65",
