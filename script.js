@@ -473,6 +473,328 @@ async function syncTeamToServer() {
   }
 }
 
+// ==========================================================================
+// DADOS DE FERRAMENTAS
+// ==========================================================================
+const DEFAULT_TOOLS_DATA = [];
+
+let TOOLS_DATA = [];
+
+try {
+  const savedTools = localStorage.getItem("godoy_tools_data");
+  if (savedTools) {
+    const parsed = JSON.parse(savedTools);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      TOOLS_DATA = parsed;
+    } else {
+      TOOLS_DATA = JSON.parse(JSON.stringify(DEFAULT_TOOLS_DATA));
+    }
+  } else {
+    TOOLS_DATA = JSON.parse(JSON.stringify(DEFAULT_TOOLS_DATA));
+  }
+} catch (e) {
+  TOOLS_DATA = JSON.parse(JSON.stringify(DEFAULT_TOOLS_DATA));
+}
+
+async function loadToolsFromServer() {
+  try {
+    const res = await fetch("/api/tools");
+    if (res.ok) {
+      const serverTools = await res.json();
+      if (Array.isArray(serverTools) && serverTools.length > 0) {
+        TOOLS_DATA = serverTools;
+        try {
+          localStorage.setItem("godoy_tools_data", JSON.stringify(TOOLS_DATA));
+        } catch (e) { }
+        if (document.getElementById("select-existing-tool")) {
+          populateToolsSelector();
+        }
+        return;
+      }
+    }
+  } catch (err) {
+    console.warn("API de ferramentas indisponível:", err);
+  }
+
+  try {
+    const jsonRes = await fetch("./data/tools.json");
+    if (jsonRes.ok) {
+      const localTools = await jsonRes.json();
+      if (Array.isArray(localTools) && localTools.length > 0) {
+        TOOLS_DATA = localTools;
+        try {
+          localStorage.setItem("godoy_tools_data", JSON.stringify(TOOLS_DATA));
+        } catch (e) { }
+        if (document.getElementById("select-existing-tool")) {
+          populateToolsSelector();
+        }
+        return;
+      }
+    }
+  } catch (err) {
+    console.warn("Arquivo ./data/tools.json não pôde ser lido:", err);
+  }
+}
+
+async function syncToolsToServer() {
+  try {
+    await fetch("/api/tools", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(TOOLS_DATA)
+    });
+  } catch (err) {
+    console.error("Erro ao salvar ferramentas no servidor:", err);
+  }
+}
+
+// POPULAR SELETOR DE FERRAMENTAS NO PAINEL DE ADMIN
+function populateToolsSelector() {
+  const select = document.getElementById("select-existing-tool");
+  if (!select) return;
+
+  const currentVal = select.value;
+  select.innerHTML = "";
+
+  const optNew = document.createElement("option");
+  optNew.value = "new";
+  optNew.textContent = "➕ [Adicionar Nova Ferramenta]";
+  select.appendChild(optNew);
+
+  TOOLS_DATA.forEach(t => {
+    const opt = document.createElement("option");
+    opt.value = t.id;
+    const icon = t.icon || "🛠️";
+    opt.textContent = `${icon} ${t.title}`;
+    select.appendChild(opt);
+  });
+
+  if (currentVal && Array.from(select.options).some(o => o.value === currentVal)) {
+    select.value = currentVal;
+  } else {
+    select.value = "new";
+  }
+}
+
+// CARREGAR FERRAMENTA SELECIONADA PARA EDIÇÃO
+function loadSelectedToolForEdit() {
+  const select = document.getElementById("select-existing-tool");
+  if (!select) return;
+
+  const id = select.value;
+  const deleteBtn = document.getElementById("btn-delete-tool");
+  const headingEl = document.getElementById("tool-form-heading");
+
+  if (id === "new") {
+    // Modo criação
+    document.getElementById("tool-input-id").value = "";
+    document.getElementById("tool-input-title").value = "";
+    document.getElementById("tool-input-category").value = "created";
+    document.getElementById("tool-input-icon").value = "🛠️";
+    document.getElementById("tool-input-badge").value = "";
+    document.getElementById("tool-input-badge-color").value = "primary";
+    document.getElementById("tool-input-button-text").value = "🚀 Acessar Ferramenta";
+    document.getElementById("tool-input-url").value = "";
+    document.getElementById("tool-input-image").value = "";
+    document.getElementById("tool-input-platform").value = "";
+    document.getElementById("tool-input-tags").value = "";
+    document.getElementById("tool-input-description").value = "";
+    document.getElementById("tool-input-content").value = "";
+    if (deleteBtn) deleteBtn.style.display = "none";
+    if (headingEl) headingEl.textContent = "➕ Nova Ferramenta";
+    updateToolPreview();
+    return;
+  }
+
+  const tool = TOOLS_DATA.find(t => t.id === id);
+  if (!tool) return;
+
+  document.getElementById("tool-input-id").value = tool.id || "";
+  document.getElementById("tool-input-title").value = tool.title || "";
+  document.getElementById("tool-input-category").value = tool.category || "created";
+  document.getElementById("tool-input-icon").value = tool.icon || "🛠️";
+  document.getElementById("tool-input-badge").value = tool.badge || "";
+  document.getElementById("tool-input-badge-color").value = tool.badgeColor || "primary";
+  document.getElementById("tool-input-button-text").value = tool.buttonText || "🚀 Acessar Ferramenta";
+  document.getElementById("tool-input-url").value = tool.url || tool.downloadUrl || "";
+  document.getElementById("tool-input-image").value = tool.image || "";
+  document.getElementById("tool-input-platform").value = tool.platform || "";
+  document.getElementById("tool-input-tags").value = Array.isArray(tool.tags) ? tool.tags.join(", ") : "";
+  document.getElementById("tool-input-description").value = tool.description || "";
+  document.getElementById("tool-input-content").value = tool.content || "";
+
+  if (deleteBtn) deleteBtn.style.display = "inline-flex";
+  if (headingEl) headingEl.textContent = `✏️ Editando: ${tool.title}`;
+
+  updateToolPreview();
+}
+
+// ATUALIZAR PREVIEW DO CARD DA FERRAMENTA
+function updateToolPreview() {
+  const previewEl = document.getElementById("tool-rendered-preview");
+  if (!previewEl) return;
+
+  const title = document.getElementById("tool-input-title")?.value.trim() || "Nome da Ferramenta";
+  const icon = document.getElementById("tool-input-icon")?.value.trim() || "🛠️";
+  const badge = document.getElementById("tool-input-badge")?.value.trim() || "";
+  const description = document.getElementById("tool-input-description")?.value.trim() || "Descrição da ferramenta...";
+  const image = document.getElementById("tool-input-image")?.value.trim() || "";
+  const platform = document.getElementById("tool-input-platform")?.value.trim() || "";
+  const buttonText = document.getElementById("tool-input-button-text")?.value.trim() || "🚀 Acessar";
+  const category = document.getElementById("tool-input-category")?.value || "created";
+  const tagsRaw = document.getElementById("tool-input-tags")?.value.trim() || "";
+  const tags = tagsRaw ? tagsRaw.split(",").map(t => t.trim()).filter(Boolean) : [];
+
+  const categoryColors = {
+    created: "#6366f1",
+    recommended: "#f59e0b",
+    workflow: "#10b981",
+    essential: "#ef4444"
+  };
+  const accentColor = categoryColors[category] || "#6366f1";
+
+  const tagsHtml = tags.map(tag => `<span style="font-size:0.7rem; padding:2px 8px; background:rgba(255,255,255,0.08); border-radius:20px; color:var(--text-muted);">${tag}</span>`).join("");
+
+  previewEl.innerHTML = `
+    <div style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:14px; overflow:hidden; max-width:360px; font-family:inherit;">
+      ${image ? `<div style="height:160px; background:url('${image}') center/cover; position:relative;">
+        <div style="position:absolute;inset:0;background:linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.7));"></div>
+        <div style="position:absolute;top:10px;right:10px; font-size:1.6rem;">${icon}</div>
+      </div>` : `<div style="height:100px; background:linear-gradient(135deg,${accentColor}22,${accentColor}44); display:flex;align-items:center;justify-content:center; font-size:3rem;">${icon}</div>`}
+      <div style="padding:14px;">
+        ${badge ? `<span style="font-size:0.7rem; font-weight:700; color:${accentColor}; text-transform:uppercase; letter-spacing:0.05em;">${badge}</span>` : ""}
+        <h3 style="font-size:1rem; font-weight:700; color:var(--text-main); margin:6px 0 6px;">${title}</h3>
+        ${platform ? `<div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:6px;">💻 ${platform}</div>` : ""}
+        <p style="font-size:0.8rem; color:var(--text-sub); line-height:1.5; margin-bottom:10px;">${description}</p>
+        ${tagsHtml ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;">${tagsHtml}</div>` : ""}
+        <button style="width:100%; padding:8px; background:${accentColor}; color:#fff; border:none; border-radius:8px; font-size:0.85rem; font-weight:700; cursor:pointer;">${buttonText}</button>
+      </div>
+    </div>
+  `;
+}
+
+// SALVAR FERRAMENTA
+function saveTool() {
+  const idInput = document.getElementById("tool-input-id").value.trim();
+  const title = document.getElementById("tool-input-title").value.trim();
+  const category = document.getElementById("tool-input-category").value || "created";
+  const icon = document.getElementById("tool-input-icon").value.trim() || "🛠️";
+  const badge = document.getElementById("tool-input-badge").value.trim();
+  const badgeColor = document.getElementById("tool-input-badge-color").value || "primary";
+  const buttonText = document.getElementById("tool-input-button-text").value.trim() || "🚀 Acessar Ferramenta";
+  const url = document.getElementById("tool-input-url").value.trim();
+  const image = document.getElementById("tool-input-image").value.trim();
+  const platform = document.getElementById("tool-input-platform").value.trim();
+  const tagsRaw = document.getElementById("tool-input-tags").value.trim();
+  const tags = tagsRaw ? tagsRaw.split(",").map(t => t.trim()).filter(Boolean) : [];
+  const description = document.getElementById("tool-input-description").value.trim();
+  const content = document.getElementById("tool-input-content").value.trim();
+
+  if (!title) {
+    showToast("Por favor, preencha o Título da ferramenta.", "error");
+    return;
+  }
+
+  const id = idInput || title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") + "-" + Date.now();
+
+  const toolObj = {
+    id,
+    type: "tool",
+    category,
+    title,
+    icon,
+    badge: badge || undefined,
+    badgeColor: badgeColor || undefined,
+    buttonText,
+    url,
+    downloadUrl: url,
+    image: image || undefined,
+    platform: platform || undefined,
+    tags,
+    description,
+    content: content || undefined,
+    date: new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })
+  };
+
+  // Limpar undefined
+  Object.keys(toolObj).forEach(k => toolObj[k] === undefined && delete toolObj[k]);
+
+  const existingIdx = TOOLS_DATA.findIndex(t => t.id === id);
+  if (existingIdx >= 0) {
+    TOOLS_DATA[existingIdx] = toolObj;
+  } else {
+    TOOLS_DATA.unshift(toolObj);
+  }
+
+  try {
+    localStorage.setItem("godoy_tools_data", JSON.stringify(TOOLS_DATA));
+  } catch (e) { }
+
+  syncToolsToServer();
+  populateToolsSelector();
+
+  // Atualizar exibição do JSON completo
+  const codeDisplay = document.getElementById("tool-code-display");
+  if (codeDisplay) codeDisplay.textContent = JSON.stringify(TOOLS_DATA, null, 2);
+
+  // Selecionar a ferramenta salva
+  const select = document.getElementById("select-existing-tool");
+  if (select) {
+    select.value = id;
+    loadSelectedToolForEdit();
+  }
+
+  const saveBtn = document.getElementById("btn-save-tool");
+  if (saveBtn) {
+    const origHtml = saveBtn.innerHTML;
+    saveBtn.innerHTML = "✓ Ferramenta Salva!";
+    saveBtn.style.backgroundColor = "#10b981";
+    setTimeout(() => {
+      saveBtn.innerHTML = origHtml;
+      saveBtn.style.backgroundColor = "";
+    }, 2500);
+  }
+
+  const feedback = document.getElementById("tool-save-feedback");
+  if (feedback) {
+    feedback.textContent = `✅ Ferramenta "${title}" salva com sucesso!`;
+    feedback.style.display = "flex";
+    setTimeout(() => { feedback.style.display = "none"; }, 4500);
+  }
+
+  showToast(`✅ Ferramenta "${title}" salva com sucesso!`, "success");
+}
+
+// EXCLUIR FERRAMENTA
+function deleteSelectedTool() {
+  const select = document.getElementById("select-existing-tool");
+  if (!select) return;
+
+  const id = select.value;
+  if (id === "new") return;
+
+  const tool = TOOLS_DATA.find(t => t.id === id);
+  if (!tool) return;
+
+  showCustomConfirm({
+    title: "Excluir Ferramenta",
+    message: `Tem certeza de que deseja excluir "${tool.title}"?`,
+    confirmText: "Excluir Ferramenta",
+    cancelText: "Cancelar",
+    isDanger: true,
+    onConfirm: async () => {
+      TOOLS_DATA = TOOLS_DATA.filter(t => t.id !== id);
+      try {
+        localStorage.setItem("godoy_tools_data", JSON.stringify(TOOLS_DATA));
+      } catch (e) { }
+      await syncToolsToServer();
+      populateToolsSelector();
+      loadSelectedToolForEdit();
+      showToast(`Ferramenta "${tool.title}" excluída com sucesso!`, "success");
+    }
+  });
+}
+
 let activeStatusFilter = "all";
 let activePlatformFilter = "all";
 let activeSubtagFilter = "all";
@@ -481,9 +803,6 @@ let currentTab = "devlogs";
 let currentOutputFormat = "js";
 let lastSubmittedOrderSummary = "";
 
-// ESTADO GLOBAL DE FERRAMENTAS
-let TOOLS_DATA = [];
-let activeToolsCategory = "all";
 
 // ANIMAÇÃO DE INTRODUÇÃO AO CARREGAR A PÁGINA
 function animateOnLoad() {
@@ -895,7 +1214,7 @@ function renderToolsCards() {
 
   // Combinar ferramentas de data/tools.json com publicações de tipo 'tool'
   const combinedToolsMap = new Map();
-  
+
   TOOLS_DATA.forEach(t => combinedToolsMap.set(t.id, t));
   if (Array.isArray(PROJECTS_DATA)) {
     PROJECTS_DATA.filter(p => p.type === "tool" || (p.subtag && p.subtag.toLowerCase().includes("ferramenta"))).forEach(p => {
@@ -949,7 +1268,7 @@ function renderToolsCards() {
   container.innerHTML = filtered.map(tool => {
     const badgeClass = tool.badgeColor ? `tool-badge-${tool.badgeColor}` : "tool-badge-default";
     const tagsHTML = (tool.tags || []).map(tag => `<span class="tool-tag">${tag}</span>`).join("");
-    const iconHTML = tool.image 
+    const iconHTML = tool.image
       ? `<img src="${tool.image}" alt="${tool.title}" class="tool-card-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" /><div class="tool-card-icon-fallback" style="display:none;">${tool.icon || "🛠️"}</div>`
       : `<div class="tool-card-icon-fallback">${tool.icon || "🛠️"}</div>`;
 
@@ -1154,7 +1473,7 @@ function createCardHTML(item) {
       </div>
     `;
   } else if (item.type === "paid") {
-    statusBadge = `<span class="card-status-tag status-paid">💰 Pago / Financiado</span>`;
+    statusBadge = `<span class="card-status-tag status-paid">💰 Financiado</span>`;
   } else if (item.type === "archived") {
     statusBadge = `<span class="card-status-tag status-archived">📦 Arquivado</span>`;
   } else if (item.type === "abandoned") {
@@ -3023,27 +3342,43 @@ function renderTeamCards() {
   triggerGridStaggerAnimation();
 }
 
-// ALTERNAR ENTRE GERENCIADOR DE POSTS E GERENCIADOR DE EQUIPE NO SUBPAGE
+// ALTERNAR ENTRE GERENCIADOR DE POSTS, FERRAMENTAS E EQUIPE NO SUBPAGE
 function switchAdminSection(section) {
   const postsSec = document.getElementById("section-admin-posts");
+  const toolsSec = document.getElementById("section-admin-tools");
   const teamSec = document.getElementById("section-admin-team");
   const btnPosts = document.getElementById("admin-tab-posts");
+  const btnTools = document.getElementById("admin-tab-tools");
   const btnTeam = document.getElementById("admin-tab-team");
+
+  // Esconder todas
+  if (postsSec) postsSec.style.display = "none";
+  if (toolsSec) toolsSec.style.display = "none";
+  if (teamSec) teamSec.style.display = "none";
+
+  // Remover active de todas
+  if (btnPosts) btnPosts.classList.remove("active");
+  if (btnTools) btnTools.classList.remove("active");
+  if (btnTeam) btnTeam.classList.remove("active");
 
   if (section === "posts") {
     if (postsSec) postsSec.style.display = "grid";
-    if (teamSec) teamSec.style.display = "none";
     if (btnPosts) btnPosts.classList.add("active");
-    if (btnTeam) btnTeam.classList.remove("active");
+  } else if (section === "tools") {
+    if (toolsSec) toolsSec.style.display = "grid";
+    if (btnTools) btnTools.classList.add("active");
+    populateToolsSelector();
+    loadSelectedToolForEdit();
+    const codeDisplay = document.getElementById("tool-code-display");
+    if (codeDisplay) codeDisplay.textContent = JSON.stringify(TOOLS_DATA, null, 2);
   } else {
-    if (postsSec) postsSec.style.display = "none";
     if (teamSec) teamSec.style.display = "grid";
-    if (btnPosts) btnPosts.classList.remove("active");
     if (btnTeam) btnTeam.classList.add("active");
     populateTeamSelector();
     loadSelectedTeamMemberForEdit();
   }
 }
+
 
 // POPULAR SELETOR DE INTEGRANTES NO SUBPAGE GERADOR
 function populateTeamSelector() {

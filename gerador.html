@@ -40,19 +40,23 @@
       <div class="admin-notice-card">
         <div class="notice-icon">✏️</div>
         <div class="notice-text">
-          <h3>Edição de Publicações e Integrantes da Equipe</h3>
-          <p>Alterne entre a gestão de <strong>Posts & Devlogs</strong> ou a gestão dos <strong>Membros da Equipe (Godoy
-              & Krisp)</strong>. Ao salvar, as alterações são aplicadas imediatamente no site!</p>
+          <h3>Edição de Publicações, Ferramentas e Integrantes da Equipe</h3>
+          <p>Alterne entre a gestão de <strong>Posts &amp; Devlogs</strong>, <strong>Ferramentas</strong> ou a gestão
+            dos <strong>Membros da Equipe (Godoy
+              &amp; Krisp)</strong>. Ao salvar, as alterações são aplicadas imediatamente no site!</p>
         </div>
       </div>
 
       <!-- MODOS DE GERENCIAMENTO -->
       <div class="admin-mode-tabs">
         <button class="admin-mode-btn active" id="admin-tab-posts" onclick="switchAdminSection('posts')">
-          📰 Publicações & Devlogs
+          📰 Publicações &amp; Devlogs
+        </button>
+        <button class="admin-mode-btn" id="admin-tab-tools" onclick="switchAdminSection('tools')">
+          🛠️ Ferramentas
         </button>
         <button class="admin-mode-btn" id="admin-tab-team" onclick="switchAdminSection('team')">
-          👥 Membros da Equipe (Godoy & Krisp)
+          👥 Membros da Equipe (Godoy &amp; Krisp)
         </button>
       </div>
 
@@ -100,7 +104,7 @@
                 <option value="tool">🛠️ Ferramenta / Utilitário</option>
                 <option value="ongoing">⚙️ Projeto Em Andamento</option>
                 <option value="completed">✅ Projeto Concluído / Download</option>
-                <option value="paid">💰 Projeto Pago / Financiado</option>
+                <option value="paid">💰 Projeto Financiado</option>
                 <option value="archived">📦 Projeto Arquivado</option>
                 <option value="abandoned">🚫 Projeto Abandonado / Cancelado</option>
               </select>
@@ -208,13 +212,22 @@
               <label class="form-label">🎯 Enquadramento da Capa (Ajuste Vertical):</label>
               <input type="hidden" id="input-image-position" value="center">
               <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
-                <button type="button" class="preset-btn img-pos-btn" id="pos-btn-top" onclick="setImagePositionPreset('top')" title="Exibir o topo da arte (rostos, títulos)">⬆️ Topo</button>
-                <button type="button" class="preset-btn img-pos-btn active" id="pos-btn-center" onclick="setImagePositionPreset('center')" title="Exibir o centro da arte (padrão)">⏺️ Centro</button>
-                <button type="button" class="preset-btn img-pos-btn" id="pos-btn-bottom" onclick="setImagePositionPreset('bottom')" title="Exibir a base da arte">⬇️ Base</button>
-                <button type="button" class="preset-btn img-pos-btn" id="pos-btn-top25" onclick="setImagePositionPreset('center 25%')" title="Ajuste fino superior (25%)">🔼 Alto (25%)</button>
-                <button type="button" class="preset-btn img-pos-btn" id="pos-btn-bottom75" onclick="setImagePositionPreset('center 75%')" title="Ajuste fino inferior (75%)">🔽 Baixo (75%)</button>
+                <button type="button" class="preset-btn img-pos-btn" id="pos-btn-top"
+                  onclick="setImagePositionPreset('top')" title="Exibir o topo da arte (rostos, títulos)">⬆️
+                  Topo</button>
+                <button type="button" class="preset-btn img-pos-btn active" id="pos-btn-center"
+                  onclick="setImagePositionPreset('center')" title="Exibir o centro da arte (padrão)">⏺️ Centro</button>
+                <button type="button" class="preset-btn img-pos-btn" id="pos-btn-bottom"
+                  onclick="setImagePositionPreset('bottom')" title="Exibir a base da arte">⬇️ Base</button>
+                <button type="button" class="preset-btn img-pos-btn" id="pos-btn-top25"
+                  onclick="setImagePositionPreset('center 25%')" title="Ajuste fino superior (25%)">🔼 Alto
+                  (25%)</button>
+                <button type="button" class="preset-btn img-pos-btn" id="pos-btn-bottom75"
+                  onclick="setImagePositionPreset('center 75%')" title="Ajuste fino inferior (75%)">🔽 Baixo
+                  (75%)</button>
               </div>
-              <p style="font-size: 0.725rem; color: var(--text-muted); margin-top: 4px;">Ajusta o alinhamento vertical do corte da imagem no card caso os rostos fiquem cortados.</p>
+              <p style="font-size: 0.725rem; color: var(--text-muted); margin-top: 4px;">Ajusta o alinhamento vertical
+                do corte da imagem no card caso os rostos fiquem cortados.</p>
             </div>
           </div>
 
@@ -429,7 +442,151 @@
 
       </div>
 
-      <!-- SEÇÃO 2: GERENCIADOR DA EQUIPE -->
+      <!-- SEÇÃO 2: GERENCIADOR DE FERRAMENTAS -->
+      <div id="section-admin-tools" class="generator-container" style="display: none;">
+
+        <div class="generator-form-box">
+
+          <!-- SELETOR DE FERRAMENTAS PARA EDIÇÃO -->
+          <div
+            style="background: var(--bg-input); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+            <label class="form-label" for="select-existing-tool"
+              style="font-size: 0.9rem; font-weight: 700; color: var(--accent-primary); display: flex; align-items: center; gap: 6px;">
+              🔍 Selecionar Ferramenta para Editar:
+            </label>
+            <div style="display: flex; gap: 8px; margin-top: 6px; width: 100%;">
+              <select id="select-existing-tool" class="form-input" onchange="loadSelectedToolForEdit()"
+                style="flex: 1; min-width: 0; font-weight: 600; cursor: pointer;">
+                <option value="new">➕ [Adicionar Nova Ferramenta]</option>
+              </select>
+              <button class="btn-secondary" onclick="loadSelectedToolForEdit()"
+                style="white-space: nowrap; padding: 0 14px; flex-shrink: 0;">✨ Novo</button>
+            </div>
+          </div>
+
+          <h2 class="form-section-title" id="tool-form-heading">➕ Nova Ferramenta</h2>
+
+          <input type="hidden" id="tool-input-id" value="">
+
+          <div class="form-group">
+            <label class="form-label" for="tool-input-title">Título / Nome da Ferramenta:</label>
+            <input type="text" id="tool-input-title" class="form-input"
+              placeholder="Ex: GPATCH Web App - Aplicador de Patches" oninput="updateToolPreview()">
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="tool-input-category">Categoria:</label>
+              <select id="tool-input-category" class="form-input" onchange="updateToolPreview()">
+                <option value="created">🛠️ Criada por Mim</option>
+                <option value="recommended">⭐ Indicada / Recomendada</option>
+                <option value="workflow">🔄 Fluxo de Trabalho</option>
+                <option value="essential">🔑 Essencial / Romhacking</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="tool-input-icon">Ícone / Emoji:</label>
+              <input type="text" id="tool-input-icon" class="form-input" placeholder="Ex: ⚡, 🛠️, 🎙️, 🔊" value="🛠️"
+                oninput="updateToolPreview()">
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="tool-input-badge">Selo / Badge:</label>
+              <input type="text" id="tool-input-badge" class="form-input"
+                placeholder="Ex: Criado por Mim, Indicação de Ouro" oninput="updateToolPreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="tool-input-badge-color">Cor do Badge:</label>
+              <select id="tool-input-badge-color" class="form-input" onchange="updateToolPreview()">
+                <option value="primary">🟣 Roxo (Primary)</option>
+                <option value="gold">🟡 Dourado (Gold)</option>
+                <option value="green">🟢 Verde (Green)</option>
+                <option value="red">🔴 Vermelho (Red)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="tool-input-button-text">Texto do Botão de Acesso:</label>
+              <input type="text" id="tool-input-button-text" class="form-input" placeholder="Ex: 🚀 Acessar GPATCH"
+                value="🚀 Acessar Ferramenta" oninput="updateToolPreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="tool-input-platform">Plataforma:</label>
+              <input type="text" id="tool-input-platform" class="form-input" placeholder="Ex: Web / PC / Celular"
+                oninput="updateToolPreview()">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="tool-input-url">🔗 Link de Acesso Direto:</label>
+            <input type="text" id="tool-input-url" class="form-input"
+              placeholder="Ex: https://rafaelgodoyebert.github.io/gpatch/" oninput="updateToolPreview()">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="tool-input-image">🖼️ URL da Imagem de Capa:</label>
+            <input type="text" id="tool-input-image" class="form-input" placeholder="https://exemplo.com/imagem.jpg"
+              oninput="updateToolPreview()">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="tool-input-tags">Tags (separadas por vírgula):</label>
+            <input type="text" id="tool-input-tags" class="form-input"
+              placeholder="Ex: Ferramenta, Modding, Web App, PS2" oninput="updateToolPreview()">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="tool-input-description">📝 Resumo / Descrição Curta (aparece no
+              card):</label>
+            <textarea id="tool-input-description" class="form-textarea" style="min-height: 70px;"
+              placeholder="Breve descrição da ferramenta..." oninput="updateToolPreview()"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="tool-input-content">📄 Conteúdo Detalhado (HTML - para o modal):</label>
+            <textarea id="tool-input-content" class="form-textarea editor-textarea" style="min-height: 140px;"
+              placeholder="Conteúdo HTML completo da página de detalhes da ferramenta..."
+              oninput="updateToolPreview()"></textarea>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Use HTML como &lt;h3&gt;,
+              &lt;p&gt;, &lt;ul&gt; etc. para o conteúdo do modal da ferramenta.</p>
+          </div>
+
+          <!-- BOTÕES DE AÇÃO DO GERENCIADOR DE FERRAMENTAS -->
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
+            <button type="button" class="action-btn-primary" id="btn-save-tool" onclick="saveTool()"
+              style="flex: 1; min-width: 180px; justify-content: center; padding: 12px;">
+              💾 Salvar Ferramenta
+            </button>
+            <button type="button" class="btn-secondary" onclick="deleteSelectedTool()" id="btn-delete-tool"
+              style="display: none; color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">
+              🗑️ Excluir Ferramenta
+            </button>
+          </div>
+          <div id="tool-save-feedback"
+            style="display: none; margin-top: 12px; padding: 12px 16px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #10b981; border-radius: 8px; font-size: 0.875rem; font-weight: 700; align-items: center; gap: 8px;">
+          </div>
+
+        </div>
+
+        <!-- PREVIEW DO CARD DA FERRAMENTA -->
+        <div class="generator-output-box">
+          <h2 class="form-section-title">👁️ Pré-visualização do Card</h2>
+          <div id="tool-rendered-preview" class="preview-box"></div>
+
+          <div style="margin-top: 20px;">
+            <h3 style="font-size: 0.9rem; color: var(--text-main); font-weight: 700; margin-bottom: 8px;">📋 JSON das
+              Ferramentas (tools.json completo):</h3>
+            <pre id="tool-code-display" class="code-display" style="max-height: 200px;"></pre>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SEÇÃO 3: GERENCIADOR DA EQUIPE -->
       <div id="section-admin-team" class="generator-container" style="display: none;">
 
         <!-- FORMULÁRIO DE EDIÇÃO DE MEMBRO DA EQUIPE -->
