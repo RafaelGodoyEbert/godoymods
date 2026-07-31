@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="dark">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,12 +10,14 @@
   <link rel="shortcut icon" href="https://i.imgur.com/OgaeHFx.png">
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script src="config.js"></script>
   <script src="script.js" defer></script>
 </head>
+
 <body class="generator-subpage">
 
   <div class="subpage-container">
-    
+
     <!-- BARRA DE NAVEGAÇÃO DA SUBPÁGINA -->
     <header class="subpage-header">
       <div class="subpage-header-content">
@@ -23,7 +26,8 @@
         </a>
         <h1 class="subpage-title">🛠️ Criador & Editor de Devlogs e Mods</h1>
         <div class="subpage-actions">
-          <button class="icon-btn-header" id="theme-toggle-btn" onclick="toggleThemeQuick()" title="Alternar Modo Escuro / Claro">
+          <button class="icon-btn-header" id="theme-toggle-btn" onclick="toggleThemeQuick()"
+            title="Alternar Modo Escuro / Claro">
             🌙
           </button>
         </div>
@@ -31,13 +35,14 @@
     </header>
 
     <main class="subpage-main">
-      
+
       <!-- CARD DE INSTRUÇÕES DA SUBPÁGINA -->
       <div class="admin-notice-card">
         <div class="notice-icon">✏️</div>
         <div class="notice-text">
           <h3>Edição de Publicações e Integrantes da Equipe</h3>
-          <p>Alterne entre a gestão de <strong>Posts & Devlogs</strong> ou a gestão dos <strong>Membros da Equipe (Godoy & Krisp)</strong>. Ao salvar, as alterações são aplicadas imediatamente no site!</p>
+          <p>Alterne entre a gestão de <strong>Posts & Devlogs</strong> ou a gestão dos <strong>Membros da Equipe (Godoy
+              & Krisp)</strong>. Ao salvar, as alterações são aplicadas imediatamente no site!</p>
         </div>
       </div>
 
@@ -53,20 +58,24 @@
 
       <!-- SEÇÃO 1: GERENCIADOR DE POSTS -->
       <div id="section-admin-posts" class="generator-container">
-        
+
         <!-- FORMULÁRIO DE ENTRADA E EDIÇÃO -->
         <div class="generator-form-box">
-          
+
           <!-- SELETOR DE POSTS PARA EDIÇÃO -->
-          <div style="background: var(--bg-input); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px;">
-            <label class="form-label" for="select-existing-post" style="font-size: 0.9rem; font-weight: 700; color: var(--accent-primary); display: flex; align-items: center; gap: 6px;">
+          <div
+            style="background: var(--bg-input); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+            <label class="form-label" for="select-existing-post"
+              style="font-size: 0.9rem; font-weight: 700; color: var(--accent-primary); display: flex; align-items: center; gap: 6px;">
               🔍 Selecionar Post para Editar:
             </label>
             <div style="display: flex; gap: 8px; margin-top: 6px; width: 100%;">
-              <select id="select-existing-post" class="form-input" onchange="loadSelectedPostForEdit()" style="flex: 1; min-width: 0; font-weight: 600; cursor: pointer;">
+              <select id="select-existing-post" class="form-input" onchange="loadSelectedPostForEdit()"
+                style="flex: 1; min-width: 0; font-weight: 600; cursor: pointer;">
                 <option value="new">➕ [Criar Novo Post ou Devlog]</option>
               </select>
-              <button class="btn-secondary" onclick="resetFormToNew()" style="white-space: nowrap; padding: 0 14px; flex-shrink: 0;">✨ Limpar</button>
+              <button class="btn-secondary" onclick="resetFormToNew()"
+                style="white-space: nowrap; padding: 0 14px; flex-shrink: 0;">✨ Limpar</button>
             </div>
             <p style="font-size: 0.775rem; color: var(--text-muted); margin-top: 6px; margin-bottom: 0;">
               Escolha um post existente acima para trocar a imagem ou alterar os dados.
@@ -74,12 +83,13 @@
           </div>
 
           <h2 class="form-section-title" id="form-title-heading">✍️ Dados do Post</h2>
-          
+
           <input type="hidden" id="input-id" value="">
 
           <div class="form-group">
             <label class="form-label" for="input-title">Título do Post / Mod / Devlog:</label>
-            <input type="text" id="input-title" class="form-input" placeholder="Ex: God of War II - Dublagem em Português PT-BR" oninput="updateGeneratorPreview()">
+            <input type="text" id="input-title" class="form-input"
+              placeholder="Ex: God of War II - Dublagem em Português PT-BR" oninput="updateGeneratorPreview()">
           </div>
 
           <div class="form-row-2">
@@ -98,54 +108,144 @@
 
             <div class="form-group">
               <label class="form-label" for="input-platform">Plataforma Principal:</label>
-              <input type="text" id="input-platform" class="form-input" placeholder="Ex: PlayStation 2, PS3, PC, Web" oninput="updateGeneratorPreview()">
+              <input type="text" id="input-platform" class="form-input" placeholder="Ex: PlayStation 2, PS3, PC, Web"
+                oninput="updateGeneratorPreview()">
             </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="input-subtag">🏷️ Subtag / Tipo de Localização (Dublado / Legendado / Ferramenta):</label>
-            <input type="text" id="input-subtag" class="form-input" placeholder="Ex: Dublado, Legendado, Port, Ferramenta" oninput="updateGeneratorPreview()">
+            <label class="form-label" for="input-subtag">🏷️ Subtag / Tipo de Localização (Dublado / Legendado /
+              Ferramenta):</label>
+            <input type="text" id="input-subtag" class="form-input"
+              placeholder="Ex: Dublado, Legendado, Port, Ferramenta" oninput="updateGeneratorPreview()">
             <div class="subtag-presets">
               <button type="button" class="preset-btn" onclick="setPresetSubtag('Dublado')">🎙️ Dublado</button>
               <button type="button" class="preset-btn" onclick="setPresetSubtag('Legendado')">📝 Legendado</button>
               <button type="button" class="preset-btn" onclick="setPresetSubtag('Port')">🔄 Port</button>
-              <button type="button" class="preset-btn" onclick="setPresetSubtag('Dublado (IA)')">🤖 Dublado (IA)</button>
-              <button type="button" class="preset-btn" onclick="setPresetSubtag('Ferramenta (Criada)')">🛠️ Ferramenta (Criada)</button>
-              <button type="button" class="preset-btn" onclick="setPresetSubtag('Ferramenta (Indicada)')">⭐ Ferramenta (Indicada)</button>
+              <button type="button" class="preset-btn" onclick="setPresetSubtag('Dublado (IA)')">🤖 Dublado
+                (IA)</button>
+              <button type="button" class="preset-btn" onclick="setPresetSubtag('Ferramenta (Criada)')">🛠️ Ferramenta
+                (Criada)</button>
+              <button type="button" class="preset-btn" onclick="setPresetSubtag('Ferramenta (Indicada)')">⭐ Ferramenta
+                (Indicada)</button>
+            </div>
+          </div>
+
+          <!-- OPÇÕES ESPECÍFICAS PARA POSTS DE FERRAMENTAS -->
+          <div class="form-group" id="container-tool-options"
+            style="display: none; background: rgba(99, 102, 241, 0.08); padding: 14px; border-radius: 10px; border: 1px solid rgba(99, 102, 241, 0.25); margin-bottom: 18px;">
+            <h4
+              style="font-size: 0.9rem; color: var(--text-accent); margin-bottom: 10px; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+              🛠️ Configurações da Ferramenta:
+            </h4>
+
+            <div class="form-row-2">
+              <div class="form-group" style="margin-bottom: 10px;">
+                <label class="form-label" for="input-tool-category">Categoria da Ferramenta:</label>
+                <select id="input-tool-category" class="form-input" onchange="updateGeneratorPreview()">
+                  <option value="created">🛠️ Criada por Mim (GPATCH, Dialogue Editor)</option>
+                  <option value="recommended">⭐ Indicada / Recomendada (RVC v2, Audacity)</option>
+                  <option value="workflow">🔄 Fluxo de Trabalho / Produção</option>
+                  <option value="essential">🔑 Essencial / Deromhacking</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 10px;">
+                <label class="form-label" for="input-tool-icon">Ícone / Emoji:</label>
+                <input type="text" id="input-tool-icon" class="form-input" placeholder="Ex: ⚡, 🛠️, 🎙️, 🔊, 🎮, 📝"
+                  value="🛠️" oninput="updateGeneratorPreview()">
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group" style="margin-bottom: 10px;">
+                <label class="form-label" for="input-tool-badge">Selo / Badge de Destaque:</label>
+                <input type="text" id="input-tool-badge" class="form-input"
+                  placeholder="Ex: Criado por Mim, Indicação de Ouro" value="Ferramenta"
+                  oninput="updateGeneratorPreview()">
+              </div>
+
+              <div class="form-group" style="margin-bottom: 10px;">
+                <label class="form-label" for="input-tool-button-text">Texto do Botão:</label>
+                <input type="text" id="input-tool-button-text" class="form-input"
+                  placeholder="Ex: 🚀 Acessar GPATCH, 📥 Baixar Ferramenta" value="🚀 Acessar Ferramenta"
+                  oninput="updateGeneratorPreview()">
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" for="input-tool-url">Link de Acesso Direto à Ferramenta:</label>
+              <input type="text" id="input-tool-url" class="form-input"
+                placeholder="Ex: https://rafaelgodoyebert.github.io/gpatch/ ou link do GitHub"
+                oninput="updateGeneratorPreview()">
             </div>
           </div>
 
           <div class="form-group">
             <label class="form-label" for="input-image">🖼️ URL ou Arquivo da Imagem de Capa:</label>
             <div style="display: flex; gap: 8px; align-items: center; width: 100%;">
-              <input type="text" id="input-image" class="form-input" style="flex: 1; min-width: 0;" placeholder="https://exemplo.com/sua-imagem.jpg" oninput="updateGeneratorPreview()">
-              <label class="btn-secondary" style="margin: 0; padding: 8px 12px; cursor: pointer; flex-shrink: 0; white-space: nowrap;" title="Escolher arquivo de imagem do computador">
+              <input type="text" id="input-image" class="form-input" style="flex: 1; min-width: 0;"
+                placeholder="https://exemplo.com/sua-imagem.jpg" oninput="updateGeneratorPreview()">
+              <label class="btn-secondary"
+                style="margin: 0; padding: 8px 12px; cursor: pointer; flex-shrink: 0; white-space: nowrap;"
+                title="Escolher arquivo de imagem do computador">
                 📁 Upload
-                <input type="file" id="input-image-file" accept="image/*" style="display: none;" onchange="handleImageFileUpload(event)">
+                <input type="file" id="input-image-file" accept="image/*" style="display: none;"
+                  onchange="handleImageFileUpload(event)">
               </label>
-              <div id="image-thumb-preview" style="width: 50px; height: 38px; border-radius: 6px; overflow: hidden; background: var(--bg-input); border: 1px solid var(--border-color); flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+              <div id="image-thumb-preview"
+                style="width: 50px; height: 38px; border-radius: 6px; overflow: hidden; background: var(--bg-input); border: 1px solid var(--border-color); flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
                 <img id="image-thumb-img" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
-                <span id="image-thumb-placeholder" style="font-size:0.65rem; color:var(--text-muted); text-align:center;">Capa</span>
+                <span id="image-thumb-placeholder"
+                  style="font-size:0.65rem; color:var(--text-muted); text-align:center;">Capa</span>
               </div>
             </div>
-            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Cole um link direto de imagem ou clique em Upload para carregar uma foto do seu dispositivo.</p>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Cole um link direto de imagem ou
+              clique em Upload para carregar uma foto do seu dispositivo.</p>
+
+            <!-- CONTROLE DE ENQUADRAMENTO DA IMAGEM DE CAPA -->
+            <div style="margin-top: 10px;">
+              <label class="form-label">🎯 Enquadramento da Capa (Ajuste Vertical):</label>
+              <input type="hidden" id="input-image-position" value="center">
+              <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                <button type="button" class="preset-btn img-pos-btn" id="pos-btn-top" onclick="setImagePositionPreset('top')" title="Exibir o topo da arte (rostos, títulos)">⬆️ Topo</button>
+                <button type="button" class="preset-btn img-pos-btn active" id="pos-btn-center" onclick="setImagePositionPreset('center')" title="Exibir o centro da arte (padrão)">⏺️ Centro</button>
+                <button type="button" class="preset-btn img-pos-btn" id="pos-btn-bottom" onclick="setImagePositionPreset('bottom')" title="Exibir a base da arte">⬇️ Base</button>
+                <button type="button" class="preset-btn img-pos-btn" id="pos-btn-top25" onclick="setImagePositionPreset('center 25%')" title="Ajuste fino superior (25%)">🔼 Alto (25%)</button>
+                <button type="button" class="preset-btn img-pos-btn" id="pos-btn-bottom75" onclick="setImagePositionPreset('center 75%')" title="Ajuste fino inferior (75%)">🔽 Baixo (75%)</button>
+              </div>
+              <p style="font-size: 0.725rem; color: var(--text-muted); margin-top: 4px;">Ajusta o alinhamento vertical do corte da imagem no card caso os rostos fiquem cortados.</p>
+            </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="input-theme-color">🎨 Cor do Embed (Barra Lateral no Discord / WhatsApp):</label>
+            <label class="form-label" for="input-theme-color">🎨 Cor do Embed & Tema (Extração Automática da
+              Imagem):</label>
             <div style="display: flex; gap: 8px; align-items: center;">
-              <input type="color" id="input-theme-color-picker" value="#6366f1" style="width: 42px; height: 38px; padding: 2px; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer;" oninput="document.getElementById('input-theme-color').value = this.value; updateGeneratorPreview();">
-              <input type="text" id="input-theme-color" class="form-input" style="flex: 1;" placeholder="Ex: #22c55e (Cor em Hex de acordo com a arte)" value="#6366f1" oninput="document.getElementById('input-theme-color-picker').value = this.value; updateGeneratorPreview();">
+              <input type="color" id="input-theme-color-picker" value="#6366f1"
+                style="width: 42px; height: 38px; padding: 2px; border-radius: 6px; border: 1px solid var(--border-color); cursor: pointer;"
+                oninput="document.getElementById('input-theme-color').value = this.value; updateGeneratorPreview();">
+              <input type="text" id="input-theme-color" class="form-input" style="flex: 1;"
+                placeholder="Ex: #22c55e (Hex da paleta da imagem)" value="#6366f1"
+                oninput="document.getElementById('input-theme-color-picker').value = this.value; updateGeneratorPreview();">
+              <button type="button" class="btn-secondary" onclick="autoExtractColorForCurrentForm()"
+                style="white-space: nowrap; padding: 8px 12px;"
+                title="Ler a imagem de capa e extrair a cor mais vibrante automaticamente">
+                🎨 Extrair da Foto
+              </button>
             </div>
-            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Define a cor da linha lateral do embed e destaque no Discord e WhatsApp para combinar com a paleta da imagem.</p>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Define a cor da linha lateral no
+              Discord, WhatsApp e adaptação automática do modal para combinar com a paleta da imagem.</p>
           </div>
 
           <div class="form-row-2">
             <div class="form-group">
               <label class="form-label" for="input-date">📅 Data da Publicação (Data do Post):</label>
-              <input type="text" id="input-date" class="form-input" placeholder="Ex: 29 de Julho, 2026" oninput="updateGeneratorPreview()">
+              <input type="text" id="input-date" class="form-input" placeholder="Ex: 29 de Julho, 2026"
+                oninput="updateGeneratorPreview()">
               <div class="subtag-presets" style="margin-top: 6px;">
-                <button type="button" class="preset-btn" onclick="setPresetPostDate('today')">📅 Hoje (Data Atual)</button>
+                <button type="button" class="preset-btn" onclick="setPresetPostDate('today')">📅 Hoje (Data
+                  Atual)</button>
                 <button type="button" class="preset-btn" onclick="setPresetPostDate('month_year')">📅 Mês / Ano</button>
                 <button type="button" class="preset-btn" onclick="setPresetPostDate('year')">📅 Ano</button>
               </div>
@@ -153,32 +253,41 @@
 
             <div class="form-group">
               <label class="form-label" for="input-progress">Progresso (%) - se em andamento:</label>
-              <input type="number" id="input-progress" class="form-input" min="0" max="100" value="70" oninput="updateGeneratorPreview()">
+              <input type="number" id="input-progress" class="form-input" min="0" max="100" value="70"
+                oninput="updateGeneratorPreview()">
             </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="input-project-period">⏳ Período do Projeto / Cronograma (Início & Conclusão - Opcional):</label>
-            <input type="text" id="input-project-period" class="form-input" placeholder="Ex: Início: Jan/2024 • Conclusão: Jul/2026" oninput="updateGeneratorPreview()">
+            <label class="form-label" for="input-project-period">⏳ Período do Projeto / Cronograma (Início & Conclusão -
+              Opcional):</label>
+            <input type="text" id="input-project-period" class="form-input"
+              placeholder="Ex: Início: Jan/2024 • Conclusão: Jul/2026" oninput="updateGeneratorPreview()">
             <div class="subtag-presets" style="margin-top: 6px;">
-              <button type="button" class="preset-btn" onclick="setPresetProjectPeriod('ongoing')">🚀 Em Andamento (Início: Mês/Ano)</button>
-              <button type="button" class="preset-btn" onclick="setPresetProjectPeriod('completed')">✅ Concluído (Início • Conclusão)</button>
-              <button type="button" class="preset-btn" onclick="setPresetProjectPeriod('start_only')">📅 Somente Ano de Início</button>
+              <button type="button" class="preset-btn" onclick="setPresetProjectPeriod('ongoing')">🚀 Em Andamento
+                (Início: Mês/Ano)</button>
+              <button type="button" class="preset-btn" onclick="setPresetProjectPeriod('completed')">✅ Concluído (Início
+                • Conclusão)</button>
+              <button type="button" class="preset-btn" onclick="setPresetProjectPeriod('start_only')">📅 Somente Ano de
+                Início</button>
             </div>
             <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
-              💡 Dica: A data da publicação indica quando a novidade/post foi publicado. O período do projeto registra a linha do tempo do mod (ex: início, duração ou data de conclusão).
+              💡 Dica: A data da publicação indica quando a novidade/post foi publicado. O período do projeto registra a
+              linha do tempo do mod (ex: início, duração ou data de conclusão).
             </p>
           </div>
 
           <div class="form-group">
             <label class="form-label" for="input-tags">Tags / Filtros (separadas por vírgula):</label>
-            <input type="text" id="input-tags" class="form-input" placeholder="Ex: PC, PlayStation 3, PlayStation 2, Android, Xbox 360" oninput="handleTagsInputChange()">
+            <input type="text" id="input-tags" class="form-input"
+              placeholder="Ex: PC, PlayStation 3, PlayStation 2, Android, Xbox 360" oninput="handleTagsInputChange()">
           </div>
 
           <div class="form-group" id="container-tag-links">
             <label class="form-label">📥 Links de Download Direto por Plataforma / Tag (Opcional):</label>
             <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">
-              Insira o link direto de download (ex: MediaFire, Mega, Google Drive) para cada plataforma/tag digitada acima. Ao salvar, as tags ficarão destacadas em verde e redirecionarão para o download direto.
+              Insira o link direto de download (ex: MediaFire, Mega, Google Drive) para cada plataforma/tag digitada
+              acima. Ao salvar, as tags ficarão destacadas em verde e redirecionarão para o download direto.
             </p>
             <div id="tag-links-fields-wrapper" style="display: flex; flex-direction: column; gap: 8px;">
               <!-- Gerado dinamicamente com base nas tags informadas acima -->
@@ -187,79 +296,104 @@
 
           <div class="form-group">
             <label class="form-label" for="input-summary">Resumo Curto (Aparece no Card):</label>
-            <textarea id="input-summary" class="form-textarea" style="min-height: 65px;" placeholder="Breve descrição em poucas frases para o card principal..." oninput="updateGeneratorPreview()"></textarea>
+            <textarea id="input-summary" class="form-textarea" style="min-height: 65px;"
+              placeholder="Breve descrição em poucas frases para o card principal..."
+              oninput="updateGeneratorPreview()"></textarea>
           </div>
 
           <div class="form-group">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
-              <label class="form-label" for="input-content" style="margin-bottom: 0;">📝 Conteúdo Completo do Post (Estilo Blog):</label>
-              <button type="button" class="btn-secondary" onclick="previewCurrentPostModal()" style="font-size: 0.775rem; padding: 4px 10px; background-color: var(--accent-primary); color: #ffffff; border-color: var(--accent-primary);" title="Ver exatamente como a matéria fica no modal com vídeos e imagens">
+            <div
+              style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 8px;">
+              <label class="form-label" for="input-content" style="margin-bottom: 0;">📝 Conteúdo Completo do Post
+                (Estilo Blog):</label>
+              <button type="button" class="btn-secondary" onclick="previewCurrentPostModal()"
+                style="font-size: 0.775rem; padding: 4px 10px; background-color: var(--accent-primary); color: #ffffff; border-color: var(--accent-primary);"
+                title="Ver exatamente como a matéria fica no modal com vídeos e imagens">
                 👁️ Ver Prévia em Tela Cheia
               </button>
             </div>
-            
+
             <!-- Barra de Ferramentas do Editor de Blog -->
             <div class="editor-toolbar">
-              <button type="button" class="toolbar-btn toolbar-btn-highlight" onclick="insertContentSnippet('iframe')" title="Inserir Vídeo do YouTube ou código de <iframe>">
+              <button type="button" class="toolbar-btn toolbar-btn-highlight" onclick="insertContentSnippet('iframe')"
+                title="Inserir Vídeo do YouTube ou código de <iframe>">
                 🎥 + Vídeo / iframe
               </button>
-              <label class="toolbar-btn toolbar-btn-highlight" style="cursor: pointer; margin: 0; display: inline-flex; align-items: center; gap: 4px;" title="Fazer Upload de Foto do Dispositivo (Base64) diretamente no corpo do texto">
+              <label class="toolbar-btn toolbar-btn-highlight"
+                style="cursor: pointer; margin: 0; display: inline-flex; align-items: center; gap: 4px;"
+                title="Fazer Upload de Foto do Dispositivo (Base64) diretamente no corpo do texto">
                 📷 + Upload Imagem (Base64)
-                <input type="file" id="input-content-image-file" accept="image/*" style="display: none;" onchange="handleContentImageUpload(event)">
+                <input type="file" id="input-content-image-file" accept="image/*" style="display: none;"
+                  onchange="handleContentImageUpload(event)">
               </label>
-              <button type="button" class="toolbar-btn toolbar-btn-highlight" onclick="insertContentSnippet('image')" title="Inserir URL de Imagem">
+              <button type="button" class="toolbar-btn toolbar-btn-highlight" onclick="insertContentSnippet('image')"
+                title="Inserir URL de Imagem">
                 🌐 + URL Imagem
               </button>
-              <button type="button" class="toolbar-btn" onclick="insertContentSnippet('subtitle')" title="Inserir Subtítulo H3">
+              <button type="button" class="toolbar-btn" onclick="insertContentSnippet('subtitle')"
+                title="Inserir Subtítulo H3">
                 📌 Subtítulo (H3)
               </button>
-              <button type="button" class="toolbar-btn" onclick="insertContentSnippet('paragraph')" title="Inserir Parágrafo">
+              <button type="button" class="toolbar-btn" onclick="insertContentSnippet('paragraph')"
+                title="Inserir Parágrafo">
                 📄 Parágrafo
               </button>
-              <button type="button" class="toolbar-btn" onclick="insertContentSnippet('list')" title="Inserir Lista com Marcadores">
+              <button type="button" class="toolbar-btn" onclick="insertContentSnippet('list')"
+                title="Inserir Lista com Marcadores">
                 • Lista (ul)
               </button>
-              <button type="button" class="toolbar-btn" onclick="insertContentSnippet('quote')" title="Inserir Bloco de Citação">
+              <button type="button" class="toolbar-btn" onclick="insertContentSnippet('quote')"
+                title="Inserir Bloco de Citação">
                 💬 Citação
               </button>
               <button type="button" class="toolbar-btn" onclick="insertContentSnippet('bold')" title="Texto em Negrito">
                 <b>B</b> Negrito
               </button>
-              <button type="button" class="toolbar-btn" onclick="insertContentSnippet('link')" title="Inserir Link de Web">
+              <button type="button" class="toolbar-btn" onclick="insertContentSnippet('link')"
+                title="Inserir Link de Web">
                 🔗 Link
               </button>
             </div>
 
-            <textarea id="input-content" class="form-textarea editor-textarea" style="min-height: 200px; border-top-left-radius: 0; border-top-right-radius: 0;" placeholder="Escreva o texto do post à vontade. Você pode colar print/imagem diretamente (Ctrl+V), arrastar fotos para aqui ou usar os botões acima..." oninput="updateGeneratorPreview()"></textarea>
+            <textarea id="input-content" class="form-textarea editor-textarea"
+              style="min-height: 200px; border-top-left-radius: 0; border-top-right-radius: 0;"
+              placeholder="Escreva o texto do post à vontade. Você pode colar print/imagem diretamente (Ctrl+V), arrastar fotos para aqui ou usar os botões acima..."
+              oninput="updateGeneratorPreview()"></textarea>
             <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
-              💡 Dica: Você pode <strong>colar fotos diretamente (Ctrl+V)</strong>, arrastar arquivos de imagem para a caixa de texto ou clicar em <strong>📷 + Upload Imagem (Base64)</strong>.
+              💡 Dica: Você pode <strong>colar fotos diretamente (Ctrl+V)</strong>, arrastar arquivos de imagem para a
+              caixa de texto ou clicar em <strong>📷 + Upload Imagem (Base64)</strong>.
             </p>
           </div>
 
           <div class="form-group">
             <label class="form-label" for="input-download">Link do Discord / Download (Opcional):</label>
-            <input type="text" id="input-download" class="form-input" placeholder="https://discord.com/invite/atFQmmR2fy" oninput="updateGeneratorPreview()">
+            <input type="text" id="input-download" class="form-input"
+              placeholder="https://discord.com/invite/atFQmmR2fy" oninput="updateGeneratorPreview()">
           </div>
 
           <!-- BOTÕES DE AÇÃO DO EDITOR -->
           <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
-            <button type="button" class="action-btn-primary" id="btn-save-post" onclick="savePostToSiteFeed()" style="flex: 1; min-width: 180px; justify-content: center; padding: 12px;">
+            <button type="button" class="action-btn-primary" id="btn-save-post" onclick="savePostToSiteFeed()"
+              style="flex: 1; min-width: 180px; justify-content: center; padding: 12px;">
               💾 Salvar Publicação
             </button>
-            <button type="button" class="btn-secondary" onclick="deleteSelectedPost()" id="btn-delete-post" style="display: none; color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">
+            <button type="button" class="btn-secondary" onclick="deleteSelectedPost()" id="btn-delete-post"
+              style="display: none; color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">
               🗑️ Excluir Post
             </button>
           </div>
-          <div id="post-save-feedback" style="display: none; margin-top: 12px; padding: 12px 16px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #10b981; border-radius: 8px; font-size: 0.875rem; font-weight: 700; align-items: center; gap: 8px;"></div>
+          <div id="post-save-feedback"
+            style="display: none; margin-top: 12px; padding: 12px 16px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #10b981; border-radius: 8px; font-size: 0.875rem; font-weight: 700; align-items: center; gap: 8px;">
+          </div>
 
         </div>
 
         <!-- SAÍDA DE CÓDIGO E PREVIEW RENDERIZADO -->
         <div class="generator-output-box">
-          
+
           <div class="output-header">
             <h2 class="form-section-title" style="margin-bottom:0;">📋 Código Exportável</h2>
-            
+
             <div class="format-toggle">
               <button id="fmt-js" class="format-btn active" onclick="setOutputFormat('js')">JS Object</button>
               <button id="fmt-md" class="format-btn" onclick="setOutputFormat('markdown')">Markdown</button>
@@ -286,7 +420,8 @@
           <hr style="border: none; border-top: 1px solid var(--border-color); margin: 12px 0;">
 
           <div>
-            <h3 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--text-main); font-weight: 700;">👁️ Pré-visualização do Card:</h3>
+            <h3 style="font-size: 0.95rem; margin-bottom: 10px; color: var(--text-main); font-weight: 700;">👁️
+              Pré-visualização do Card:</h3>
             <div id="rendered-preview" class="preview-box"></div>
           </div>
 
@@ -296,43 +431,50 @@
 
       <!-- SEÇÃO 2: GERENCIADOR DA EQUIPE -->
       <div id="section-admin-team" class="generator-container" style="display: none;">
-        
+
         <!-- FORMULÁRIO DE EDIÇÃO DE MEMBRO DA EQUIPE -->
         <div class="generator-form-box">
-          
-          <div style="background: var(--bg-input); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px;">
-            <label class="form-label" for="select-team-member" style="font-size: 0.9rem; font-weight: 700; color: var(--accent-primary); display: flex; align-items: center; gap: 6px;">
+
+          <div
+            style="background: var(--bg-input); padding: 14px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 20px;">
+            <label class="form-label" for="select-team-member"
+              style="font-size: 0.9rem; font-weight: 700; color: var(--accent-primary); display: flex; align-items: center; gap: 6px;">
               👥 Selecionar Integrante da Equipe:
             </label>
             <div style="display: flex; gap: 8px; margin-top: 6px; width: 100%;">
-              <select id="select-team-member" class="form-input" onchange="loadSelectedTeamMemberForEdit()" style="flex: 1; min-width: 0; font-weight: 600; cursor: pointer;">
+              <select id="select-team-member" class="form-input" onchange="loadSelectedTeamMemberForEdit()"
+                style="flex: 1; min-width: 0; font-weight: 600; cursor: pointer;">
                 <option value="rafael-godoy">👑 Rafael Godoy (Godoy)</option>
                 <option value="krisp">⚡ Krisp (Co-criador & Modder)</option>
                 <option value="new_member">➕ [Adicionar Novo Integrante]</option>
               </select>
-              <button class="btn-secondary" onclick="resetTeamFormToNew()" style="white-space: nowrap; padding: 0 14px; flex-shrink: 0;">✨ Novo</button>
+              <button class="btn-secondary" onclick="resetTeamFormToNew()"
+                style="white-space: nowrap; padding: 0 14px; flex-shrink: 0;">✨ Novo</button>
             </div>
           </div>
 
           <h2 class="form-section-title" id="team-form-heading">👤 Dados do Integrante</h2>
-          
+
           <input type="hidden" id="team-input-id" value="rafael-godoy">
 
           <div class="form-row-2">
             <div class="form-group">
               <label class="form-label" for="team-input-name">Nome Completo / Apelido:</label>
-              <input type="text" id="team-input-name" class="form-input" placeholder="Ex: Krisp ou Rafael Godoy" oninput="updateTeamPreview()">
+              <input type="text" id="team-input-name" class="form-input" placeholder="Ex: Krisp ou Rafael Godoy"
+                oninput="updateTeamPreview()">
             </div>
             <div class="form-group">
               <label class="form-label" for="team-input-role">Cargo / Função na Equipe:</label>
-              <input type="text" id="team-input-role" class="form-input" placeholder="Ex: Co-criador & Modder" oninput="updateTeamPreview()">
+              <input type="text" id="team-input-role" class="form-input" placeholder="Ex: Co-criador & Modder"
+                oninput="updateTeamPreview()">
             </div>
           </div>
 
           <div class="form-row-2">
             <div class="form-group">
               <label class="form-label" for="team-input-badge">Selo / Badge:</label>
-              <input type="text" id="team-input-badge" class="form-input" placeholder="Ex: ⚡ Equipe Principal" oninput="updateTeamPreview()">
+              <input type="text" id="team-input-badge" class="form-input" placeholder="Ex: ⚡ Equipe Principal"
+                oninput="updateTeamPreview()">
             </div>
             <div class="form-group">
               <label class="form-label" for="team-input-status">🏷️ Tag de Atividade na Equipe:</label>
@@ -342,8 +484,10 @@
                 <option value="Sumido">👻 Sumido</option>
               </select>
               <div class="subtag-presets" style="margin-top: 6px;">
-                <button type="button" class="preset-btn" onclick="setTeamStatusPreset('Em Atividade')">🟢 Em Atividade</button>
-                <button type="button" class="preset-btn" onclick="setTeamStatusPreset('Aposentado')">🏖️ Aposentado</button>
+                <button type="button" class="preset-btn" onclick="setTeamStatusPreset('Em Atividade')">🟢 Em
+                  Atividade</button>
+                <button type="button" class="preset-btn" onclick="setTeamStatusPreset('Aposentado')">🏖️
+                  Aposentado</button>
                 <button type="button" class="preset-btn" onclick="setTeamStatusPreset('Sumido')">👻 Sumido</button>
               </div>
             </div>
@@ -352,56 +496,69 @@
           <div class="form-group">
             <label class="form-label" for="team-input-avatar">🖼️ URL ou Arquivo da Foto / Avatar:</label>
             <div style="display: flex; gap: 8px; align-items: center; width: 100%;">
-              <input type="text" id="team-input-avatar" class="form-input" style="flex: 1; min-width: 0;" placeholder="https://exemplo.com/avatar.jpg" oninput="updateTeamPreview()">
-              <label class="btn-secondary" style="margin: 0; padding: 8px 12px; cursor: pointer; flex-shrink: 0; white-space: nowrap;">
+              <input type="text" id="team-input-avatar" class="form-input" style="flex: 1; min-width: 0;"
+                placeholder="https://exemplo.com/avatar.jpg" oninput="updateTeamPreview()">
+              <label class="btn-secondary"
+                style="margin: 0; padding: 8px 12px; cursor: pointer; flex-shrink: 0; white-space: nowrap;">
                 📁 Upload
-                <input type="file" id="team-input-avatar-file" accept="image/*" style="display: none;" onchange="handleTeamAvatarUpload(event)">
+                <input type="file" id="team-input-avatar-file" accept="image/*" style="display: none;"
+                  onchange="handleTeamAvatarUpload(event)">
               </label>
             </div>
           </div>
 
           <div class="form-group">
             <label class="form-label" for="team-input-bio">Biografia / Apresentação:</label>
-            <textarea id="team-input-bio" class="form-textarea" style="min-height: 80px;" placeholder="Resumo das atividades do membro na equipe..." oninput="updateTeamPreview()"></textarea>
+            <textarea id="team-input-bio" class="form-textarea" style="min-height: 80px;"
+              placeholder="Resumo das atividades do membro na equipe..." oninput="updateTeamPreview()"></textarea>
           </div>
 
           <div class="form-group">
             <label class="form-label" for="team-input-specs">Especialidades (separadas por vírgula):</label>
-            <input type="text" id="team-input-specs" class="form-input" placeholder="Ex: Dublagens, Traduções, Testes & QA" oninput="updateTeamPreview()">
+            <input type="text" id="team-input-specs" class="form-input"
+              placeholder="Ex: Dublagens, Traduções, Testes & QA" oninput="updateTeamPreview()">
           </div>
 
           <div class="form-row-2">
             <div class="form-group">
               <label class="form-label" for="team-input-discord">Link do Discord ou User:</label>
-              <input type="text" id="team-input-discord" class="form-input" placeholder="Ex: https://discord.com/invite/... ou Krisp0o" oninput="updateTeamPreview()">
+              <input type="text" id="team-input-discord" class="form-input"
+                placeholder="Ex: https://discord.com/invite/... ou Krisp0o" oninput="updateTeamPreview()">
             </div>
             <div class="form-group">
               <label class="form-label" for="team-input-youtube">Link do YouTube (Opcional):</label>
-              <input type="text" id="team-input-youtube" class="form-input" placeholder="https://youtube.com/@seucanal" oninput="updateTeamPreview()">
+              <input type="text" id="team-input-youtube" class="form-input" placeholder="https://youtube.com/@seucanal"
+                oninput="updateTeamPreview()">
             </div>
           </div>
 
           <div class="form-row-2">
             <div class="form-group">
               <label class="form-label" for="team-input-twitter">Link do Twitter / X:</label>
-              <input type="text" id="team-input-twitter" class="form-input" placeholder="https://x.com/Krisp0o" oninput="updateTeamPreview()">
+              <input type="text" id="team-input-twitter" class="form-input" placeholder="https://x.com/Krisp0o"
+                oninput="updateTeamPreview()">
             </div>
             <div class="form-group">
               <label class="form-label" for="team-input-steam">Link da Steam:</label>
-              <input type="text" id="team-input-steam" class="form-input" placeholder="https://steamcommunity.com/id/thekrisp/" oninput="updateTeamPreview()">
+              <input type="text" id="team-input-steam" class="form-input"
+                placeholder="https://steamcommunity.com/id/thekrisp/" oninput="updateTeamPreview()">
             </div>
           </div>
 
           <!-- BOTÕES DE AÇÃO DO GERENCIADOR DE EQUIPE -->
           <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
-            <button type="button" class="action-btn-primary" id="btn-save-team" onclick="saveTeamMember()" style="flex: 1; min-width: 180px; justify-content: center; padding: 12px;">
+            <button type="button" class="action-btn-primary" id="btn-save-team" onclick="saveTeamMember()"
+              style="flex: 1; min-width: 180px; justify-content: center; padding: 12px;">
               💾 Salvar Integrante
             </button>
-            <button type="button" class="btn-secondary" onclick="deleteSelectedTeamMember()" id="btn-delete-team-member" style="display: none; color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">
+            <button type="button" class="btn-secondary" onclick="deleteSelectedTeamMember()" id="btn-delete-team-member"
+              style="display: none; color: #ef4444; border-color: rgba(239, 68, 68, 0.4);">
               🗑️ Remover Integrante
             </button>
           </div>
-          <div id="team-save-feedback" style="display: none; margin-top: 12px; padding: 12px 16px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #10b981; border-radius: 8px; font-size: 0.875rem; font-weight: 700; align-items: center; gap: 8px;"></div>
+          <div id="team-save-feedback"
+            style="display: none; margin-top: 12px; padding: 12px 16px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #10b981; border-radius: 8px; font-size: 0.875rem; font-weight: 700; align-items: center; gap: 8px;">
+          </div>
 
         </div>
 
@@ -411,7 +568,8 @@
           <div id="team-rendered-preview" class="preview-box"></div>
 
           <div style="margin-top: 20px;">
-            <h3 style="font-size: 0.9rem; color: var(--text-main); font-weight: 700; margin-bottom: 8px;">📋 JSON da Equipe Completa:</h3>
+            <h3 style="font-size: 0.9rem; color: var(--text-main); font-weight: 700; margin-bottom: 8px;">📋 JSON da
+              Equipe Completa:</h3>
             <pre id="team-code-display" class="code-display" style="max-height: 200px;"></pre>
           </div>
         </div>
@@ -421,7 +579,8 @@
     </main>
 
     <footer class="site-footer">
-      <p>Godoy Mods • Área de Edição e Gerenciamento de Publicações • <a href="index.html" style="color:var(--text-accent);">Voltar ao Site Principal</a></p>
+      <p>Godoy Mods • Área de Edição e Gerenciamento de Publicações • <a href="index.html"
+          style="color:var(--text-accent);">Voltar ao Site Principal</a></p>
     </footer>
 
   </div>
@@ -430,7 +589,7 @@
   <div class="modal-overlay" id="post-modal-overlay" onclick="closePostModal(event)">
     <div class="modal-container" onclick="event.stopPropagation()">
       <button class="modal-close-btn" onclick="closePostModal()" aria-label="Fechar modal">✕</button>
-      
+
       <div class="modal-header">
         <div class="modal-tags" id="modal-tags"></div>
         <h2 class="modal-title" id="modal-title"></h2>
@@ -449,5 +608,5 @@
   </div>
 
 </body>
-</html>
 
+</html>

@@ -3,7 +3,6 @@ import path from 'path';
 
 const rootDir = process.cwd();
 const projectsFilePath = path.join(rootDir, 'data', 'projects.json');
-const fallbackProjectsFilePath = path.join(rootDir, 'projects.json');
 const previewsDir = path.join(rootDir, 'p');
 
 function stripHtml(html) {
@@ -41,14 +40,12 @@ function getDefaultThemeColor(platform, tags) {
 
 export function generatePreviews() {
   console.log('🚀 Gerando páginas de preview estáticas para redes sociais (Discord, WhatsApp, etc.)...');
-  
+
   let rawData;
   if (fs.existsSync(projectsFilePath)) {
     rawData = fs.readFileSync(projectsFilePath, 'utf-8');
-  } else if (fs.existsSync(fallbackProjectsFilePath)) {
-    rawData = fs.readFileSync(fallbackProjectsFilePath, 'utf-8');
   } else {
-    console.error('❌ Nenhum arquivo projects.json encontrado.');
+    console.error('❌ Nenhum arquivo data/projects.json encontrado.');
     return;
   }
 
@@ -91,7 +88,7 @@ export function generatePreviews() {
 
     const title = escapeHtml(project.title || 'Godoy Mods');
     const fullTitle = `${title} - Godoy Mods`;
-    
+
     let descriptionText = project.description || stripHtml(project.content) || 'Confira os mods, traduções e devlogs de jogos no Godoy Mods!';
     descriptionText = escapeHtml(descriptionText.substring(0, 200));
 
@@ -103,7 +100,7 @@ export function generatePreviews() {
       if (match && match[1]) {
         try {
           rawImg = decodeURIComponent(match[1]);
-        } catch (e) {}
+        } catch (e) { }
       }
     }
     const imageUrl = rawImg.replace(/"/g, '&quot;').replace(/'/g, '&#39;');

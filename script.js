@@ -265,7 +265,8 @@ let PROJECTS_DATA = [];
 
 // Carregar dados de /data/projects.json ou /api/projects
 async function loadProjectsFromServer() {
-  function handleEditorAutoSelect() {
+  function refreshUI() {
+    renderAllCards();
     if (document.getElementById("select-existing-post")) {
       populatePostSelector();
       const selectElem = document.getElementById("select-existing-post");
@@ -274,9 +275,25 @@ async function loadProjectsFromServer() {
         loadSelectedPostForEdit();
       }
     }
+    checkUrlHashAndOpenModal();
   }
 
-  // 1. Tentar carregar da API do servidor
+  // 1. Tentar carregar do localStorage SE contiver dados válidos
+  try {
+    const savedLocal = localStorage.getItem("godoy_projects_data");
+    if (savedLocal) {
+      const parsed = JSON.parse(savedLocal);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        PROJECTS_DATA = parsed.filter(p => p && p.id !== "preview-temp-id");
+        PROJECTS_DATA.sort((a, b) => parsePostDate(b.date) - parsePostDate(a.date));
+        refreshUI();
+      } else {
+        localStorage.removeItem("godoy_projects_data");
+      }
+    }
+  } catch (e) { }
+
+  // 2. Tentar API do servidor (/api/projects)
   try {
     const res = await fetch("/api/projects");
     if (res.ok) {
@@ -284,18 +301,30 @@ async function loadProjectsFromServer() {
       if (Array.isArray(serverProjects) && serverProjects.length > 0) {
         PROJECTS_DATA = serverProjects.filter(p => p && p.id !== "preview-temp-id");
         PROJECTS_DATA.sort((a, b) => parsePostDate(b.date) - parsePostDate(a.date));
-        renderAllCards();
-        handleEditorAutoSelect();
-        checkUrlHashAndOpenModal();
+        try {
+          localStorage.setItem("godoy_projects_data", JSON.stringify(PROJECTS_DATA));
+        } catch (e) { }
+        refreshUI();
         return;
       }
     }
-  } catch (err) {
-    console.warn("API do servidor indisponível, tentando arquivos estáticos:", err);
+  } catch (err) { }
+
+  // 3. Tentar caminhos estáticos para /data/projects.json
+  const currentPath = window.location.pathname;
+  let relPrefix = "./";
+  if (currentPath.includes("/p/")) {
+    relPrefix = "../../";
   }
 
-  // 2. Tentar carregar dos arquivos JSON estáticos
-  const jsonPaths = ["./data/projects.json"];
+  const jsonPaths = [
+    relPrefix + "data/projects.json",
+    "./data/projects.json",
+    "../data/projects.json",
+    "/data/projects.json",
+    "data/projects.json"
+  ];
+
   for (const path of jsonPaths) {
     try {
       const jsonRes = await fetch(path);
@@ -304,16 +333,17 @@ async function loadProjectsFromServer() {
         if (Array.isArray(localProjects) && localProjects.length > 0) {
           PROJECTS_DATA = localProjects.filter(p => p && p.id !== "preview-temp-id");
           PROJECTS_DATA.sort((a, b) => parsePostDate(b.date) - parsePostDate(a.date));
-          renderAllCards();
-          handleEditorAutoSelect();
-          checkUrlHashAndOpenModal();
+          try {
+            localStorage.setItem("godoy_projects_data", JSON.stringify(PROJECTS_DATA));
+          } catch (e) { }
+          refreshUI();
           return;
         }
       }
-    } catch (err) {
-      console.warn(`Arquivo estático ${path} não pôde ser lido:`, err);
-    }
+    } catch (err) { }
   }
+
+  refreshUI();
 }
 
 async function syncProjectsToServer() {
@@ -493,14 +523,16 @@ function animateOnLoad() {
 }
 
 // INICIALIZAÇÃO AO CARREGAR A PÁGINA
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   initTheme();
+  initNavTabsScroll();
+
+  await loadProjectsFromServer();
+  await loadTeamFromServer();
+  await loadToolsFromServer();
+
   renderAllCards();
   renderTeamCards();
-  initNavTabsScroll();
-  loadProjectsFromServer();
-  loadTeamFromServer();
-  loadToolsFromServer();
   animateOnLoad();
 
   window.addEventListener("hashchange", checkUrlHashAndOpenModal);
@@ -1157,7 +1189,7 @@ function createCardHTML(item) {
   return `
     <article class="card card-clickable" onclick="openPostModal('${item.id}')">
       <div class="card-media">
-        <img src="${item.image}" alt="${item.title}" loading="lazy" referrerpolicy="no-referrer" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80';">
+        <img src="${item.image}" alt="${item.title}" loading="lazy" referrerpolicy="no-referrer" style="object-position: ${item.imagePosition || item.imagePos || 'center'};" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80';">
         <div class="card-media-overlay"></div>
         ${statusBadge}
       </div>
@@ -1238,30 +1270,208 @@ function formatBlogContent(rawContent) {
   return text;
 }
 
-// HELPER PARA INSERÇÃO E UPLOAD DE IMAGEM BASE64 NO CORPO DO BLOG (gerador.html)
-function handleContentImageUpload(e) {
+// OTIMIZADOR DE IMAGEM PARA WEB (COMPRESSÃO E REDIMENSIONAMENTO NO NAVEGADOR)
+async function optimizeImageForWeb(file, maxWidth = 1600, maxHeight = 1600, quality = 0.82) {
+  if (!file || !file.type || !file.type.startsWith("image/")) return file;
+
+  // Se o arquivo já for super leve (<= 150KB), não precisa otimizar
+  if (file.size <= 150 * 1024) return file;
+
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+
+      let width = img.width;
+      let height = img.height;
+
+      if (width > maxWidth || height > maxHeight) {
+        if (width > height) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        } else {
+          width = Math.round((width * maxHeight) / height);
+          height = maxHeight;
+        }
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+
+      canvas.toBlob(
+        (blob) => {
+          if (blob && blob.size < file.size) {
+            const originalKb = (file.size / 1024).toFixed(0);
+            const optKb = (blob.size / 1024).toFixed(0);
+            console.log(`⚡ Imagem otimizada no navegador: ${originalKb}KB ➔ ${optKb}KB`);
+            const optimizedFile = new File([blob], file.name ? file.name.replace(/\.[^/.]+$/, ".jpg") : "image.jpg", {
+              type: "image/jpeg",
+              lastModified: Date.now()
+            });
+            resolve(optimizedFile);
+          } else {
+            resolve(file);
+          }
+        },
+        "image/jpeg",
+        quality
+      );
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(file);
+    };
+    img.src = url;
+  });
+}
+
+let isUploadingImage = false;
+
+// HELPER PARA INSERÇÃO E UPLOAD DE IMAGEM NO CORPO DO BLOG (gerador.html)
+async function uploadImageFile(file) {
+  if (!file) return null;
+  if (isUploadingImage) {
+    showToast("⏳ Aguarde! Já existe uma imagem sendo processada e enviada...", "warning");
+    return null;
+  }
+
+  isUploadingImage = true;
+
+  // Atualizar miniatura do Gerador com indicador de carregamento
+  const thumbPlaceholder = document.getElementById("image-thumb-placeholder");
+  const thumbImg = document.getElementById("image-thumb-img");
+  const origPlaceholderText = thumbPlaceholder ? thumbPlaceholder.innerHTML : "Capa";
+
+  if (thumbPlaceholder) {
+    thumbPlaceholder.innerHTML = "⏳<br><span style='font-size:0.6rem;'>Enviando...</span>";
+    if (thumbImg) thumbImg.style.display = "none";
+  }
+
+  showToast("⚙️ Otimizando foto para web e enviando...", "info");
+
+  const config = (typeof window !== "undefined" && window.GODOY_CONFIG) ? window.GODOY_CONFIG : {};
+  const uploadcareKey = config.UPLOADCARE_PUB_KEY || "demopublickey";
+  const imgurClientId = config.IMGUR_CLIENT_ID || "54642c239c58f1a";
+  const uploadcareUrl = config.UPLOADCARE_API_URL || "https://upload.uploadcare.com/base/";
+  const catboxUrl = config.CATBOX_API_URL || "https://catbox.moe/user/api.php";
+  const imgurUrl = config.IMGUR_API_URL || "https://api.imgur.com/3/image";
+
+  let uploadedResultUrl = null;
+
+  try {
+    // 1. Otimizar e comprimir a foto no navegador antes de enviar
+    const optimizedFile = await optimizeImageForWeb(file);
+
+    // 2. Servidor 1: Uploadcare CDN (Hospedagem Permanente, Global CDN, livre de CORS)
+    try {
+      const formData = new FormData();
+      formData.append("UPLOADCARE_PUB_KEY", uploadcareKey);
+      formData.append("UPLOADCARE_STORE", "1");
+      formData.append("file", optimizedFile, optimizedFile.name || "cover.jpg");
+
+      const res = await fetch(uploadcareUrl, {
+        method: "POST",
+        body: formData
+      });
+      if (res.ok) {
+        const json = await res.json();
+        if (json && json.file) {
+          const fileName = (optimizedFile.name || "cover.jpg").replace(/[^a-zA-Z0-9_.-]/g, "_");
+          const directLink = `https://ucarecdn.com/${json.file}/${fileName}`;
+          showToast("✅ Imagem hospedada com sucesso em CDN permanente!", "success");
+          uploadedResultUrl = directLink;
+        }
+      }
+    } catch (err) {
+      console.warn("Uploadcare falhou, tentando Catbox...", err);
+    }
+
+    // 3. Servidor 2: Catbox.moe API se Uploadcare falhar
+    if (!uploadedResultUrl) {
+      try {
+        const formData = new FormData();
+        formData.append("reqtype", "fileupload");
+        formData.append("fileToUpload", optimizedFile);
+        const res = await fetch(catboxUrl, {
+          method: "POST",
+          body: formData
+        });
+        if (res.ok) {
+          const url = (await res.text()).trim();
+          if (url.startsWith("http")) {
+            showToast("✅ Imagem hospedada no Catbox com sucesso!", "success");
+            uploadedResultUrl = url;
+          }
+        }
+      } catch (err) {
+        console.warn("Catbox falhou, tentando Imgur...", err);
+      }
+    }
+
+    // 4. Servidor 3: Imgur API se Catbox falhar
+    if (!uploadedResultUrl) {
+      try {
+        const formData = new FormData();
+        formData.append("image", optimizedFile);
+        const res = await fetch(imgurUrl, {
+          method: "POST",
+          headers: { Authorization: `Client-ID ${imgurClientId}` },
+          body: formData
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.data && data.data.link) {
+            showToast("✅ Imagem hospedada no Imgur com sucesso!", "success");
+            uploadedResultUrl = data.data.link;
+          }
+        }
+      } catch (err) {
+        console.warn("Imgur falhou...", err);
+      }
+    }
+
+    // 5. Se todos os servidores remotos falharem:
+    if (!uploadedResultUrl) {
+      showToast("❌ Falha na hospedagem remota em todos os servidores (TmpFiles, Catbox, Imgur). Tente novamente.", "error");
+    }
+
+  } finally {
+    isUploadingImage = false;
+    if (thumbPlaceholder) {
+      thumbPlaceholder.innerHTML = origPlaceholderText;
+    }
+  }
+
+  return uploadedResultUrl;
+}
+
+async function handleContentImageUpload(e) {
   const file = e.target.files && e.target.files[0];
   if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = function (event) {
-    const base64Data = event.target.result;
-    insertBase64ImageToContent(base64Data, file.name);
-    e.target.value = "";
-  };
-  reader.readAsDataURL(file);
+  const uploadedUrl = await uploadImageFile(file);
+  if (uploadedUrl) {
+    insertImageToContent(uploadedUrl, file.name);
+  }
+  e.target.value = "";
 }
 
-function insertBase64ImageToContent(base64Data, defaultCaption = "") {
+function insertImageToContent(imageUrl, defaultCaption = "") {
   const textarea = document.getElementById("input-content");
   if (!textarea) return;
 
   const caption = prompt("Insira uma legenda para a imagem (opcional):", defaultCaption) || "";
   let snippet = "";
   if (caption) {
-    snippet = `\n<figure class="blog-figure">\n  <img src="${base64Data}" alt="${caption}">\n  <figcaption>${caption}</figcaption>\n</figure>\n`;
+    snippet = `\n<figure class="blog-figure">\n  <img src="${imageUrl}" alt="${caption}">\n  <figcaption>${caption}</figcaption>\n</figure>\n`;
   } else {
-    snippet = `\n<img src="${base64Data}" alt="Imagem do Post">\n`;
+    snippet = `\n<img src="${imageUrl}" alt="Imagem do Post">\n`;
   }
 
   const start = textarea.selectionStart || 0;
@@ -1273,34 +1483,72 @@ function insertBase64ImageToContent(base64Data, defaultCaption = "") {
   textarea.focus();
 
   updateGeneratorPreview();
-  showToast("📷 Imagem Base64 inserida no corpo do post com sucesso!", "success");
+  showToast("📷 Imagem inserida no corpo do post!", "success");
 }
 
 function setupEditorDragDropAndPaste() {
+  if (typeof window === "undefined") return;
+
+  // Registrar escutador global do evento 'paste' (Ctrl+V) no Gerador de Posts
+  if (!window.datasetGlobalPasteBound) {
+    window.datasetGlobalPasteBound = true;
+    window.addEventListener("paste", async (e) => {
+      const items = e.clipboardData && e.clipboardData.items;
+      if (!items) return;
+
+      let imageItem = null;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf("image") !== -1) {
+          imageItem = items[i];
+          break;
+        }
+      }
+
+      if (!imageItem) return;
+
+      if (isUploadingImage) {
+        showToast("⏳ Aguarde! Uma foto já está sendo enviada...", "warning");
+        return;
+      }
+
+      const activeElem = document.activeElement;
+      const isContentEditor = activeElem && activeElem.id === "input-content";
+
+      e.preventDefault();
+      const blob = imageItem.getAsFile();
+      if (!blob) return;
+
+      const uploadedUrl = await uploadImageFile(blob);
+
+      if (uploadedUrl) {
+        if (isContentEditor) {
+          insertImageToContent(uploadedUrl, "Print colado");
+        } else {
+          const imgInput = document.getElementById("input-image");
+          if (imgInput) {
+            imgInput.value = uploadedUrl;
+            updateGeneratorPreview();
+
+            // Extrair a cor automaticamente do print colado
+            extractColorFromImage(uploadedUrl, (extractedHex) => {
+              if (extractedHex) {
+                const colorInput = document.getElementById("input-theme-color");
+                const colorPicker = document.getElementById("input-theme-color-picker");
+                if (colorInput) colorInput.value = extractedHex;
+                if (colorPicker) colorPicker.value = extractedHex;
+                updateGeneratorPreview();
+              }
+            });
+            showToast("📸 Print da área de transferência definido como Imagem de Capa!", "success");
+          }
+        }
+      }
+    });
+  }
+
   const textarea = document.getElementById("input-content");
   if (!textarea || textarea.dataset.dragPasteBound) return;
   textarea.dataset.dragPasteBound = "true";
-
-  // Suporte a colar foto (Ctrl+V) diretamente no editor
-  textarea.addEventListener("paste", (e) => {
-    const items = e.clipboardData && e.clipboardData.items;
-    if (!items) return;
-
-    for (let i = 0; i < items.length; i++) {
-      if (items[i].type.indexOf("image") !== -1) {
-        e.preventDefault();
-        const blob = items[i].getAsFile();
-        if (blob) {
-          const reader = new FileReader();
-          reader.onload = (event) => {
-            insertBase64ImageToContent(event.target.result, "Imagem colada");
-          };
-          reader.readAsDataURL(blob);
-        }
-        break;
-      }
-    }
-  });
 
   // Suporte a Arrastar e Soltar (Drag & Drop) de arquivos de foto
   textarea.addEventListener("dragover", (e) => {
@@ -1315,7 +1563,7 @@ function setupEditorDragDropAndPaste() {
     textarea.style.backgroundColor = "";
   });
 
-  textarea.addEventListener("drop", (e) => {
+  textarea.addEventListener("drop", async (e) => {
     e.preventDefault();
     textarea.style.borderColor = "";
     textarea.style.backgroundColor = "";
@@ -1324,11 +1572,10 @@ function setupEditorDragDropAndPaste() {
     if (files && files.length > 0) {
       const file = files[0];
       if (file.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          insertBase64ImageToContent(event.target.result, file.name);
-        };
-        reader.readAsDataURL(file);
+        const uploadedUrl = await uploadImageFile(file);
+        if (uploadedUrl) {
+          insertImageToContent(uploadedUrl, file.name);
+        }
       }
     }
   });
@@ -1463,6 +1710,25 @@ function openPostModal(postId) {
 
   const modalOverlay = document.getElementById("post-modal-overlay");
   if (!modalOverlay) return;
+
+  // Adaptar estilo do Modal com a Cor do Tema do Post/Imagem
+  const modalContainer = modalOverlay.querySelector(".modal-container");
+  const themeColor = item.themeColor || "#6366f1";
+  if (modalContainer) {
+    modalContainer.style.setProperty("--post-theme-color", themeColor);
+    modalContainer.style.setProperty("--post-theme-glow", `${themeColor}22`);
+    modalContainer.style.setProperty("--post-theme-shadow", `${themeColor}44`);
+  }
+
+  if (item.image && item.image.trim() !== "") {
+    extractColorFromImage(item.image, (extractedHex) => {
+      if (extractedHex && modalContainer) {
+        modalContainer.style.setProperty("--post-theme-color", extractedHex);
+        modalContainer.style.setProperty("--post-theme-glow", `${extractedHex}22`);
+        modalContainer.style.setProperty("--post-theme-shadow", `${extractedHex}44`);
+      }
+    });
+  }
 
   // Atualizar a URL e adicionar entrada no histórico para o botão "Voltar" do celular fechar o modal
   if (postId !== "preview-temp-id" && !modalOverlay.classList.contains("active")) {
@@ -1785,16 +2051,6 @@ function populatePostSelector() {
   }
 }
 
-function handleTypeChange() {
-  const typeElem = document.getElementById("input-type");
-  const containerTagLinks = document.getElementById("container-tag-links");
-  const type = typeElem ? typeElem.value : "devlog";
-  if (containerTagLinks) {
-    containerTagLinks.style.display = (type === "devlog") ? "none" : "block";
-  }
-  updateGeneratorPreview();
-}
-
 function handleTagsInputChange() {
   const currentTagLinks = getTagLinksFromInputs();
   renderTagLinksInputs(currentTagLinks);
@@ -1846,6 +2102,57 @@ function getTagLinksFromInputs() {
   return linksObj;
 }
 
+function handleTypeChange() {
+  const typeElem = document.getElementById("input-type");
+  if (!typeElem) return;
+
+  const type = typeElem.value;
+  const toolContainer = document.getElementById("container-tool-options");
+  const containerTagLinks = document.getElementById("container-tag-links");
+  const progressInput = document.getElementById("input-progress");
+  const progressContainer = progressInput ? progressInput.closest(".form-group") : null;
+
+  if (toolContainer) {
+    toolContainer.style.display = (type === "tool") ? "block" : "none";
+  }
+  if (containerTagLinks) {
+    containerTagLinks.style.display = (type === "devlog" || type === "tool") ? "none" : "block";
+  }
+  if (progressContainer) {
+    progressContainer.style.display = (type === "ongoing") ? "block" : "none";
+  }
+
+  updateGeneratorPreview();
+}
+
+function setImagePositionPreset(pos) {
+  const inputPos = document.getElementById("input-image-position");
+  if (inputPos) inputPos.value = pos;
+
+  document.querySelectorAll(".img-pos-btn").forEach(btn => {
+    btn.classList.remove("active");
+  });
+
+  if (pos === "top") {
+    const btn = document.getElementById("pos-btn-top");
+    if (btn) btn.classList.add("active");
+  } else if (pos === "bottom") {
+    const btn = document.getElementById("pos-btn-bottom");
+    if (btn) btn.classList.add("active");
+  } else if (pos === "center 25%") {
+    const btn = document.getElementById("pos-btn-top25");
+    if (btn) btn.classList.add("active");
+  } else if (pos === "center 75%") {
+    const btn = document.getElementById("pos-btn-bottom75");
+    if (btn) btn.classList.add("active");
+  } else {
+    const btn = document.getElementById("pos-btn-center");
+    if (btn) btn.classList.add("active");
+  }
+
+  updateGeneratorPreview();
+}
+
 function loadSelectedPostForEdit() {
   const selectElem = document.getElementById("select-existing-post");
   const deleteBtn = document.getElementById("btn-delete-post");
@@ -1882,12 +2189,21 @@ function loadSelectedPostForEdit() {
   document.getElementById("input-tags").value = (item.tags || []).join(", ");
   document.getElementById("input-summary").value = item.description || "";
   document.getElementById("input-content").value = (item.content || "").replace(/\\n/g, "\n");
-  document.getElementById("input-download").value = item.downloadUrl || "";
+  document.getElementById("input-download").value = item.downloadUrl || item.url || "";
 
   const colorElem = document.getElementById("input-theme-color");
   const colorPickerElem = document.getElementById("input-theme-color-picker");
   if (colorElem) colorElem.value = item.themeColor || "#6366f1";
   if (colorPickerElem) colorPickerElem.value = item.themeColor || "#6366f1";
+
+  const imgPosVal = item.imagePosition || item.imagePos || "center";
+  setImagePositionPreset(imgPosVal);
+
+  if (document.getElementById("input-tool-category")) document.getElementById("input-tool-category").value = item.category || "created";
+  if (document.getElementById("input-tool-icon")) document.getElementById("input-tool-icon").value = item.icon || "🛠️";
+  if (document.getElementById("input-tool-badge")) document.getElementById("input-tool-badge").value = item.badge || "Ferramenta";
+  if (document.getElementById("input-tool-button-text")) document.getElementById("input-tool-button-text").value = item.buttonText || "🚀 Acessar Ferramenta";
+  if (document.getElementById("input-tool-url")) document.getElementById("input-tool-url").value = item.url || item.downloadUrl || "";
 
   handleTypeChange();
   renderTagLinksInputs(item.tagLinks || item.platformDownloads || {});
@@ -1917,6 +2233,14 @@ function resetFormToNew() {
   if (colorElem) colorElem.value = "#6366f1";
   if (colorPickerElem) colorPickerElem.value = "#6366f1";
 
+  setImagePositionPreset("center");
+
+  if (document.getElementById("input-tool-category")) document.getElementById("input-tool-category").value = "created";
+  if (document.getElementById("input-tool-icon")) document.getElementById("input-tool-icon").value = "🛠️";
+  if (document.getElementById("input-tool-badge")) document.getElementById("input-tool-badge").value = "Ferramenta";
+  if (document.getElementById("input-tool-button-text")) document.getElementById("input-tool-button-text").value = "🚀 Acessar Ferramenta";
+  if (document.getElementById("input-tool-url")) document.getElementById("input-tool-url").value = "";
+
   document.getElementById("input-date").value = getFormattedCurrentDate();
   const periodElem = document.getElementById("input-project-period");
   if (periodElem) periodElem.value = "";
@@ -1942,6 +2266,8 @@ function updateGeneratorPreview() {
   const image = document.getElementById("input-image").value.trim() || "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80";
   const colorElem = document.getElementById("input-theme-color");
   const themeColor = colorElem ? colorElem.value.trim() : "#6366f1";
+  const imagePosElem = document.getElementById("input-image-position");
+  const imagePosition = imagePosElem ? imagePosElem.value : "center";
   const date = document.getElementById("input-date").value.trim() || getFormattedCurrentDate();
   const periodElem = document.getElementById("input-project-period");
   const projectPeriod = periodElem ? periodElem.value.trim() : "";
@@ -1967,6 +2293,7 @@ function updateGeneratorPreview() {
     platform,
     ...(subtag ? { subtag } : {}),
     image,
+    ...(imagePosition && imagePosition !== "center" ? { imagePosition } : {}),
     ...(themeColor ? { themeColor } : {}),
     tags,
     ...(Object.keys(tagLinks).length > 0 ? { tagLinks } : {}),
@@ -2042,40 +2369,119 @@ function setOutputFormat(fmt) {
   updateGeneratorPreview();
 }
 
-function handleImageFileUpload(e) {
+// EXTRAÇÃO AUTOMÁTICA DA COR PREDOMINANTE / VIBRANTE DE UMA IMAGEM (CANVAS HSL)
+function extractColorFromImage(imgSrc, callback) {
+  if (!imgSrc || typeof callback !== "function") return;
+  if (imgSrc.startsWith("data:image/svg")) return;
+
+  const img = new Image();
+  img.crossOrigin = "Anonymous";
+  img.src = imgSrc;
+
+  img.onload = function () {
+    try {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = 40;
+      canvas.height = 40;
+      ctx.drawImage(img, 0, 0, 40, 40);
+
+      const imageData = ctx.getImageData(0, 0, 40, 40);
+      const data = imageData.data;
+
+      let rSum = 0, gSum = 0, bSum = 0, count = 0;
+      let maxSat = -1;
+      let vibrantColor = null;
+
+      for (let i = 0; i < data.length; i += 16) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
+        const a = data[i + 3];
+
+        if (a < 128) continue; // Ignorar pixels transparentes
+
+        const max = Math.max(r, g, b) / 255;
+        const min = Math.min(r, g, b) / 255;
+        const l = (max + min) / 2;
+        const d = max - min;
+        const s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
+
+        // Ignorar pretos profundos (l < 0.12), brancos (l > 0.90) e cinzas foscos (s < 0.15)
+        if (l < 0.12 || l > 0.90 || s < 0.15) continue;
+
+        if (s > maxSat) {
+          maxSat = s;
+          vibrantColor = { r, g, b };
+        }
+
+        rSum += r;
+        gSum += g;
+        bSum += b;
+        count++;
+      }
+
+      let hex = null;
+      if (vibrantColor) {
+        hex = "#" + [vibrantColor.r, vibrantColor.g, vibrantColor.b].map(x => x.toString(16).padStart(2, "0")).join("");
+      } else if (count > 0) {
+        const avgR = Math.round(rSum / count);
+        const avgG = Math.round(gSum / count);
+        const avgB = Math.round(bSum / count);
+        hex = "#" + [avgR, avgG, avgB].map(x => x.toString(16).padStart(2, "0")).join("");
+      }
+
+      if (hex) callback(hex);
+    } catch (e) {
+      console.warn("Cross-origin ou erro no canvas ao extrair cor da imagem", e);
+    }
+  };
+}
+
+function autoExtractColorForCurrentForm() {
+  const imgInput = document.getElementById("input-image");
+  const imageUrl = imgInput ? imgInput.value.trim() : "";
+  if (!imageUrl) {
+    showToast("Por favor, informe a URL ou faça o upload da imagem de capa primeiro.", "error");
+    return;
+  }
+
+  showToast("🔍 Analisando imagem e extraindo cor predominante...", "info");
+  extractColorFromImage(imageUrl, (extractedHex) => {
+    if (extractedHex) {
+      const colorInput = document.getElementById("input-theme-color");
+      const colorPicker = document.getElementById("input-theme-color-picker");
+      if (colorInput) colorInput.value = extractedHex;
+      if (colorPicker) colorPicker.value = extractedHex;
+      updateGeneratorPreview();
+      showToast(`🎨 Cor predominante extraída com sucesso: ${extractedHex}`, "success");
+    }
+  });
+}
+
+async function handleImageFileUpload(e) {
   const file = e.target.files && e.target.files[0];
   if (!file) return;
 
-  const reader = new FileReader();
-  reader.onload = async function (event) {
-    const dataUrl = event.target.result;
+  const uploadedUrl = await uploadImageFile(file);
+  if (uploadedUrl) {
     const imgInput = document.getElementById("input-image");
-
-    // Tenta fazer o upload para a pasta /uploads/ do servidor
-    try {
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageBase64: dataUrl })
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.url && imgInput) {
-          imgInput.value = data.url;
-          updateGeneratorPreview();
-          return;
-        }
-      }
-    } catch (err) {
-      console.warn("Upload no servidor indisponível, usando DataURL direto:", err);
-    }
-
     if (imgInput) {
-      imgInput.value = dataUrl;
+      imgInput.value = uploadedUrl;
       updateGeneratorPreview();
+
+      // Extrair a cor automaticamente da nova imagem
+      extractColorFromImage(uploadedUrl, (extractedHex) => {
+        if (extractedHex) {
+          const colorInput = document.getElementById("input-theme-color");
+          const colorPicker = document.getElementById("input-theme-color-picker");
+          if (colorInput) colorInput.value = extractedHex;
+          if (colorPicker) colorPicker.value = extractedHex;
+          updateGeneratorPreview();
+        }
+      });
     }
-  };
-  reader.readAsDataURL(file);
+  }
 }
 
 function savePostToSiteFeed() {
@@ -2094,6 +2500,8 @@ function savePostToSiteFeed() {
   const subtagElem = document.getElementById("input-subtag");
   const subtag = subtagElem ? subtagElem.value.trim() : "";
   const image = document.getElementById("input-image").value.trim() || "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80";
+  const colorElem = document.getElementById("input-theme-color");
+  const themeColor = colorElem ? colorElem.value.trim() : "#6366f1";
   const date = document.getElementById("input-date").value.trim() || getFormattedCurrentDate();
   const periodElem = document.getElementById("input-project-period");
   const projectPeriod = periodElem ? periodElem.value.trim() : "";
@@ -2104,6 +2512,15 @@ function savePostToSiteFeed() {
   const description = document.getElementById("input-summary").value.trim() || "Sem descrição disponível.";
   const content = document.getElementById("input-content").value.trim();
   const downloadUrl = document.getElementById("input-download").value.trim();
+
+  const toolCategory = document.getElementById("input-tool-category") ? document.getElementById("input-tool-category").value : "created";
+  const toolIcon = document.getElementById("input-tool-icon") ? document.getElementById("input-tool-icon").value.trim() : "🛠️";
+  const toolBadge = document.getElementById("input-tool-badge") ? document.getElementById("input-tool-badge").value.trim() : "Ferramenta";
+  const toolBtnText = document.getElementById("input-tool-button-text") ? document.getElementById("input-tool-button-text").value.trim() : "🚀 Acessar Ferramenta";
+  const toolUrl = document.getElementById("input-tool-url") ? document.getElementById("input-tool-url").value.trim() : "";
+
+  const imagePosElem = document.getElementById("input-image-position");
+  const imagePosition = imagePosElem ? imagePosElem.value : "center";
 
   const existingIndex = PROJECTS_DATA.findIndex(p => p && String(p.id).trim() === String(id).trim());
   const existingItem = existingIndex >= 0 ? PROJECTS_DATA[existingIndex] : {};
@@ -2118,11 +2535,20 @@ function savePostToSiteFeed() {
     platform,
     ...(subtag ? { subtag } : {}),
     image,
+    ...(imagePosition && imagePosition !== "center" ? { imagePosition } : (existingItem.imagePosition ? { imagePosition: existingItem.imagePosition } : {})),
+    ...(themeColor ? { themeColor } : {}),
     tags,
     ...(Object.keys(tagLinks).length > 0 ? { tagLinks } : (existingItem.tagLinks ? { tagLinks: existingItem.tagLinks } : {})),
     ...(type === "ongoing" ? { progress } : {}),
+    ...(type === "tool" ? {
+      category: toolCategory,
+      icon: toolIcon,
+      badge: toolBadge,
+      buttonText: toolBtnText,
+      url: toolUrl || downloadUrl
+    } : {}),
     content,
-    downloadUrl,
+    downloadUrl: toolUrl || downloadUrl,
     ...(existingItem.platformDownloads ? { platformDownloads: existingItem.platformDownloads } : {}),
     ...(existingItem.discordUrl ? { discordUrl: existingItem.discordUrl } : {})
   };
@@ -2912,4 +3338,14 @@ window.addEventListener("message", (e) => {
     });
   }
 });
+
+// Inicialização dos eventos de colar/upload de imagem
+if (typeof document !== "undefined") {
+  document.addEventListener("DOMContentLoaded", () => {
+    setupEditorDragDropAndPaste();
+  });
+  if (document.readyState === "interactive" || document.readyState === "complete") {
+    setupEditorDragDropAndPaste();
+  }
+}
 

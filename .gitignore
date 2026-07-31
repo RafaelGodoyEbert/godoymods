@@ -1,4 +1,25 @@
-node_modules/
+# Chaves e Configurações Privadas (Não enviar para o GitHub)
+config.js
+config.json
 .env
+.env.local
+
+# Proibir envio de arquivos JSON de dados na raiz (utilizar estritamente /data/)
+/projects.json
+/tools.json
+/team.json
+
+# Node & Dependências
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs & Arquivos Temporários
 *.log
+.DS_Store
+Thumbs.db
+
+# Pastas Temporárias
 blogspot/
+uploads/
