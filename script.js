@@ -1711,7 +1711,7 @@ function openPostModal(postId) {
   const modalOverlay = document.getElementById("post-modal-overlay");
   if (!modalOverlay) return;
 
-  // Adaptar estilo do Modal com a Cor do Tema do Post/Imagem
+  // Adaptar estilo do Modal com a Cor do Tema do Post
   const modalContainer = modalOverlay.querySelector(".modal-container");
   const themeColor = item.themeColor || "#6366f1";
   if (modalContainer) {
@@ -1720,7 +1720,8 @@ function openPostModal(postId) {
     modalContainer.style.setProperty("--post-theme-shadow", `${themeColor}44`);
   }
 
-  if (item.image && item.image.trim() !== "") {
+  // Extrair cor da imagem apenas se o post não possuir cor temática própria definida
+  if ((!item.themeColor || item.themeColor === "#6366f1") && item.image && item.image.trim() !== "") {
     extractColorFromImage(item.image, (extractedHex) => {
       if (extractedHex && modalContainer) {
         modalContainer.style.setProperty("--post-theme-color", extractedHex);
@@ -1792,6 +1793,7 @@ function openPostModal(postId) {
       };
       modalImage.src = item.image;
       modalImage.alt = item.title;
+      modalImage.style.objectPosition = item.imagePosition || item.imagePos || "center";
       if (modalMediaBg) {
         modalMediaBg.style.backgroundImage = `url('${item.image}')`;
       }
