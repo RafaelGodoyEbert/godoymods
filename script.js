@@ -1784,7 +1784,7 @@ function openPostModal(postId) {
   if (modalImage) {
     const parentContainer = modalImage.parentElement;
     if (item.image && item.image.trim() !== "") {
-      if (parentContainer) parentContainer.style.display = "flex";
+      if (parentContainer) parentContainer.style.display = "";
       modalImage.onerror = function () {
         this.onerror = null;
         const fallback = "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80";
