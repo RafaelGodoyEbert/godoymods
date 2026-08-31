@@ -61,6 +61,17 @@ export function generatePreviews() {
     fs.mkdirSync(previewsDir, { recursive: true });
   }
 
+  // Limpar pastas órfãs/antigas dentro de /p/ que foram renomeadas ou excluídas
+  const validIds = new Set(projects.map(p => p && p.id).filter(Boolean));
+  const existingItems = fs.readdirSync(previewsDir);
+  for (const item of existingItems) {
+    const itemPath = path.join(previewsDir, item);
+    if (fs.statSync(itemPath).isDirectory() && !validIds.has(item)) {
+      console.log(`🧹 Removendo pasta de preview obsoleta: /p/${item}`);
+      fs.rmSync(itemPath, { recursive: true, force: true });
+    }
+  }
+
   // index.html dentro da pasta /p/ redirecionando para a home
   const rootPreviewHtml = `<!DOCTYPE html>
 <html lang="pt-BR">
