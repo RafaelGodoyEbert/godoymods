@@ -103,7 +103,7 @@ export function generatePreviews() {
     let descriptionText = project.description || stripHtml(project.content) || 'Confira os mods, traduções e devlogs de jogos no Godoy Mods!';
     descriptionText = escapeHtml(descriptionText.substring(0, 200));
 
-    const defaultImage = 'https://i.imgur.com/OgaeHFx.png';
+    const defaultImage = 'https://rafaelgodoyebert.github.io/godoymods/images/team/rafael-godoy.webp';
     let rawImg = project.image && project.image.trim() !== '' ? project.image.trim() : defaultImage;
 
     if (rawImg.includes('duckduckgo.com/iu/?u=')) {
@@ -132,7 +132,7 @@ export function generatePreviews() {
   <meta name="description" content="${descriptionText}">
   <meta name="theme-color" content="${themeColor}">
   
-  <!-- Open Graph / Facebook / Discord / WhatsApp -->
+  <!-- Open Graph / Facebook / Discord / WhatsApp / Telegram -->
   <meta property="og:type" content="article">
   <meta property="og:url" content="${pageUrl}">
   <meta property="og:title" content="${fullTitle}">
@@ -149,8 +149,7 @@ export function generatePreviews() {
   <meta name="twitter:description" content="${descriptionText}">
   <meta name="twitter:image" content="${imageUrl}">
 
-  <!-- Redirecionamento instantâneo para o modal no site principal -->
-  <meta http-equiv="refresh" content="0;url=${targetUrl}">
+  <!-- Redirecionamento exclusivo via Javascript para visitantes humanos (sem quebrar bots) -->
   <script>
     window.location.replace("${targetUrl}");
   </script>
