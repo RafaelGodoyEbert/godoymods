@@ -496,45 +496,7 @@ try {
   TOOLS_DATA = JSON.parse(JSON.stringify(DEFAULT_TOOLS_DATA));
 }
 
-async function loadToolsFromServer() {
-  try {
-    const res = await fetch("/api/tools");
-    if (res.ok) {
-      const serverTools = await res.json();
-      if (Array.isArray(serverTools) && serverTools.length > 0) {
-        TOOLS_DATA = serverTools;
-        try {
-          localStorage.setItem("godoy_tools_data", JSON.stringify(TOOLS_DATA));
-        } catch (e) { }
-        if (document.getElementById("select-existing-tool")) {
-          populateToolsSelector();
-        }
-        return;
-      }
-    }
-  } catch (err) {
-    console.warn("API de ferramentas indisponível:", err);
-  }
 
-  try {
-    const jsonRes = await fetch("./data/tools.json");
-    if (jsonRes.ok) {
-      const localTools = await jsonRes.json();
-      if (Array.isArray(localTools) && localTools.length > 0) {
-        TOOLS_DATA = localTools;
-        try {
-          localStorage.setItem("godoy_tools_data", JSON.stringify(TOOLS_DATA));
-        } catch (e) { }
-        if (document.getElementById("select-existing-tool")) {
-          populateToolsSelector();
-        }
-        return;
-      }
-    }
-  } catch (err) {
-    console.warn("Arquivo ./data/tools.json não pôde ser lido:", err);
-  }
-}
 
 async function syncToolsToServer() {
   try {
@@ -1506,7 +1468,16 @@ function createCardHTML(item) {
     return `<span class="tag-badge">${t}</span>`;
   }).join("");
 
-  const periodBadgeHTML = item.projectPeriod ? `<div class="card-project-period" title="Período do Projeto (Início & Conclusão)">⏳ ${item.projectPeriod}</div>` : "";
+  let cardPeriodText = item.projectPeriod || "";
+  if (cardPeriodText) {
+    const parts = cardPeriodText.split(/[•·|]/).map(p => p.trim());
+    const updatedPart = parts.find(p => p.toLowerCase().includes("atualizad"));
+    if (updatedPart) {
+      cardPeriodText = updatedPart;
+    }
+  }
+
+  const periodBadgeHTML = cardPeriodText ? `<div class="card-project-period" title="Período do Projeto: ${item.projectPeriod}">⏳ ${cardPeriodText}</div>` : "";
 
   return `
     <article class="card card-clickable" onclick="openPostModal('${item.id}')">
