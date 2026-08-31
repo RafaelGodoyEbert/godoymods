@@ -295,7 +295,7 @@ async function loadProjectsFromServer() {
 
   // 2. Tentar API do servidor (/api/projects)
   try {
-    const res = await fetch("/api/projects");
+    const res = await fetch("/api/projects?t=" + Date.now());
     if (res.ok) {
       const serverProjects = await res.json();
       if (Array.isArray(serverProjects) && serverProjects.length > 0) {
@@ -327,7 +327,7 @@ async function loadProjectsFromServer() {
 
   for (const path of jsonPaths) {
     try {
-      const jsonRes = await fetch(path);
+      const jsonRes = await fetch(path + "?t=" + Date.now());
       if (jsonRes.ok) {
         const localProjects = await jsonRes.json();
         if (Array.isArray(localProjects) && localProjects.length > 0) {

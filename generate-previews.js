@@ -103,7 +103,11 @@ export function generatePreviews() {
         } catch (e) { }
       }
     }
-    const imageUrl = rawImg.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    let ogImageUrl = rawImg;
+    if (ogImageUrl && !ogImageUrl.startsWith('http://') && !ogImageUrl.startsWith('https://')) {
+      ogImageUrl = `https://rafaelgodoyebert.github.io/godoymods/${ogImageUrl.replace(/^\.?\//, '')}`;
+    }
+    const imageUrl = ogImageUrl.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     const targetUrl = `https://rafaelgodoyebert.github.io/godoymods/#${projectId}`;
     const pageUrl = `https://rafaelgodoyebert.github.io/godoymods/p/${projectId}/`;
     const themeColor = project.themeColor || getDefaultThemeColor(project.platform, project.tags);

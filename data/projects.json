@@ -8,7 +8,7 @@
     "description": "O DastGames fazendo a boa e Patrocinando a trilogia do PoP de ps2.",
     "platform": "PC",
     "subtag": "Dublado (IA)",
-    "image": "https://ucarecdn.com/be05ac61-d430-46ea-af7b-2ad02f142547/image.jpg",
+    "image": "images/covers/prince-of-persia-the-two-thrones-dublado.webp",
     "imagePosition": "top",
     "themeColor": "#f9e4c4",
     "tags": [
@@ -29,7 +29,7 @@
     "description": "O DastGames fazendo a boa e Patrocinando a trilogia do PoP de ps2.",
     "platform": "PC",
     "subtag": "Dublado (IA)",
-    "image": "https://ucarecdn.com/b48b2a97-a054-4511-9a85-fa32a7c839ee/image.jpg",
+    "image": "images/covers/prince-of-persia-warrior-within-dublado.webp",
     "themeColor": "#b20923",
     "tags": [
       "PC",
@@ -48,7 +48,7 @@
     "description": "Estreia oficial do nosso novo portal unificado com criador de posts, catálogo detalhado e sistema de encomendas direct no Discord.",
     "platform": "Comunidade",
     "subtag": "Novidade",
-    "image": "https://i.imgur.com/OgaeHFx.png",
+    "image": "images/covers/portal-welcome-devlog.webp",
     "themeColor": "#f4caaa",
     "tags": [
       "Geral",
@@ -65,7 +65,7 @@
     "description": "Avanços na dublagem e sincronia de vozes para o PlayStation 2 e PlayStation 3.",
     "platform": "PlayStation 2",
     "subtag": "Dublado (IA)",
-    "image": "https://i.imgur.com/nO8CmNX.png",
+    "image": "images/covers/black.webp",
     "themeColor": "#6a410c",
     "tags": [
       "PlayStation 2",
@@ -87,7 +87,7 @@
     "description": "Dublagem completa em PT-BR das cutscenes (6/6) e falas in-game (955/955) com 99% de revisão.",
     "platform": "PC",
     "subtag": "Dublado (IA)",
-    "image": "https://i.imgur.com/8jzuwod.png",
+    "image": "images/covers/prince-of-persia-sot-dublado.webp",
     "themeColor": "#e0bc4c",
     "tags": [
       "PC",
@@ -108,7 +108,7 @@
     "description": "Tradução-relâmpago via IA (Claude) que deu origem à ferramenta open-source Dialogue Editor.",
     "platform": "Nintendo Switch",
     "subtag": "Tradução (IA)",
-    "image": "https://i.imgur.com/Kqw0DB9.png",
+    "image": "images/covers/paper-mario-ttyd.webp",
     "themeColor": "#8a1900",
     "tags": [
       "Nintendo Switch"
@@ -124,7 +124,7 @@
     "description": "Projeto de dublagem em PT-BR para a versão original de 2007 (que não possui legendas no jogo original).",
     "platform": "PC, Playstation2",
     "subtag": "Dublado (IA)",
-    "image": "https://i.imgur.com/BlIwKjb.jpeg",
+    "image": "images/covers/assassins-creed-dublado.webp",
     "themeColor": "#007ba1",
     "tags": [
       "PC",
@@ -141,7 +141,7 @@
     "description": "Projeto de dublagem PT-BR em Bayview que impulsionou o desenvolvimento do DubGen.",
     "platform": "PS2 / PC",
     "subtag": "Dublado (IA)",
-    "image": "https://i.imgur.com/CRmc7Mu.jpeg",
+    "image": "images/covers/nfs-underground-2-dublado.webp",
     "imagePosition": "top",
     "themeColor": "#086477",
     "tags": [
@@ -159,7 +159,7 @@
     "description": "Projeto de dublagem PT-BR para Bully (paralisado por divergências de gestão e cronograma da equipe).",
     "platform": "PC",
     "subtag": "Dublado",
-    "image": "https://i.imgur.com/gt0vX8a.jpeg",
+    "image": "images/covers/bully-dublado.webp",
     "themeColor": "#001c65",
     "tags": [
       "PC",
@@ -180,7 +180,7 @@
     "description": "Tradução e localização PT-BR do clássico da MTV para PS2 e PSP.",
     "platform": "PS2 / PSP",
     "subtag": "Legendado",
-    "image": "https://i.imgur.com/DhsXvWC.jpeg",
+    "image": "images/covers/jackass-the-game.webp",
     "themeColor": "#f8234c",
     "tags": [
       "PlayStation 2",
@@ -197,7 +197,7 @@
     "description": "Projeto de tradução em PT-BR para Resident Evil Code: Veronica X HD (abandonado).",
     "platform": "PlayStation 3 / Xbox 360",
     "subtag": "Legendado",
-    "image": "https://i.imgur.com/1iYoL8M.jpeg",
+    "image": "images/covers/re-code-veronica-x-hd-traducao.webp",
     "imagePosition": "top",
     "themeColor": "#f7baa6",
     "tags": [
@@ -216,7 +216,7 @@
     "description": "Tradução completa em PT-BR para GTA Vice City NextGen Edition no PC por Krisp.",
     "platform": "PC",
     "subtag": "Port, Legendado",
-    "image": "https://i.imgur.com/u0QE9de.jpeg",
+    "image": "images/covers/gta-vc-nextgen-traducao.webp",
     "themeColor": "#3b0307",
     "tags": [
       "PC"
@@ -236,7 +236,7 @@
     "description": "Port da dublagem em PT-BR de Resident Evil 4 HD para PlayStation 3 por Krisp.",
     "platform": "PlayStation 3",
     "subtag": "Port, Dublado",
-    "image": "https://i.imgur.com/nKTgk06.jpeg",
+    "image": "images/covers/re4-hd-dublado.webp",
     "themeColor": "#402d1f",
     "tags": [
       "PlayStation 3"
@@ -256,7 +256,7 @@
     "description": "Krisp está dedicando seu tempo para trazer a tradução desse jogo.",
     "platform": "PlayStation 2 / PSP",
     "subtag": "Legendado",
-    "image": "https://i.imgur.com/ZsQl2Ic.jpeg",
+    "image": "images/covers/the-warriors-ptbr.webp",
     "themeColor": "#ee3425",
     "tags": [
       "PSP",
@@ -278,7 +278,7 @@
     "description": "Port da tradução em PT-BR para PS3 por Godoy (tradução original por XEX Brasil).",
     "platform": "PlayStation 3",
     "subtag": "Port, Legendado",
-    "image": "https://i.imgur.com/RJtxxV2.jpeg",
+    "image": "images/covers/cod-classic.webp",
     "imagePosition": "center 75%",
     "themeColor": "#c98d69",
     "tags": [
@@ -296,7 +296,7 @@
     "description": "Port da tradução oficial de Mafia 2 Definitive Edition para os consoles PS3 e Xbox 360.",
     "platform": "PlayStation 3 / Xbox 360",
     "subtag": "Port, Legendado",
-    "image": "https://i.imgur.com/mLqnoQW.png",
+    "image": "images/covers/mafia-2-de-traducao.webp",
     "imagePosition": "top",
     "themeColor": "#14253a",
     "tags": [
@@ -319,7 +319,7 @@
     "description": "Dublagem completa em PT-BR para Portal e Portal with RTX no PC por RafaelGodoy & Krisp.",
     "platform": "PC",
     "subtag": "Dublado (IA)",
-    "image": "https://i.imgur.com/JejhmnC.png",
+    "image": "images/covers/portal-dublado-pc.webp",
     "themeColor": "#0284c7",
     "tags": [
       "PC"
@@ -339,7 +339,7 @@
     "description": "Port de Undertale em formato PKG para PlayStation 3 e emulador RPCS3 por Krisp.",
     "platform": "PlayStation 3 / RPCS3",
     "subtag": "Port",
-    "image": "https://ucarecdn.com/f78e12bc-0246-4f22-8e9f-ece2ffb82b12/image.png",
+    "image": "images/covers/undertale-port.webp",
     "themeColor": "#ed1c23",
     "tags": [
       "PlayStation 3"
@@ -359,7 +359,7 @@
     "description": "Finalmente, depois de 13 anos do lançamento, conseguimos lançar uma tradução para esse jogo. Agora também com a tradução da DLC, Pesadelo dos Mortos-vivos (Undead Nightmare).",
     "platform": "PlayStation 3 / Xbox 360",
     "subtag": "Legendado",
-    "image": "https://ucarecdn.com/4b3a00e5-9655-479f-a93c-121209dd16b3/image.jpg",
+    "image": "images/covers/rdr1-legendado.webp",
     "imagePosition": "top",
     "themeColor": "#650500",
     "tags": [
@@ -377,22 +377,24 @@
     "id": "toy-story-3-dublado",
     "type": "completed",
     "title": "Toy Story 3",
-    "date": "agosto, 2023",
-    "projectPeriod": "Início: 2023 • Concluído: agosto/2023",
-    "description": "Só falta descobrir por que a Disney deixou os arquivos dentro e não quis deixar certinho para todas as plataformas.",
-    "platform": "PlayStation 3 / Xbox 360",
+    "date": "31 de Agosto, 2026",
+    "projectPeriod": "Início: 2023 • Concluído: ago/2023 • Atualizado (v2): ago/2026",
+    "description": "Port da dublagem e tradução PT-BR oficial para PS3, Xbox 360 e agora Nintendo Wii (v2 com correções)!",
+    "platform": "PlayStation 3 / Xbox 360 / Nintendo Wii",
     "subtag": "Legendado, Dublado, Port",
-    "image": "https://ucarecdn.com/e4db7c72-1b66-44b3-a28c-69982a80e2db/image.jpg",
+    "image": "images/covers/toy-story-3-dublado.webp",
     "themeColor": "#fdbf89",
     "tags": [
       "PlayStation 3",
-      "Xbox 360"
+      "Xbox 360",
+      "Nintendo Wii"
     ],
     "tagLinks": {
-      "PlayStation 3": "https://github.com/PS3-4K-Pro/Packages/releases/download/Mods/Toy_Story_3_-_Brazilian_Portuguese_Translation.pkg",
-      "Xbox 360": "https://www.mediafire.com/file/wd7o0al5pju3bcq/X360_Tradu%25C3%25A7%25C3%25A3o_e_Dublagem_Toy_Story_3_port_Godoy%2526Krisp.zip/file"
+      "PlayStation 3": "https://huggingface.co/datasets/RafaG/mods/resolve/main/ToyStory3/PS3_Tradu%C3%A7%C3%A3o_e_Dublagem_Toy_Story_3_port_Godoy%26Krisp_v2.zip?download=true",
+      "Xbox 360": "https://huggingface.co/datasets/RafaG/mods/resolve/main/ToyStory3/X360_Tradu%C3%A7%C3%A3o_e_Dublagem_Toy_Story_3_port_Godoy%26Krisp_v2.zip?download=true",
+      "Nintendo Wii": "https://huggingface.co/datasets/RafaG/mods/resolve/main/ToyStory3/Wii_Tradu%C3%A7%C3%A3o_e_Dublagem_Toy_Story_3_port_Godoy%26Krisp.7z?download=true"
     },
-    "content": "<p>Só falta descobrir por que a Disney deixou os arquivos dentro e não quis deixar certinho para todas as plataformas.</p>\n\n<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/Cek5FEWXBjo?si=Sxt8-cWWTe6rXCSe\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>\n\n<strong>Bugs conhecidos</strong>\n\n<ul>\n  <li>Corte da voz ingame</li>\n  <li>Algumas vezes não inicia no xbox, galera diz que é pra remover o audio</li>\n</ul>",
+    "content": "<p>Só falta descobrir por que a Disney deixou os arquivos dentro e não quis deixar certinho para todas as plataformas.</p>\n\n<h3>✨ Novidades da Atualização (v2.0):</h3>\n<ul>\n  <li>⭐ <strong>Novo Port para Nintendo Wii:</strong> Dublagem e legendas em PT-BR adaptadas para o console da Nintendo!</li>\n  <li>🔄 <strong>Versão 2.0 (PS3 & Xbox 360):</strong> Pacotes revisados e atualizados com melhorias de estabilidade.</li>\n  <li>🚀 <strong>Hospedagem Rápida:</strong> Links diretos atualizados via Hugging Face.</li>\n</ul>\n\n<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/Cek5FEWXBjo?si=Sxt8-cWWTe6rXCSe\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
     "downloadUrl": ""
   },
   {
@@ -403,7 +405,7 @@
     "description": "Apesar desse jogo já ter uma dublagem, agora estamos usando IA com a voz original do Kratos para assim deixar mais interessante a jogatina. Também vamos usar IA em outras vozes, como Zeus, Gaia(Narradora) entre outros. Esse projeto está sendo desenvolvido numa parceria do canal Ghelos e eu Godoy.",
     "platform": "PlayStation 3 / PlayStation 2",
     "subtag": "Dublado (IA)",
-    "image": "https://i.imgur.com/YtTC1vN.jpeg",
+    "image": "images/covers/gow2-dublado-ps2.webp",
     "themeColor": "#e0f48e",
     "tags": [
       "PlayStation 3",
@@ -420,7 +422,7 @@
     "description": "A dublagem do GTA San Andreas já está sendo desenvolvida desde 2019, pela equipe NemesisFanDubs. Me juntei a eles com a ideia de fazer o port para outras plataformas.",
     "platform": "Multi-plataforma",
     "subtag": "Dublado / Port",
-    "image": "https://sm.ign.com/ign_br/screenshot/default/san-andreas-art_m1rg.jpg",
+    "image": "images/covers/gta-sa-dublado.webp",
     "tags": [
       "PC",
       "PlayStation 3",
@@ -445,7 +447,7 @@
     "description": "A galera pediu e nós nos reunimos, a equipe Mathias Produções está fazendo a dublagem e a gente vai colocar no game e adicionar IA se necessário.",
     "platform": "PC / PlayStation 3",
     "subtag": "Dublado",
-    "image": "https://wallpaperaccess.com/full/707183.png",
+    "image": "images/covers/gta-5-dublado.webp",
     "tags": [
       "PC",
       "PlayStation 3"

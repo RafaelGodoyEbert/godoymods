@@ -5,7 +5,7 @@
     "nickname": "Rafael Godoy",
     "role": "Fundador & Diretoria de Projetos",
     "badge": "👑 Fundador & Mainstream",
-    "avatar": "https://i.imgur.com/OgaeHFx.png",
+    "avatar": "images/team/rafael-godoy.webp",
     "status": "Em Atividade",
     "bio": "Fundador e linha de frente do Godoy Mods. Responsável pelo contato com a comunidade, visão geral de projetos e divulgação, além de atuar ativamente na produção de dublagens PT-BR via IA, manipulação de áudio ADPCM/VAG e ports para PC, PS2, PS3, Xbox 360 e Android.",
     "specialties": [
@@ -27,7 +27,7 @@
     "nickname": "Krisp",
     "role": "Cérebro Técnico & Lead Reverse Engineer",
     "badge": "🧠 Cérebro Técnico",
-    "avatar": "https://i.imgur.com/xKl9MSu.png",
+    "avatar": "images/team/krisp.webp",
     "status": "Em Atividade",
     "bio": "Cérebro técnico responsável pela arquitetura avançada de engenharia reversa no Godoy Mods. Desenvolve ferramentas customizadas para codecs proprietários de áudio da EA e formatos da Ubisoft. Entre seus destaques de modding, realizou o port completo do jogo Undertale do PS4 para PS3.",
     "specialties": [

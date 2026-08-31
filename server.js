@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import fs from 'fs';
+import { execSync } from 'child_process';
 import { generatePreviews } from './generate-previews.js';
 
 const app = express();
@@ -14,7 +15,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.static(process.cwd()));
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
-// API: Upload de imagem de capa ou avatar
+// API: Upload de imagem de capa ou avatar com conversão automática para WebP
 app.post('/api/upload', (req, res) => {
   try {
     const { imageBase64 } = req.body;
@@ -29,10 +30,25 @@ app.post('/api/upload', (req, res) => {
     const match = imageBase64.match(/^data:image\/(\w+);base64,/);
     let ext = match ? match[1] : 'png';
     if (ext === 'jpeg') ext = 'jpg';
-    const filename = `img_${Date.now()}_${Math.floor(Math.random() * 1000)}.${ext}`;
-    const filePath = path.join(uploadsDir, filename);
-    fs.writeFileSync(filePath, Buffer.from(base64Data, 'base64'));
-    res.json({ success: true, url: `/uploads/${filename}` });
+
+    const timestamp = Date.now();
+    const randomId = Math.floor(Math.random() * 1000);
+    const tempFile = path.join(uploadsDir, `temp_${timestamp}_${randomId}.${ext}`);
+    const webpFilename = `img_${timestamp}_${randomId}.webp`;
+    const webpPath = path.join(uploadsDir, webpFilename);
+
+    fs.writeFileSync(tempFile, Buffer.from(base64Data, 'base64'));
+
+    try {
+      execSync(`ffmpeg -y -i "${tempFile}" -c:v libwebp -quality 85 -vf "scale=if(gte(iw\\,1600)\\,1600\\,-1):-1" "${webpPath}"`, { stdio: 'ignore' });
+      if (fs.existsSync(tempFile)) fs.unlinkSync(tempFile);
+      res.json({ success: true, url: `/uploads/${webpFilename}` });
+    } catch (convErr) {
+      console.warn('Falha na conversão WebP, usando arquivo original:', convErr);
+      const fallbackFilename = `img_${timestamp}_${randomId}.${ext}`;
+      fs.renameSync(tempFile, path.join(uploadsDir, fallbackFilename));
+      res.json({ success: true, url: `/uploads/${fallbackFilename}` });
+    }
   } catch (err) {
     console.error('Erro no upload de imagem:', err);
     res.status(500).json({ error: 'Falha ao salvar imagem no servidor.' });
