@@ -1522,7 +1522,30 @@ body {
   }
 
   .modal-footer {
-    padding: 12px 16px 16px 16px;
+    padding: 12px 14px;
+    gap: 8px;
+    border-radius: 0;
+    position: sticky;
+    bottom: 0;
+  }
+
+  .modal-footer-downloads {
+    width: 100%;
+    gap: 6px;
+  }
+
+  .modal-footer-downloads .btn-download-action {
+    flex: 1 1 calc(50% - 6px);
+    justify-content: center;
+    text-align: center;
+    font-size: 0.8rem;
+    padding: 9px 10px;
+  }
+
+  .modal-footer-actions {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 6px;
   }
 }
 
@@ -1685,15 +1708,65 @@ body {
 }
 
 .modal-footer {
-  padding: 16px 24px;
+  position: sticky;
+  bottom: 0;
+  margin-top: auto;
+  z-index: 30;
+  padding: 14px 20px;
+  background-color: var(--bg-card);
   border-top: 1px solid var(--border-color);
-  background-color: var(--bg-sidebar);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 10px;
-  border-bottom-left-radius: 14px;
-  border-bottom-right-radius: 14px;
+  flex-wrap: wrap;
+  border-bottom-left-radius: 13px;
+  border-bottom-right-radius: 13px;
+}
+
+.modal-footer-downloads {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.modal-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.btn-download-action {
+  background-color: #059669;
+  color: #ffffff !important;
+  border: 1px solid #059669;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.825rem;
+  font-weight: 700;
+  text-decoration: none !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 6px rgba(5, 150, 105, 0.3);
+}
+
+.btn-download-action:hover {
+  background-color: #047857;
+  border-color: #047857;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.45);
+  color: #ffffff !important;
+}
+
+.btn-download-action:active {
+  transform: translateY(0);
 }
 
 .btn-primary-action {

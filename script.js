@@ -2059,15 +2059,8 @@ function openPostModal(postId) {
     subtagBadgeHTML = `<span class="subtag-badge">${subIcon} ${item.subtag}</span>`;
   }
 
-  // Tags / Badges com Links Reais do Mod
-  const isDevlog = item.type === "devlog";
-  const tagsHTML = (item.tags || []).map(t => {
-    const link = !isDevlog && ((item.tagLinks && item.tagLinks[t]) || (item.platformDownloads && item.platformDownloads[t]));
-    if (link) {
-      return `<a href="${link}" target="_blank" rel="noopener noreferrer" class="tag-badge tag-badge-link" title="Baixar mod para ${t}">📥 ${t}</a>`;
-    }
-    return `<span class="tag-badge">${t}</span>`;
-  }).join("");
+  // Tags / Badges no cabeçalho do Modal (Apenas tags visuais limpas)
+  const tagsHTML = (item.tags || []).map(t => `<span class="tag-badge">${t}</span>`).join("");
   modalTags.innerHTML = tagsHTML;
 
   // Título e Meta
@@ -2113,24 +2106,61 @@ function openPostModal(postId) {
 
   const safeTitle = (item.title || "").replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/"/g, "&quot;");
 
-  // Footer com Ações Limpas e Botão de Compartilhar
-  let footerHTML = `
-    <button class="btn-secondary-action btn-share-action" onclick="sharePost('${item.id}', '${safeTitle}')" title="Compartilhar este post">
-      🔗 Compartilhar
-    </button>
-    <button class="btn-secondary-action" onclick="closePostModal()">Fechar</button>
-  `;
+  // Coleta de Links de Download para o Rodapé Fixo do Modal
+  let downloadButtonsHTML = "";
+  const isDevlog = item.type === "devlog";
 
-  if (item.discordUrl) {
-    footerHTML = `
-      <a href="${item.discordUrl}" target="_blank" rel="noopener noreferrer" class="btn-secondary-action" style="border-color: #5865F2; color: #5865F2;">
-        💬 Servidor Discord / Suporte
+  // 1. Links diretos configurados por plataforma / tag (tagLinks ou platformDownloads)
+  const tagLinksMap = (!isDevlog && (item.tagLinks || item.platformDownloads)) ? (item.tagLinks || item.platformDownloads) : null;
+  if (tagLinksMap && typeof tagLinksMap === "object") {
+    Object.entries(tagLinksMap).forEach(([plat, url]) => {
+      if (url && typeof url === "string" && url.trim() !== "") {
+        downloadButtonsHTML += `
+          <a href="${url.trim()}" target="_blank" rel="noopener noreferrer" class="btn-download-action" title="Baixar mod para ${plat}">
+            📥 ${plat}
+          </a>
+        `;
+      }
+    });
+  }
+
+  // 2. Link direto geral caso não haja links específicos por tag
+  if (!downloadButtonsHTML && !isDevlog) {
+    const directUrl = (item.downloadUrl || item.url || "").trim();
+    if (directUrl && !directUrl.includes("discord.gg") && !directUrl.includes("discord.com")) {
+      const btnLabel = item.type === "tool" ? "🛠️ Acessar Ferramenta" : "📥 Baixar Mod";
+      downloadButtonsHTML += `
+        <a href="${directUrl}" target="_blank" rel="noopener noreferrer" class="btn-download-action" title="${btnLabel}">
+          ${btnLabel}
+        </a>
+      `;
+    }
+  }
+
+  // 3. Link do Servidor Discord / Suporte
+  let discordLinkHTML = "";
+  const discordUrl = item.discordUrl || ((item.downloadUrl && (item.downloadUrl.includes("discord.gg") || item.downloadUrl.includes("discord.com"))) ? item.downloadUrl : "");
+  if (discordUrl) {
+    discordLinkHTML = `
+      <a href="${discordUrl}" target="_blank" rel="noopener noreferrer" class="btn-secondary-action btn-discord-action" style="border-color: #5865F2; color: #5865F2;" title="Servidor Discord / Suporte">
+        💬 Discord / Suporte
       </a>
-      ${footerHTML}
     `;
   }
 
-  modalFooter.innerHTML = footerHTML;
+  // Footer Fixo com Downloads e Ações
+  modalFooter.innerHTML = `
+    <div class="modal-footer-downloads">
+      ${downloadButtonsHTML}
+      ${discordLinkHTML}
+    </div>
+    <div class="modal-footer-actions">
+      <button class="btn-secondary-action btn-share-action" onclick="sharePost('${item.id}', '${safeTitle}')" title="Compartilhar este post">
+        🔗 Compartilhar
+      </button>
+      <button class="btn-secondary-action" onclick="closePostModal()">Fechar</button>
+    </div>
+  `;
 
   // Exibir Modal
   modalOverlay.classList.add("active");
