@@ -15,7 +15,7 @@
       "PC",
       "Playstation 2"
     ],
-    "progress": 65,
+    "progress": 85,
     "sponsored": true,
     "content": "<p>Confira as últimas novidades e o andamento do nosso projeto de modificação!</p>\n\n<h3>✨ Destaques do Update:</h3>\n<ul>\n  <li><strong>Progresso de dublagem:</strong> Trabalhando na sincronização das vozes principais e nos ajustes de áudio em alta fidelidade.</li>\n  <li><strong>Parceria confirmada:</strong> O canal <a href=\"https://www.youtube.com/@dastgames94\" target=\"_blank\">DastGames</a> (acesse o <a href=\"https://discord.gg/8Y7czsqxyd\" target=\"_blank\">Discord dele</a>) chegou junto para patrocinar o projeto da clássica trilogia <em>Prince of Persia</em> (famosa no PS2)!</li>\n  <li><strong>Plataforma:</strong> O foco do desenvolvimento é a versão de <strong>PC</strong> (uma versão para PS2 é apenas uma possibilidade remota).</li>\n  <li><strong>Novas Ferramentas:</strong> Desenvolvemos ferramentas próprias para viabilizar o projeto — o <em>\"Editor de Emoções\"</em> e o <em>\"Editor de Cutscenes\"</em>.</li>\n</ul>\n\n<p>Em breve faremos um post detalhado sobre como essas ferramentas funcionam!</p>",
     "downloadUrl": "https://discord.com/invite/atFQmmR2fy"
@@ -35,7 +35,7 @@
       "PC",
       "Playstation 2"
     ],
-    "progress": 85,
+    "progress": 100,
     "sponsored": true,
     "content": "<p>🚀 <strong>NOVIDADES NO PROJETO!</strong></p>\n\n<p>O <a href=\"https://www.youtube.com/@dastgames94\" target=\"_blank\">DastGames</a> fortaleceu o projeto e fechamos o patrocínio para a clássica trilogia <strong>Prince of Persia</strong> (conhecida do PS2). Aproveite para entrar no <a href=\"https://discord.gg/8Y7czsqxyd\" target=\"_blank\">Discord da DastGames</a>!</p>\n\n<p><em>Vale lembrar: o foco do desenvolvimento é a versão de <strong>PC</strong> (portar para o PS2 é um grande talvez).</em></p>\n\n<h3>✨ No que estamos trabalhando:</h3>\n<ul>\n  <li>Sincronização em andamento das vozes principais.</li>\n  <li>Tratamento e refinamento do áudio em alta fidelidade.</li>\n  <li>Criação de ferramentas próprias para a dublagem: o <strong>\"Editor de Emoções\"</strong> e o <strong>\"Editor de Cutscenes\"</strong>.</li>\n</ul>\n\n<p>Em breve traremos um post dedicado explicando o funcionamento dessas novas ferramentas!</p>",
     "downloadUrl": "https://discord.com/invite/atFQmmR2fy"
@@ -122,6 +122,33 @@
       "Nintendo Wii": "https://huggingface.co/datasets/RafaG/mods/resolve/main/ToyStory3/Wii_Tradu%C3%A7%C3%A3o_e_Dublagem_Toy_Story_3_port_Godoy%26Krisp.7z?download=true"
     },
     "content": "<p>Só falta descobrir por que a Disney deixou os arquivos dentro e não quis deixar certinho para todas as plataformas.</p>\n\n<h3>✨ Novidades da Atualização (v2.0):</h3>\n<ul>\n  <li>⭐ <strong>Novo Port para Nintendo Wii:</strong> Dublagem e legendas em PT-BR adaptadas para o console da Nintendo!</li>\n  <li>🔄 <strong>Versão 2.0 (PS3 & Xbox 360):</strong> Pacotes revisados e atualizados com melhorias de estabilidade.</li>\n  <li>🚀 <strong>Hospedagem Rápida:</strong> Links diretos atualizados via Hugging Face.</li>\n</ul>\n\n<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/Cek5FEWXBjo?si=Sxt8-cWWTe6rXCSe\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
+    "downloadUrl": ""
+  },
+  {
+    "id": "gta-sa-dublado",
+    "type": "ongoing",
+    "title": "GTA San Andreas",
+    "date": "17 de Novembro, 2026",
+    "description": "A dublagem do GTA San Andreas já está sendo desenvolvida desde 2019, pela equipe NemesisFanDubs. Me juntei a eles com a ideia de fazer o port para outras plataformas.",
+    "platform": "Multi-plataforma",
+    "subtag": "Dublado / Port",
+    "image": "images/covers/gta-sa-dublado.webp",
+    "themeColor": "#16a34a",
+    "tags": [
+      "PC",
+      "PlayStation 3",
+      "PlayStation 2",
+      "Android",
+      "Xbox 360",
+      "Definitive Edition PC"
+    ],
+    "tagLinks": {
+      "PC": "https://www.mediafire.com/file/q36s6h9ebck9fh1/PC_NEMESISFANDUBS_GTA_SA_DUBLADO.zip/file",
+      "Android": "https://www.mediafire.com/file/oiwhwdv8wobhw9o/Android_NemesisFanDubs_GTA_SA_DUBLADO.zip/file",
+      "Definitive Edition PC": "https://huggingface.co/datasets/RafaG/godoy/resolve/main/GTA-SADE-Dublado-NemesisFanDubs.7z?download=true"
+    },
+    "progress": 85,
+    "content": "<p>A dublagem do GTA San Andreas já está sendo desenvolvida desde 2019, pela equipe NemesisFanDubs. Me juntei a eles com a ideia de fazer o port para outras plataformas.</p>",
     "downloadUrl": ""
   },
   {
@@ -412,33 +439,6 @@
       "PlayStation 2"
     ],
     "content": "<p>Apesar desse jogo já ter uma dublagem, agora estamos usando IA com a voz original do Kratos para assim deixar mais interessante a jogatina. Também vamos usar IA em outras vozes, como Zeus, Gaia(Narradora) entre outros. Esse projeto está sendo desenvolvido numa parceria do canal Ghelos e eu Godoy.</p>\n\nLançaram um top, não vejo sentido continuar.",
-    "downloadUrl": ""
-  },
-  {
-    "id": "gta-sa-dublado",
-    "type": "ongoing",
-    "title": "GTA San Andreas",
-    "date": "17 de Novembro, 2026",
-    "description": "A dublagem do GTA San Andreas já está sendo desenvolvida desde 2019, pela equipe NemesisFanDubs. Me juntei a eles com a ideia de fazer o port para outras plataformas.",
-    "platform": "Multi-plataforma",
-    "subtag": "Dublado / Port",
-    "image": "images/covers/gta-sa-dublado.webp",
-    "themeColor": "#16a34a",
-    "tags": [
-      "PC",
-      "PlayStation 3",
-      "PlayStation 2",
-      "Android",
-      "Xbox 360",
-      "Definitive Edition PC"
-    ],
-    "tagLinks": {
-      "PC": "https://www.mediafire.com/file/q36s6h9ebck9fh1/PC_NEMESISFANDUBS_GTA_SA_DUBLADO.zip/file",
-      "Android": "https://www.mediafire.com/file/oiwhwdv8wobhw9o/Android_NemesisFanDubs_GTA_SA_DUBLADO.zip/file",
-      "Definitive Edition PC": "https://huggingface.co/datasets/RafaG/godoy/resolve/main/GTA-SADE-Dublado-NemesisFanDubs.7z?download=true"
-    },
-    "progress": 85,
-    "content": "<p>A dublagem do GTA San Andreas já está sendo desenvolvida desde 2019, pela equipe NemesisFanDubs. Me juntei a eles com a ideia de fazer o port para outras plataformas.</p>",
     "downloadUrl": ""
   },
   {
