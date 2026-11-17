@@ -101,6 +101,30 @@
     "downloadUrl": "https://www.youtube.com/channel/UC7OyRL70SFlEtHYWCLxYuKQ"
   },
   {
+    "id": "toy-story-3-dublado",
+    "type": "completed",
+    "title": "Toy Story 3",
+    "date": "31 de Agosto, 2026",
+    "projectPeriod": "Início: 2023 • Concluído: ago/2023 • Atualizado (v2): ago/2026",
+    "description": "Port da dublagem e tradução PT-BR oficial para PS3, Xbox 360 e agora Nintendo Wii (v2 com correções)!",
+    "platform": "PlayStation 3 / Xbox 360 / Nintendo Wii",
+    "subtag": "Legendado, Dublado, Port",
+    "image": "images/covers/toy-story-3-dublado.webp",
+    "themeColor": "#fdbf89",
+    "tags": [
+      "PlayStation 3",
+      "Xbox 360",
+      "Nintendo Wii"
+    ],
+    "tagLinks": {
+      "PlayStation 3": "https://huggingface.co/datasets/RafaG/mods/resolve/main/ToyStory3/PS3_Tradu%C3%A7%C3%A3o_e_Dublagem_Toy_Story_3_port_Godoy%26Krisp_v2.zip?download=true",
+      "Xbox 360": "https://huggingface.co/datasets/RafaG/mods/resolve/main/ToyStory3/X360_Tradu%C3%A7%C3%A3o_e_Dublagem_Toy_Story_3_port_Godoy%26Krisp_v2.zip?download=true",
+      "Nintendo Wii": "https://huggingface.co/datasets/RafaG/mods/resolve/main/ToyStory3/Wii_Tradu%C3%A7%C3%A3o_e_Dublagem_Toy_Story_3_port_Godoy%26Krisp.7z?download=true"
+    },
+    "content": "<p>Só falta descobrir por que a Disney deixou os arquivos dentro e não quis deixar certinho para todas as plataformas.</p>\n\n<h3>✨ Novidades da Atualização (v2.0):</h3>\n<ul>\n  <li>⭐ <strong>Novo Port para Nintendo Wii:</strong> Dublagem e legendas em PT-BR adaptadas para o console da Nintendo!</li>\n  <li>🔄 <strong>Versão 2.0 (PS3 & Xbox 360):</strong> Pacotes revisados e atualizados com melhorias de estabilidade.</li>\n  <li>🚀 <strong>Hospedagem Rápida:</strong> Links diretos atualizados via Hugging Face.</li>\n</ul>\n\n<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/Cek5FEWXBjo?si=Sxt8-cWWTe6rXCSe\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
+    "downloadUrl": ""
+  },
+  {
     "id": "paper-mario-ttyd",
     "type": "archived",
     "title": "Paper Mario: The Thousand-Year Door",
@@ -374,30 +398,6 @@
     "downloadUrl": ""
   },
   {
-    "id": "toy-story-3-dublado",
-    "type": "completed",
-    "title": "Toy Story 3",
-    "date": "31 de Agosto, 2026",
-    "projectPeriod": "Início: 2023 • Concluído: ago/2023 • Atualizado (v2): ago/2026",
-    "description": "Port da dublagem e tradução PT-BR oficial para PS3, Xbox 360 e agora Nintendo Wii (v2 com correções)!",
-    "platform": "PlayStation 3 / Xbox 360 / Nintendo Wii",
-    "subtag": "Legendado, Dublado, Port",
-    "image": "images/covers/toy-story-3-dublado.webp",
-    "themeColor": "#fdbf89",
-    "tags": [
-      "PlayStation 3",
-      "Xbox 360",
-      "Nintendo Wii"
-    ],
-    "tagLinks": {
-      "PlayStation 3": "https://huggingface.co/datasets/RafaG/mods/resolve/main/ToyStory3/PS3_Tradu%C3%A7%C3%A3o_e_Dublagem_Toy_Story_3_port_Godoy%26Krisp_v2.zip?download=true",
-      "Xbox 360": "https://huggingface.co/datasets/RafaG/mods/resolve/main/ToyStory3/X360_Tradu%C3%A7%C3%A3o_e_Dublagem_Toy_Story_3_port_Godoy%26Krisp_v2.zip?download=true",
-      "Nintendo Wii": "https://huggingface.co/datasets/RafaG/mods/resolve/main/ToyStory3/Wii_Tradu%C3%A7%C3%A3o_e_Dublagem_Toy_Story_3_port_Godoy%26Krisp.7z?download=true"
-    },
-    "content": "<p>Só falta descobrir por que a Disney deixou os arquivos dentro e não quis deixar certinho para todas as plataformas.</p>\n\n<h3>✨ Novidades da Atualização (v2.0):</h3>\n<ul>\n  <li>⭐ <strong>Novo Port para Nintendo Wii:</strong> Dublagem e legendas em PT-BR adaptadas para o console da Nintendo!</li>\n  <li>🔄 <strong>Versão 2.0 (PS3 & Xbox 360):</strong> Pacotes revisados e atualizados com melhorias de estabilidade.</li>\n  <li>🚀 <strong>Hospedagem Rápida:</strong> Links diretos atualizados via Hugging Face.</li>\n</ul>\n\n<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/Cek5FEWXBjo?si=Sxt8-cWWTe6rXCSe\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
-    "downloadUrl": ""
-  },
-  {
     "id": "gow2-dublado-ps2",
     "type": "abandoned",
     "title": "God Of War 2",
@@ -418,26 +418,28 @@
     "id": "gta-sa-dublado",
     "type": "ongoing",
     "title": "GTA San Andreas",
-    "date": "Em Andamento",
+    "date": "17 de Novembro, 2026",
     "description": "A dublagem do GTA San Andreas já está sendo desenvolvida desde 2019, pela equipe NemesisFanDubs. Me juntei a eles com a ideia de fazer o port para outras plataformas.",
     "platform": "Multi-plataforma",
     "subtag": "Dublado / Port",
     "image": "images/covers/gta-sa-dublado.webp",
+    "themeColor": "#16a34a",
     "tags": [
       "PC",
       "PlayStation 3",
       "PlayStation 2",
       "Android",
-      "Xbox 360"
+      "Xbox 360",
+      "Definitive Edition PC"
     ],
     "tagLinks": {
       "PC": "https://www.mediafire.com/file/q36s6h9ebck9fh1/PC_NEMESISFANDUBS_GTA_SA_DUBLADO.zip/file",
-      "Android": "https://www.mediafire.com/file/oiwhwdv8wobhw9o/Android_NemesisFanDubs_GTA_SA_DUBLADO.zip/file"
+      "Android": "https://www.mediafire.com/file/oiwhwdv8wobhw9o/Android_NemesisFanDubs_GTA_SA_DUBLADO.zip/file",
+      "Definitive Edition PC": "https://huggingface.co/datasets/RafaG/godoy/resolve/main/GTA-SADE-Dublado-NemesisFanDubs.7z?download=true"
     },
     "progress": 85,
     "content": "<p>A dublagem do GTA San Andreas já está sendo desenvolvida desde 2019, pela equipe NemesisFanDubs. Me juntei a eles com a ideia de fazer o port para outras plataformas.</p>",
-    "downloadUrl": "",
-    "themeColor": "#16a34a"
+    "downloadUrl": ""
   },
   {
     "id": "gta-5-dublado",
